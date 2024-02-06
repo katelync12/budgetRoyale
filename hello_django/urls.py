@@ -19,8 +19,11 @@ from django.urls import path
 # imported views
 from my_app import views
 
+
 urlpatterns = [
+    path('add/', views.add, name='add'),
+    path('', views.home, name="homepage"),
     path('admin/', admin.site.urls),
       # configured the url
-    path('',views.index, name="homepage")
+    path('index/', views.index, name="homepage1"),
 ]
