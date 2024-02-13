@@ -19,6 +19,8 @@ from django.urls import path, include
 # imported views
 from my_app import views
 from django.views.generic.base import TemplateView
+from django.contrib.auth import views as auth_views
+
 
 
 urlpatterns = [
@@ -33,7 +35,7 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
-    path("form", TemplateView.as_view(template_name="form.html"), name="form"),
-    path("transactions", TemplateView.as_view(template_name="transactions.html"), name="transactions"),
-
+    path("form/", TemplateView.as_view(template_name="form.html"), name="form"),
+    path("transactions/", TemplateView.as_view(template_name="view_transactions.html"), name="view_transactions"),
+    path("transactions/create/", TemplateView.as_view(template_name="create_transaction.html"), name="create_transactions"),
 ]

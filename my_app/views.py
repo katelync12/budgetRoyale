@@ -1,19 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import *
 from django.db import connection
 from django.db import models
 from django.http import FileResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
-def form(request):
-    return render(request, "form.html")
+# def form(request):
+#     return render(request, "form.html")
 
-def transactions(request):
-    return render(request, "transactions.html")
+# def transactions(request):
+#     return render(request, "transactions.html")
 
-def home(request):
-    return render(request, "home.html")
+# def home(request):
+#     return render(request, "home.html")
+
 
 def add(request):
     # Check if Student table exists

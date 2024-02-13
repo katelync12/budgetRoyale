@@ -4,8 +4,8 @@ from .views import *
 
 urlpatterns = [
     # path("", views.home, name="home"),
-    path("form/", views.form, name="form"),
-    path("transactions/", views.transactions, name="transactions"),
+    # path("form/", views.form, name="form"),
+    # path("transactions/", views.transactions, name="transactions"),
 
     # path('execute_dummy/', execute_dummy, name='execute_dummy'),
     #  path('execute_video/', execute_video, name='execute_video'),

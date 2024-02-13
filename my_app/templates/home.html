@@ -3,19 +3,14 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-<p>Hi {{ user.username }}!</p>
+
+<p class="header">Hi {{ user.username }}!</p>
 <p><a href="{% url 'password_change' %}">password change</a></p>
-<p><a href="{% url 'transactions' %}">transactions</a></p>
+<p><a href="{% url 'view_transactions' %}">transactions</a></p>
 <p><a href="{% url 'form' %}">form</a></p>
 <form action="{% url 'logout' %}" method="post">
   {% csrf_token %}
   <button type="submit">Log Out</button>
 </form>
-{% else %}
-<p>You are not logged in</p>
-<p><a href="{% url 'password_reset' %}">Password Reset</a></p>
-<p><a href="{% url 'login' %}">Log In</a></p>
-<p><a href="{% url 'signup' %}">Sign Up</a></p>
-{% endif %}
+
 {% endblock %}
