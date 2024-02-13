@@ -1,25 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello, World!</title>
-  </head>
-  <body>
-    <h1>Hello!</h1>
+{% extends "base.html" %}
 
-    <!-- Button added with JavaScript method -->
-    <button onclick="showAlert()">Click me</button>
+{% block title %}Home{% endblock %}
 
-    <!-- JavaScript method -->
-    <script>
-      function showAlert() {
-        alert("Button Clicked!");
-        fetch(`/add`).then(function (response) {
-          return response.json();
-        });
-      }
-    </script>
-  </body>
-</html>
+{% block content %}
+{% if user.is_authenticated %}
+<p>Hi {{ user.username }}!</p>
+<p><a href="{% url 'password_change' %}">password change</a></p>
+<p><a href="{% url 'transactions' %}">transactions</a></p>
+<p><a href="{% url 'form' %}">form</a></p>
+<form action="{% url 'logout' %}" method="post">
+  {% csrf_token %}
+  <button type="submit">Log Out</button>
+</form>
+{% else %}
+<p>You are not logged in</p>
+<p><a href="{% url 'password_reset' %}">Password Reset</a></p>
+<p><a href="{% url 'login' %}">Log In</a></p>
+<p><a href="{% url 'signup' %}">Sign Up</a></p>
+{% endif %}
+{% endblock %}

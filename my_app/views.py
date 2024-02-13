@@ -4,12 +4,16 @@ from .models import Student
 from django.db import connection
 from django.db import models
 from django.http import FileResponse, JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-def index(request):
-    return HttpResponse('Womp Womp :(')
+def form(request):
+    return render(request, "form.html")
+
+def transactions(request):
+    return render(request, "transactions.html")
 
 def home(request):
-  return render(request, "home.html")
+    return render(request, "home.html")
 
 def add(request):
     # Check if Student table exists
