@@ -1,12 +1,30 @@
-{% extends "base_login.html" %}
+{% extends "registration/login.html" %}
 
 {% block title %}Sign Up{% endblock %}
 
-{% block content %}
-<h2>Sign up</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form }}
-  <button type="submit">Sign Up</button>
-</form>
+{% block title2 %}Sign Up{% endblock %}
+
+{% block fields %}
+  
+<div>
+  <input type="username" name="username" placeholder="Username" class="custom-input">
+</div>
+<div>
+  <input type="email" name="email" placeholder="Email" class="custom-input">
+</div>
+<div>
+  <input type="password" name="password1" placeholder="Password" class="custom-input">
+</div>
+<div>
+  <input type="password" name="password2" placeholder="Confirm Password" class="custom-input">
+</div>
+
 {% endblock %}
+{% block link %}
+<div class="forgot-password" style="font-size: 14px; margin-bottom: 10px;">
+  <a href="{% url 'login' %}">Back to Log In</a>
+</div>
+{% endblock %}
+{% block button_label %}Sign Up{% endblock %}
+
+{% block extra_buttons %}{% endblock %}
