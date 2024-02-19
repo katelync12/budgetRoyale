@@ -30,6 +30,7 @@ urlpatterns = [
     # path('index/', views.index, name="homepage1"),
 
     # path("", include("my_app.urls")),
+    path('create_transaction/', views.create_transaction, name='create_transaction'),
     path('admin/', admin.site.urls),
     path('create_data/', views.add, name='create_data'),
     path("accounts/", include("accounts.urls")),
