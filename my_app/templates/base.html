@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
 <link rel="stylesheet" href="../static/css/styles.css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -8,13 +11,6 @@
 {% if user.is_authenticated %}
 
 {% block content %}
-{% comment %} code below {% endcomment %}
-
-<p>form</p>
-
-<p><a href="{% url 'home' %}">home</a></p>
-
-{% comment %} code above {% endcomment %}
 {% endblock %}
 {% else %}
 <p>You are not logged in</p>
