@@ -25,6 +25,7 @@ class Category(models.Model):
     category_id = models.CharField(max_length=255, primary_key=True)
 
 class Transactions(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     week = models.DateField()
     amount = models.FloatField()
     name = models.CharField(max_length=255)

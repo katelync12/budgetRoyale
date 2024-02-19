@@ -33,16 +33,10 @@ def create_transaction(request):
 
 def add(request):
     # Check if Student table exists
-    if not Student._meta.db_table in connection.introspection.table_names():
+    if not Transactions._meta.db_table in connection.introspection.table_names():
         # Create the Student table if it doesn't exist
         with connection.schema_editor() as schema_editor:
-            schema_editor.create_model(Student)
-            schema_editor.create_model(User)
-            schema_editor.create_model(Group)
-            schema_editor.create_model(UserJoinGroup)
-            schema_editor.create_model(Category)
             schema_editor.create_model(Transactions)
-            schema_editor.create_model(UserJoinCategory)
             print("poppy head")
 
     # Insert a new student named "Mark" with a GPA of 4.0
