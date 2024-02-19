@@ -43,6 +43,7 @@ urlpatterns = [
     path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
     path("transactions/", TemplateView.as_view(template_name="view_transactions.html"), name="view_transactions"),
     path("transactions/create/", TemplateView.as_view(template_name="create_transaction.html"), name="create_transactions"),
+    path('login/', views.login_view, name='login'),
 
     
 ]
