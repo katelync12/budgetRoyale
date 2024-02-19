@@ -51,11 +51,26 @@ def add(request):
     result = 1
     return JsonResponse({'result': result})
 
+@login_required
 def view_transactions(request):
-    transactions = Transactions.objects.all()
+    # Ensure user is authenticated before accessing request.user
+    if request.user.is_authenticated:
+        current_user = request.user
+        
+        # Gets all transactions
+        transactions = Transactions.objects.all()
+        sorted = []
+        for transaction in transactions:
+            # Only gets the transactions of the currently logged in user
+            if (transaction.user.username == str(current_user)):
+                sorted.append(transaction)
 
-    context = {
-        'transactions': transactions
-    }
-    # Render the template with the transactions data
-    return render(request, 'view_transactions.html', context)
+        context = {
+            'transactions': sorted,
+            'current_user': current_user,
+        }
+        # Render the template with the transactions data
+        return render(request, 'view_transactions.html', context)
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
