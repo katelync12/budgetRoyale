@@ -58,11 +58,8 @@ def add(request):
     return JsonResponse({'result': result})
 
 def view_transactions(request):
-    print("hello")
     transactions = Transactions.objects.all()
-    print(transactions)
 
-    # Pass the transactions to the template context
     context = {
         'transactions': transactions
     }
