@@ -1,12 +1,11 @@
-{% extends "base.html" %}
-
-{% block title %}Home{% endblock %}
-
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
 {% block content %}
 
 <p class="header">Hi {{ user.username }}!</p>
 <p><a href="{% url 'password_change' %}">password change</a></p>
 <p><a href="{% url 'view_transactions' %}">transactions</a></p>
+<p><a href="{% url 'create_data' %}">create_data</a></p>
 <p><a href="{% url 'form' %}">form</a></p>
 <form action="{% url 'logout' %}" method="post">
   {% csrf_token %}
