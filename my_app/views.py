@@ -7,6 +7,7 @@ from django.http import FileResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from .models import Transactions
 
 @login_required  # Requires the user to be logged in to access this view
 def create_transaction(request):
@@ -55,3 +56,15 @@ def add(request):
 
     result = 1
     return JsonResponse({'result': result})
+
+def view_transactions(request):
+    print("hello")
+    transactions = Transactions.objects.all()
+    print(transactions)
+
+    # Pass the transactions to the template context
+    context = {
+        'transactions': transactions
+    }
+    # Render the template with the transactions data
+    return render(request, 'view_transactions.html', context)
