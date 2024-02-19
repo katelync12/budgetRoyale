@@ -6,16 +6,30 @@ from django.db import models
 from django.http import FileResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Transactions
 
-# def form(request):
-#     return render(request, "form.html")
+@login_required  # Requires the user to be logged in to access this view
+def create_transaction(request):
+    if request.method == "POST":
+        amount = float(request.POST.get("amount"))
+        category = request.POST.get("type")
+        is_spending = request.POST.get("transaction_type") == "on"
+        
+        # Access the user who sent the request
+        user = request.user
+        
+        # If it's a spending, make the amount negative
+        if is_spending:
+            amount *= -1
 
-# def transactions(request):
-#     return render(request, "transactions.html")
+        # Print out the amount, category, spending/savings status, and the user
+        print("Amount:", amount)
+        print("Category:", category)
+        print("Spending:", is_spending)
+        print("User:", user)
 
-# def home(request):
-#     return render(request, "home.html")
-
+    return render(request, "create_transaction.html")
 
 def add(request):
     # Check if Student table exists
@@ -42,3 +56,12 @@ def add(request):
 
     result = 1
     return JsonResponse({'result': result})
+
+def view_transactions(request):
+    transactions = Transactions.objects.all()
+
+    context = {
+        'transactions': transactions
+    }
+    # Render the template with the transactions data
+    return render(request, 'view_transactions.html', context)

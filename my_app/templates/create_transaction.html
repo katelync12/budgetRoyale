@@ -1,16 +1,35 @@
 {% extends "base.html" %}
 
-
 {% block content %}
+<link rel="stylesheet" href="../static/css/switch.css">
 {% comment %} {% if user.is_authenticated %} {% endcomment %}
 
 {% comment %} code below {% endcomment %}
-<p>create transactions</p>
+<form method="POST" action="{% url 'create_transaction' %}">
+    {% csrf_token %}
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount" min="0" step="0.01" pattern="^\d+(\.\d{1,2})?$" required><br><br>
+  
+    <label for="type">Type:</label>
+    <select id="type" name="type" required>
+        <option value="Food">Food</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Other">Other</option>
+    </select><br><br>
+
+    <label class="switch">
+        <span class="spending-label">Spendings</span>
+        <input type="checkbox" name="transaction_type">
+        <span class="slider round"></span>
+        <span class="savings-label">Savings</span>
+    </label><br><br>
+
+  
+    <button type="submit">Submit</button>
+</form>
+  
 <p><a href="{% url 'home' %}">home</a></p>
 <p><a href="{% url 'view_transactions' %}"> back</a></p>
-
-
-
 {% comment %} code above {% endcomment %}
 
 {% comment %} {% else %}
@@ -18,6 +37,6 @@
 <p><a href="{% url 'password_reset' %}">Password Reset</a></p>
 <p><a href="{% url 'login' %}">Log In</a></p>
 <p><a href="{% url 'signup' %}">Sign Up</a></p>
-
 {% endif %} {% endcomment %}
+
 {% endblock %}
