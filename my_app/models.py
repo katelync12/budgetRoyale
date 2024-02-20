@@ -20,19 +20,6 @@ class UserJoinGroup(models.Model):
 class Category(models.Model):
     category_id = models.CharField(max_length=255, primary_key=True)
 
-@pgtrigger.register(
-    pgtrigger.Trigger(
-        name='print_hello_world',
-        level=pgtrigger.Row,
-        when=pgtrigger.After,
-        operation=pgtrigger.Insert,
-        func=f'''
-            -- Print "Hello, World!" when a new row is inserted into Transactions
-            RAISE NOTICE 'Hello, World!';
-            RETURN NULL;
-        ''',
-    )
-)
 class Transactions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     week = models.DateField()

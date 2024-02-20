@@ -92,12 +92,11 @@ def add_category(request):
 
 def add(request):
     # Check if Student table exists
-    if not Transactions._meta.db_table in connection.introspection.table_names():
+    if not PersonalGoal._meta.db_table in connection.introspection.table_names():
         # Create the Student table if it doesn't exist
         with connection.schema_editor() as schema_editor:
-            schema_editor.create_model(Transactions)
-            schema_editor.create_model(UserJoinCategory)
-            schema_editor.create_model(UserJoinGroup)
+            schema_editor.create_model(PersonalGoal)
+            schema_editor.create_model(GroupGoal)
             print("poppy head")
 
     # Insert a new student named "Mark" with a GPA of 4.0
