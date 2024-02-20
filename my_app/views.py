@@ -9,6 +9,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Transactions
 from django.utils import timezone
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+
 
 @login_required  # Requires the user to be logged in to access this view
 def create_transaction(request):
@@ -99,3 +102,20 @@ def view_transactions(request):
     else:
         # Redirect to login page if user is not authenticated
         return redirect('login')
+    
+# Creates an error if the login info is wrong
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            # User credentials are correct, log in the user
+            login(request, user)
+            return redirect('home')  # Redirect to dashboard or any other page
+        else:
+            # User credentials are incorrect, display an error message
+            print("error")
+            messages.error(request, "Invalid username or password.")
+            return redirect('login')  # Redirect back to the login page
+    return render(request, 'registration/login.html')

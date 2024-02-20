@@ -41,4 +41,5 @@ urlpatterns = [
     path("form/", TemplateView.as_view(template_name="form.html"), name="form"),
     path("transactions/", TemplateView.as_view(template_name="view_transactions.html"), name="view_transactions"),
     path("transactions/create/", TemplateView.as_view(template_name="create_transaction.html"), name="create_transactions"),
+    path('login/', views.login_view, name='login'),
 ]
