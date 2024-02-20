@@ -20,6 +20,8 @@ def create_transaction(request):
         amount = float(request.POST.get("amount"))
         category_name = request.POST.get("type")
         is_spending = request.POST.get("transaction_type") == "on"
+        transaction_name = request.POST.get("name")
+        transaction_date = request.POST.get("date")
         
         # Access the user who sent the request
         username = request.user.username
@@ -52,13 +54,13 @@ def create_transaction(request):
         print("User:", username)
         transaction = Transactions(
             user=user,
-            week=timezone.now(),  # Assuming you want to record the current date and time
+            week=transaction_date,  # Assuming you want to record the current date and time
             amount=amount,
-            name="Transaction Name",  # Provide a name for the transaction as needed
+            name=transaction_name,  # Provide a name for the transaction as needed
             category=category  # Assuming category is a valid value
         )
         transaction.save()
-    return render(request, "create_transaction.html")
+    return redirect('view_transactions')
 
 def add(request):
     # Check if Student table exists
