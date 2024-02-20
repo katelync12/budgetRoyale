@@ -11,6 +11,7 @@ from .models import Transactions
 from django.utils import timezone
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 
 @login_required  # Requires the user to be logged in to access this view
@@ -65,6 +66,8 @@ def add(request):
         # Create the Student table if it doesn't exist
         with connection.schema_editor() as schema_editor:
             schema_editor.create_model(Transactions)
+            schema_editor.create_model(UserJoinCategory)
+            schema_editor.create_model(UserJoinGroup)
             print("poppy head")
 
     # Insert a new student named "Mark" with a GPA of 4.0
@@ -86,11 +89,13 @@ def view_transactions(request):
         current_user = request.user
         
         # Gets all transactions
+        username = request.user.username
+        user = User.objects.get(username=username)
         transactions = Transactions.objects.all()
         sorted = []
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
-            if (transaction.user.username == str(current_user)):
+            if (transaction.user.username == username):
                 sorted.append(transaction)
 
         context = {
