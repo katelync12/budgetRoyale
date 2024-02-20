@@ -8,16 +8,34 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Transactions
+from django.utils import timezone
 
 @login_required  # Requires the user to be logged in to access this view
 def create_transaction(request):
     if request.method == "POST":
         amount = float(request.POST.get("amount"))
-        category = request.POST.get("type")
+        category_name = request.POST.get("type")
         is_spending = request.POST.get("transaction_type") == "on"
         
         # Access the user who sent the request
-        user = request.user
+        username = request.user.username
+        user = User.objects.get(username=username)
+        category = None
+        try:
+            category = Category.objects.get(category_id=category_name)
+        except Category.DoesNotExist:
+            # Create a new category
+            category = Category(category_id=category_name)
+            category.save()
+
+        # Check if there's an existing relationship between user and category
+        if category:
+            try:
+                UserJoinCategory.objects.get(user=user, category=category)
+            except UserJoinCategory.DoesNotExist:
+                # Create a new relationship between user and category
+                user_category = UserJoinCategory(user=user, category=category)
+                user_category.save()
         
         # If it's a spending, make the amount negative
         if is_spending:
@@ -25,10 +43,17 @@ def create_transaction(request):
 
         # Print out the amount, category, spending/savings status, and the user
         print("Amount:", amount)
-        print("Category:", category)
+        print("Category:", category_name)
         print("Spending:", is_spending)
-        print("User:", user)
-
+        print("User:", username)
+        transaction = Transactions(
+            user=user,
+            week=timezone.now(),  # Assuming you want to record the current date and time
+            amount=amount,
+            name="Transaction Name",  # Provide a name for the transaction as needed
+            category=category  # Assuming category is a valid value
+        )
+        transaction.save()
     return render(request, "create_transaction.html")
 
 def add(request):
