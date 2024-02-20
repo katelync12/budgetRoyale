@@ -94,6 +94,7 @@ def view_transactions(request):
         transactions = Transactions.objects.all()
         sorted = []
         for transaction in transactions:
+            print(transaction.user_id)
             # Only gets the transactions of the currently logged in user
             if (transaction.user.username == username):
                 sorted.append(transaction)
