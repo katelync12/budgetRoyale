@@ -13,6 +13,12 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.models import User
 
+@login_required
+def create_transaction_page(request):
+    current_user = request.user
+    categories = UserJoinCategory.objects.filter(user=current_user)
+
+    return render(request, "create_transaction.html", {'categories': categories})
 
 @login_required  # Requires the user to be logged in to access this view
 def create_transaction(request):
@@ -61,6 +67,28 @@ def create_transaction(request):
         )
         transaction.save()
     return redirect('view_transactions')
+
+def add_category(request):
+    category_name = request.GET.get('name', '')
+    username = request.user.username
+    user = User.objects.get(username=username)
+    category = None
+    try:
+        category = Category.objects.get(category_id=category_name)
+    except Category.DoesNotExist:
+        # Create a new category
+        category = Category(category_id=category_name)
+        category.save()
+
+    # Check if there's an existing relationship between user and category
+    if category:
+        try:
+            UserJoinCategory.objects.get(user=user, category=category)
+        except UserJoinCategory.DoesNotExist:
+            # Create a new relationship between user and category
+            user_category = UserJoinCategory(user=user, category=category)
+            user_category.save()
+    return JsonResponse({'result': category_name})
 
 def add(request):
     # Check if Student table exists
