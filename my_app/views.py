@@ -88,7 +88,7 @@ def add_category(request):
             # Create a new relationship between user and category
             user_category = UserJoinCategory(user=user, category=category)
             user_category.save()
-    return JsonResponse({'result': category_name})
+    return JsonResponse({'category_id': category.category_id})
 
 def add(request):
     # Check if Student table exists
