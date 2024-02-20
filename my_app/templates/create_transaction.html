@@ -27,8 +27,8 @@
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
-                <label for="category">Add Category:</label>
-                <input type="text" id="category" name="category" required>
+                <label for="category1">Add Category:</label>
+                <input type="text" id="category1" name="category1">
                 <a
                 href="#"
                 id="add-btn"
@@ -86,7 +86,7 @@
     }
 
     function addCategory(button) {
-        var cName = document.getElementById("category").value;
+        var cName = document.getElementById("category1").value;
         fetch(`/add_category/?name=${cName}`)
             .then(function (response) {
                 return response.json();
