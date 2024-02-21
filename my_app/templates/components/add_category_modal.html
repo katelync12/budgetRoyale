@@ -55,28 +55,55 @@
                 alert("Please enter a category name."); // Notify the user
                 return; // Exit the function early if the category name is empty
             }
-
-            fetch(`/add_category/?name=${cName}`)
-                .then(function (response) {
+        
+            fetch(`/verify_unique_category/?name=${cName}`)
+                .then(function(response) {
                     return response.json();
                 })
-                .then(function (data) {
-                    console.log(data);
-
-                    // Get the select element for the transaction type dropdown
-                    var select = document.getElementById("type");
-
-                    // Create a new option element for the newly added category
-                    var option = document.createElement("option");
-                    option.value = data.category_id; // Assuming the server returns the category ID
-                    option.text = data.category_id; // Assuming the server returns the category ID as the text
-                    select.add(option); // Add the new option to the select element
-
-                    // Select the newly added category in the dropdown
-                    select.value = data.category_id; // Assuming the server returns the category ID
+                .then(function(data) {
+                    if (!data.unique) {
+                        // Category already exists, alert the user
+                        alert("Category already exists. Please choose a different name.");
+                        return;
+                    } else {
+                        // Category is unique, proceed to add it
+                        return fetch(`/add_category/?name=${cName}`);
+                    }
+                })
+                .then(function(response) {
+                    if (response) {
+                        return response.json();
+                    }
+                })
+                .then(function(data) {
+                    if (data) {
+                        console.log(data);
+        
+                        // Get the select element for the transaction type dropdown
+                        var select = document.getElementById("type");
+        
+                        // Check if the optgroup with label "Newly Added Categories" exists
+                        var optgroup = select.querySelector('optgroup[label="Newly Added Categories"]');
+                        if (!optgroup) {
+                            // Create a new optgroup element
+                            optgroup = document.createElement("optgroup");
+                            optgroup.label = "Newly Added Categories";
+                            select.appendChild(optgroup); // Add the new optgroup to the select element
+                        }
+        
+                        // Create a new option element for the newly added category
+                        var option = document.createElement("option");
+                        option.value = data.category_id; // Assuming the server returns the category ID
+                        option.text = data.category_id; // Assuming the server returns the category ID as the text
+        
+                        // Add the new option to the optgroup
+                        optgroup.appendChild(option);
+        
+                        // Select the newly added category in the dropdown
+                        select.value = data.category_id; // Assuming the server returns the category ID
+                        modal.style.display = "none"; // Close the modal
+                    }
                 });
-
-            modal.style.display = "none";
         }
     </script>
 {% endblock %}

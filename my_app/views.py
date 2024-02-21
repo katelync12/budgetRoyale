@@ -128,6 +128,23 @@ def create_transaction(request):
         transaction.save()
     return redirect('view_transactions')
 
+@login_required 
+def verify_unique_category(request):
+    category_name = request.GET.get('name', '')
+    username = request.user.username
+    user = User.objects.get(username=username)
+    category = None
+    try:
+        category = Category.objects.get(category_id=category_name)
+    except Category.DoesNotExist:
+        return JsonResponse({'unique': True})
+    try:
+        UserJoinCategory.objects.get(user=user, category=category)
+        return JsonResponse({'unique': False})
+    except UserJoinCategory.DoesNotExist:
+        return JsonResponse({'unique': True})
+    
+@login_required 
 def add_category(request):
     category_name = request.GET.get('name', '')
     username = request.user.username

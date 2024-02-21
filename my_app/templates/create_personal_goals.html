@@ -28,7 +28,7 @@
     <label for="name">Personal Goal Name:</label>
     <input type="text" id="name" name="name" required><br><br>
 
-    {% include 'components/toggle_component.html' with name='goal_type' label='Savings' %}
+    {% include 'components/toggle_component.html' with name='goal_type' %}
     {% include 'components/start_end_date.html' %}
     <button type="submit">Submit</button>
 </form>
