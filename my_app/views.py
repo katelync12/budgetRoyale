@@ -59,7 +59,6 @@ def add(request):
 
 def view_transactions(request):
     transactions = Transactions.objects.all()
-
     context = {
         'transactions': transactions
     }

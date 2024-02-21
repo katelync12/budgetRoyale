@@ -2,9 +2,6 @@
 
 
     {% block content %}
-    {% comment %} {% if user.is_authenticated %} {% endcomment %}
-
-    {% comment %} code below {% endcomment %}
     <p>transactions</p>
     <p><a href="{% url 'home' %}">home</a></p>
     <p><a href="{% url 'create_transactions' %}">create transaction</a></p>
@@ -16,17 +13,4 @@
     </ul>
     <a href="{% url 'home' %}">Home</a>
     <a href="{% url 'create_transactions' %}">Create Transaction</a>
-
-
-
-
-    {% comment %} code above {% endcomment %}
-
-    {% comment %} {% else %}
-    <p>You are not logged in</p>
-    <p><a href="{% url 'password_reset' %}">Password Reset</a></p>
-    <p><a href="{% url 'login' %}">Log In</a></p>
-    <p><a href="{% url 'signup' %}">Sign Up</a></p>
-
-    {% endif %} {% endcomment %}
     {% endblock %}

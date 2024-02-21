@@ -1,15 +1,85 @@
 <!DOCTYPE html>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+
+
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
-<link rel="stylesheet" href="../static/css/styles.css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block title %}base{% endblock %}
-
+<script>
+    $(document).ready(function() {
+        // Listen for when any dropdown is shown
+        $('.dropdown').on('show.bs.dropdown', function() {
+            // Add 'active' class to the .dropdown-toggle
+            $(this).find('.dropdown-toggle').addClass('active');
+        });
+    
+        // Listen for when any dropdown is hidden
+        $('.dropdown').on('hide.bs.dropdown', function() {
+            // Remove 'active' class from the .dropdown-toggle
+            $(this).find('.dropdown-toggle').removeClass('active');
+        });
+    });
+</script>
 
 {% if user.is_authenticated %}
 
+<nav class="navbar navbar-custom">
+    <div class="container-fluid">
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand custom-header">Budget Royale</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="myNavbar">
+        <ul class="nav navbar-nav custom-headers">
+            {% comment %} <li class="active"><a href="{% url 'home' %}">Home</a></li> {% endcomment %}
+            <li class="dropdown">
+            <a class="dropdown-toggle nav-headers" data-toggle="dropdown">Personal<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'transactions' %}" class="sub-headers">View Transactions</a></li>
+                <li><a href="{% url 'home' %}" class="sub-headers">Dashboard</a></li>
+                <li><a href="{% url 'view_personal_goals' %}" class="sub-headers">Personal Goals</a></li>
+            </ul>
+            </li>
+            <li class="dropdown">
+            <a class="dropdown-toggle nav-headers" data-toggle="dropdown">Group<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'home' %}" class="sub-headers">Leaderboard</a></li>
+                <li><a href="{% url 'home' %}" class="sub-headers">Group Goals</a></li>
+                <li><a href="{% url 'groups' %}" class="sub-headers">Group Settings</a></li>
+            </ul>
+            </li>
+            </li>
+            <li class="dropdown">
+            <a class="dropdown-toggle nav-headers" data-toggle="dropdown">Profile<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'home' %}" class="sub-headers">Settings</a></li>
+                <li><a href="{% url 'logout' %}" class="sub-headers">logout</a></li>
+            </ul>
+            </li>
+        </ul>
+        {% comment %} <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul> {% endcomment %}
+        </div>
+    </div>
+    </nav>
+    
+
+
+
+{% block title %}base{% endblock %}
 {% block content %}
 {% endblock %}
 {% else %}

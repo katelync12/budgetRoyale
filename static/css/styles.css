@@ -1,3 +1,4 @@
+
 .header {
     background-color: black;
     font-size: large;
@@ -80,3 +81,117 @@ p {
     }
   
   /* Ends styling for the order forms */
+  /* Start navbar styling */
+    
+/* .navbar-custom {
+  color: #FF0000;
+  background-color: #FF0000;
+} */
+/* bootstrap override */
+a.btn-primary:hover {
+  text-decoration: none;
+  color: white;
+}
+
+.navbar-nav li a:hover {
+    background-color: #bcbff5;
+}
+
+.icon-bar {
+  color: white !important;
+}
+
+.navbar-toggle .icon-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #cccccc;
+  border-radius: 1px;
+}
+
+blockquote {
+  font-family: Arial;
+  background-color: #F8EFBE;
+  border-left-color: #F4B514;
+}
+
+#contactme {
+  background-color: black;
+  color: white;
+  height: 180px;
+}
+
+#navbar {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+}
+
+.top-nav {
+  background-color: #671100;
+}
+
+.top-nav a {
+  color: white;
+}
+
+h1.headingStatement {
+  font-family: Monospace;
+  font-size: 2em;
+}
+.navbar-custom {
+  background-color: #5B5FC5;
+  border-radius: 0;
+}
+.custom-header {
+  color: white;
+}
+.custom-header:hover {
+  color: white;
+}
+
+.nav-headers {
+  color: white;
+}
+
+.navbar-nav:focus, 
+.navbar-nav .dropdown:hover .nav-headers {
+    background-color: #7477d7 !important; /* Force override */
+}
+
+.navbar-nav:focus,
+.navbar-nav .nav-headers:hover .nav-headers {
+    background-color: #7477d7 !important; /* Force override */
+    
+}
+.nav-headers:hover {
+  background-color: #7477d7 !important;
+  color: white !important; /* Force override */
+}
+.nav-headers.active {
+  color: white !important; 
+  background-color: #7477d7 !important; /* Override with desired color */
+}
+.sub-headers {
+  background-color: white;
+}
+@media screen and (max-width: 767px) {
+  .sub-headers {
+    background-color: #6367CD !important;
+    color: white !important;
+  }
+  .sub-headers:hover {
+    background-color: #7477d7 !important;
+  }
+}
+a.collapse {
+  color: white !important;
+}
+
+a.nav-headers.active {
+  color: white !important; 
+  background-color: white;
+}
+
+  /* End navbar styling */
