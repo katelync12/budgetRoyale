@@ -21,9 +21,17 @@ def home_view(request):
     return render(request, 'home.html')
 
 def initialize_database_for_user(user):
-    category = Category(category_id="Food")
-    user_category = UserJoinCategory(user=user, category=category)
-    user_category.save()
+    categories = ["Groceries", "Transportation", "Entertainment", "Shopping", "Housing", "Utilities", "Insurance", "Dining"]
+    for category_name in categories:
+        category = None
+        try:
+            category = Category.objects.get(category_id=category_name)
+        except Category.DoesNotExist:
+            # Create a new category
+            category = Category(category_id=category_name)
+            category.save()
+        user_category = UserJoinCategory(user=user, category=category)
+        user_category.save()
 
 def signup(request):
     print("signup")

@@ -30,7 +30,8 @@ urlpatterns = [
     # path('index/', views.index, name="homepage1"),
 
     # path("", include("my_app.urls")),
-    path('create_transaction/', views.create_transaction, name='create_transaction'),
+    path('create_transaction/', views.create_transaction, name='create_transaction_action'),
+    path('create_personal_goal/', views.create_personal_goals, name='create_personal_goal_action'),
     path('transactions/', views.view_transactions, name='transactions'),
     path('admin/', admin.site.urls),
     path('create_data/', views.add, name='create_data'),
@@ -40,6 +41,7 @@ urlpatterns = [
     # path("", TemplateView.as_view(template_name="registration/login.html"), name="login"),
     path("form/", TemplateView.as_view(template_name="form.html"), name="form"),
     path("personal-goals/", TemplateView.as_view(template_name="view_personal_goals.html"), name="view_personal_goals"),
+    path("personal-goals/create/", views.create_personal_goal_page, name="create_personal_goals"),
     path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
     path("leaderboard/", TemplateView.as_view(template_name="leaderboard.html"), name="leaderboard"),
     path("groups/settings", TemplateView.as_view(template_name="group_settings.html"), name="group_settings"),
@@ -48,5 +50,6 @@ urlpatterns = [
     path("transactions/", TemplateView.as_view(template_name="view_transactions.html"), name="view_transactions"),
     path("transactions/create/", views.create_transaction_page, name="create_transactions"),
     path('login/', views.login_view, name='login'),
-    path('add_category/', views.add_category, name='add_category')
+    path('add_category/', views.add_category, name='add_category'),
+    path('verify_unique_category/', views.verify_unique_category, name='verify_unique_category')
 ]
