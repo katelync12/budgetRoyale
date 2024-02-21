@@ -207,7 +207,7 @@ a.nav-headers.active {
 
 .styled-table {
   border-collapse: collapse;
-  width: 80%;
+  width: 90%;
   margin: auto;
 }
 
@@ -218,9 +218,16 @@ a.nav-headers.active {
   border-bottom: 1px solid #ddd;
 }
 
-.styled-table th {
-  background-color: #f2f2f2;
+/* Create alternate row colors */
+.styled-table tr:nth-child(even) {
+  background-color: #fff;
+}
+.styled-table tr:nth-child(odd) {
+  background-color: #f8f8f8;
 }
 
-
+.table-container .styled-table tr:first-child {
+  background-color: #e9e8ea;
+  font-weight: 800;
+}
 /* End transactions table styling */
