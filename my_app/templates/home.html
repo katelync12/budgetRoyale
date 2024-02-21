@@ -1,8 +1,6 @@
 {% extends "base.html" %} 
-{% block title %}Home{% endblock %} 
+
 {% block content %}
-
-
 
 <p class="header">Hi {{ user.username }}!</p>
 <p><a href="{% url 'create_data' %}">password change</a></p>
