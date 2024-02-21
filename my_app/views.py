@@ -8,16 +8,46 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Transactions
+from django.utils import timezone
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.contrib.auth.models import User
+
+@login_required
+def create_transaction_page(request):
+    current_user = request.user
+    categories = UserJoinCategory.objects.filter(user=current_user)
+
+    return render(request, "create_transaction.html", {'categories': categories})
 
 @login_required  # Requires the user to be logged in to access this view
 def create_transaction(request):
     if request.method == "POST":
         amount = float(request.POST.get("amount"))
-        category = request.POST.get("type")
+        category_name = request.POST.get("type")
         is_spending = request.POST.get("transaction_type") == "on"
+        transaction_name = request.POST.get("name")
+        transaction_date = request.POST.get("date")
         
         # Access the user who sent the request
-        user = request.user
+        username = request.user.username
+        user = User.objects.get(username=username)
+        category = None
+        try:
+            category = Category.objects.get(category_id=category_name)
+        except Category.DoesNotExist:
+            # Create a new category
+            category = Category(category_id=category_name)
+            category.save()
+
+        # Check if there's an existing relationship between user and category
+        if category:
+            try:
+                UserJoinCategory.objects.get(user=user, category=category)
+            except UserJoinCategory.DoesNotExist:
+                # Create a new relationship between user and category
+                user_category = UserJoinCategory(user=user, category=category)
+                user_category.save()
         
         # If it's a spending, make the amount negative
         if is_spending:
@@ -25,24 +55,48 @@ def create_transaction(request):
 
         # Print out the amount, category, spending/savings status, and the user
         print("Amount:", amount)
-        print("Category:", category)
+        print("Category:", category_name)
         print("Spending:", is_spending)
-        print("User:", user)
+        print("User:", username)
+        transaction = Transactions(
+            user=user,
+            week=transaction_date,  # Assuming you want to record the current date and time
+            amount=amount,
+            name=transaction_name,  # Provide a name for the transaction as needed
+            category=category  # Assuming category is a valid value
+        )
+        transaction.save()
+    return redirect('view_transactions')
 
-    return render(request, "create_transaction.html")
+def add_category(request):
+    category_name = request.GET.get('name', '')
+    username = request.user.username
+    user = User.objects.get(username=username)
+    category = None
+    try:
+        category = Category.objects.get(category_id=category_name)
+    except Category.DoesNotExist:
+        # Create a new category
+        category = Category(category_id=category_name)
+        category.save()
+
+    # Check if there's an existing relationship between user and category
+    if category:
+        try:
+            UserJoinCategory.objects.get(user=user, category=category)
+        except UserJoinCategory.DoesNotExist:
+            # Create a new relationship between user and category
+            user_category = UserJoinCategory(user=user, category=category)
+            user_category.save()
+    return JsonResponse({'category_id': category.category_id})
 
 def add(request):
     # Check if Student table exists
-    if not Student._meta.db_table in connection.introspection.table_names():
+    if not PersonalGoal._meta.db_table in connection.introspection.table_names():
         # Create the Student table if it doesn't exist
         with connection.schema_editor() as schema_editor:
-            schema_editor.create_model(Student)
-            schema_editor.create_model(User)
-            schema_editor.create_model(Group)
-            schema_editor.create_model(UserJoinGroup)
-            schema_editor.create_model(Category)
-            schema_editor.create_model(Transactions)
-            schema_editor.create_model(UserJoinCategory)
+            schema_editor.create_model(PersonalGoal)
+            schema_editor.create_model(GroupGoal)
             print("poppy head")
 
     # Insert a new student named "Mark" with a GPA of 4.0
@@ -57,10 +111,46 @@ def add(request):
     result = 1
     return JsonResponse({'result': result})
 
+@login_required
 def view_transactions(request):
-    transactions = Transactions.objects.all()
-    context = {
-        'transactions': transactions
-    }
-    # Render the template with the transactions data
-    return render(request, 'view_transactions.html', context)
+    # Ensure user is authenticated before accessing request.user
+    if request.user.is_authenticated:
+        current_user = request.user
+        
+        # Gets all transactions
+        username = request.user.username
+        user = User.objects.get(username=username)
+        transactions = Transactions.objects.all()
+        sorted = []
+        for transaction in transactions:
+            print(transaction.user_id)
+            # Only gets the transactions of the currently logged in user
+            if (transaction.user.username == username):
+                sorted.append(transaction)
+
+        context = {
+            'transactions': sorted,
+            'current_user': current_user,
+        }
+        # Render the template with the transactions data
+        return render(request, 'view_transactions.html', context)
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+    
+# Creates an error if the login info is wrong
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            # User credentials are correct, log in the user
+            login(request, user)
+            return redirect('home')  # Redirect to dashboard or any other page
+        else:
+            # User credentials are incorrect, display an error message
+            print("error")
+            messages.error(request, "Invalid username or password.")
+            return redirect('login')  # Redirect back to the login page
+    return render(request, 'registration/login.html')

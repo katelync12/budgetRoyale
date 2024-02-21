@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<link rel="stylesheet" href="../static/css/switch.css">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/switch.css' %}">
+<link rel="stylesheet" href="{% static 'css/modal.css' %}">
 {% comment %} {% if user.is_authenticated %} {% endcomment %}
 
 {% comment %} code below {% endcomment %}
@@ -12,10 +14,36 @@
   
     <label for="type">Type:</label>
     <select id="type" name="type" required>
-        <option value="Food">Food</option>
-        <option value="Shopping">Shopping</option>
-        <option value="Other">Other</option>
-    </select><br><br>
+        {% for category in categories %}
+            <option value="{{ category.category_id }}">{{ category.category_id }}</option>
+        {% endfor %}
+    </select>
+
+    <button id="myBtn"  type="button">Create new category</button><br><br>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+                <label for="category1">Add Category:</label>
+                <input type="text" id="category1" name="category1">
+                <a
+                href="#"
+                id="add-btn"
+                class="button addBtn"
+                onclick="addCategory(this)"
+                >Create</a>
+        </div>
+
+    </div>
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" required><br><br>
+
+    <label for="name">Transaction Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
 
     <label class="switch">
         <span class="spending-label">Spendings</span>
@@ -23,13 +51,65 @@
         <span class="slider round"></span>
         <span class="savings-label">Savings</span>
     </label><br><br>
-
   
     <button type="submit">Submit</button>
 </form>
   
 <p><a href="{% url 'home' %}">home</a></p>
 <p><a href="{% url 'view_transactions' %}"> back</a></p>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function addCategory(button) {
+        var cName = document.getElementById("category1").value;
+        fetch(`/add_category/?name=${cName}`)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                console.log(data);
+
+                // Get the select element for the transaction type dropdown
+                var select = document.getElementById("type");
+
+                // Create a new option element for the newly added category
+                var option = document.createElement("option");
+                option.value = data.category_id; // Assuming the server returns the category ID
+                option.text = data.category_id; // Assuming the server returns the category ID as the text
+                select.add(option); // Add the new option to the select element
+
+                // Select the newly added category in the dropdown
+                select.value = data.category_id; // Assuming the server returns the category ID
+            });
+
+        modal.style.display = "none";
+    }
+</script>
 {% comment %} code above {% endcomment %}
 
 {% comment %} {% else %}

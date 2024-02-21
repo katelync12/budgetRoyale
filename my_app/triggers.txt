@@ -1,0 +1,25 @@
+This running document will keep track of all triggers
+
+my_app_transaction:
+CREATE OR REPLACE FUNCTION increment_personal()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.amount > 0 THEN
+        UPDATE my_app_personalgoal
+        SET sum_transaction = sum_transaction + NEW.amount
+        WHERE user_id = NEW.user_id
+        AND is_spending = FALSE;
+    ELSE
+        UPDATE my_app_personalgoal
+        SET sum_transaction = sum_transaction + NEW.amount
+        WHERE user_id = NEW.user_id
+        AND is_spending = TRUE;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER increment_personal_trigger
+AFTER INSERT ON my_app_transactions
+FOR EACH ROW
+EXECUTE FUNCTION increment_personal();

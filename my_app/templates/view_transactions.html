@@ -8,9 +8,10 @@
     <h2>Transactions</h2>
     <ul>
         {% for transaction in transactions %}
-            <li>Week: {{ transaction.week }}, Amount: {{ transaction.amount }}, Name: {{ transaction.name }}, Category: {{ transaction.category }}</li>
+            <li>Week: {{ transaction.week }}, Amount: {{ transaction.amount }}, Name: {{ transaction.name }}, Category: {{ transaction.category.category_id }}</li>
         {% endfor %}
     </ul>
     <a href="{% url 'home' %}">Home</a>
     <a href="{% url 'create_transactions' %}">Create Transaction</a>
+
     {% endblock %}
