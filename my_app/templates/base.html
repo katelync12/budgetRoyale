@@ -53,16 +53,16 @@
             <li class="dropdown">
             <a class="dropdown-toggle nav-headers" data-toggle="dropdown">Group<span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li><a href="{% url 'home' %}" class="sub-headers">Leaderboard</a></li>
-                <li><a href="{% url 'home' %}" class="sub-headers">Group Goals</a></li>
-                <li><a href="{% url 'groups' %}" class="sub-headers">Group Settings</a></li>
+                <li><a href="{% url 'leaderboard' %}" class="sub-headers">Leaderboard</a></li>
+                <li><a href="{% url 'group_goals' %}" class="sub-headers">Group Goals</a></li>
+                <li><a href="{% url 'group_settings' %}" class="sub-headers">Group Settings</a></li>
             </ul>
             </li>
             </li>
             <li class="dropdown">
             <a class="dropdown-toggle nav-headers" data-toggle="dropdown">Profile<span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li><a href="{% url 'home' %}" class="sub-headers">Settings</a></li>
+                <li><a href="{% url 'profile_settings' %}" class="sub-headers">Settings</a></li>
                 <li><a href="{% url 'logout' %}" class="sub-headers">logout</a></li>
             </ul>
             </li>
@@ -73,8 +73,6 @@
     
 
 
-
-{% block title %}base{% endblock %}
 {% block content %}
 {% endblock %}
 {% else %}
