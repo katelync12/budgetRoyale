@@ -195,3 +195,32 @@ a.nav-headers.active {
 }
 
   /* End navbar styling */
+
+/* Start transactions table styling */
+
+.table-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.styled-table {
+  border-collapse: collapse;
+  width: 80%;
+  margin: auto;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.styled-table th {
+  background-color: #f2f2f2;
+}
+
+
+/* End transactions table styling */
