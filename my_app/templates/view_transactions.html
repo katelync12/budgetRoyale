@@ -6,10 +6,25 @@
     <p><a href="{% url 'home' %}">home</a></p>
     <p><a href="{% url 'create_transactions' %}">create transaction</a></p>
     <h2>Transactions</h2>
+    <div class="table-container">
+        <table class="styled-table">
+            <tr>
+                <th>Week</th>
+                <th>Transaction</th>
+                <th>Amount</th>
+                <th>Category</th>
+            </tr>
+            {% for transaction in transactions %}
+                <tr>
+                    <th>{{ transaction.week }}</th>
+                    <th>{{ transaction.name }}</th>
+                    <th>{{ transaction.amount }}</th>
+                    <th>{{ transaction.category.category_id }}</th>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
     <ul>
-        {% for transaction in transactions %}
-            <li>Week: {{ transaction.week }}, Amount: {{ transaction.amount }}, Name: {{ transaction.name }}, Category: {{ transaction.category.category_id }}</li>
-        {% endfor %}
     </ul>
     <a href="{% url 'home' %}">Home</a>
     <a href="{% url 'create_transactions' %}">Create Transaction</a>
