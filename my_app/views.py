@@ -97,7 +97,6 @@ def add(request):
         with connection.schema_editor() as schema_editor:
             schema_editor.create_model(PersonalGoal)
             schema_editor.create_model(GroupGoal)
-            print("poppy head")
 
     # Insert a new student named "Mark" with a GPA of 4.0
     mark = Student(grade="Mark", gpa=4.0)
@@ -123,7 +122,6 @@ def view_transactions(request):
         transactions = Transactions.objects.all()
         sorted = []
         for transaction in transactions:
-            print(transaction.user_id)
             # Only gets the transactions of the currently logged in user
             if (transaction.user.username == username):
                 sorted.append(transaction)
@@ -150,7 +148,6 @@ def login_view(request):
             return redirect('home')  # Redirect to dashboard or any other page
         else:
             # User credentials are incorrect, display an error message
-            print("error")
             messages.error(request, "Invalid username or password.")
             return redirect('login')  # Redirect back to the login page
     return render(request, 'registration/login.html')
