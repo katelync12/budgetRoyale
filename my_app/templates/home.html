@@ -9,7 +9,7 @@
 <p><a href="{% url 'view_transactions' %}">transactions</a></p>
 <p><a href="{% url 'create_data' %}">create_data</a></p>
 <p><a href="{% url 'form' %}">form</a></p>
-<p><a href="{% url 'create_data' %}">personal goals</a></p>
+<p><a href="{% url 'view_personal_goals' %}">personal goals</a></p>
 <p><a href="{% url 'groups' %}">Groups</a></p>
 <form action="{% url 'logout' %}" method="post">
   {% csrf_token %}

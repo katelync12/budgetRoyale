@@ -1,0 +1,26 @@
+{% block toggle_component %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/switch.css' %}">
+
+<label class="switch">
+    <input type="checkbox" name="{{ name }}">
+    <span class="slider round"></span>
+    <span class="savings-label">{{ label }}</span>
+</label><br><br>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var switchInput = document.querySelector('.switch input');
+        var spendingLabel = document.querySelector('.savings-label');
+        
+        switchInput.addEventListener('change', function () {
+            if (this.checked) {
+                spendingLabel.textContent = 'Spendings'; // Change text to 'Savings' if checked
+            } else {
+                spendingLabel.textContent = 'Savings'; // Change text to 'Spendings' if unchecked
+            }
+        });
+    });
+    
+</script>
+{% endblock %}

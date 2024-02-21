@@ -1,0 +1,14 @@
+input[type="text"] {
+    max-width: 500px;
+    margin-left: 15px;
+    margin-right: 15px;
+    box-sizing: border-box;
+    width: 80%;
+  }
+select {
+    max-width: 500px;
+    margin-left: 15px;
+    margin-right: 15px;
+    box-sizing: border-box;
+    width: 80%;
+  }
