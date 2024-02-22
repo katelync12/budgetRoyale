@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/input_field.css' %}">
+{% comment %} {% if user.is_authenticated %} {% endcomment %}
+
+{% comment %} code below {% endcomment %}
+<form method="POST" action="{% url 'create_personal_goal_action' %}">
+    {% csrf_token %}
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount" min="0" step="0.01" pattern="^\d+(\.\d{1,2})?$" required><br><br>
+  
+    <label for="type">Type:</label>
+    <select id="type" name="type">
+        <option value="">Any Category</option> <!-- Option for Any Category -->
+        <optgroup label="Category Options">
+        {% for category in categories %}
+            <option value="{{ category.category_id }}">{{ category.category_id }}</option>
+        {% endfor %}
+    </select><br><br>
+    {% block add_category_modal %}
+    {% include "components/add_category_modal.html" %}
+    {% endblock %}
+
+  
+
+    <label for="name">Personal Goal Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    {% include 'components/toggle_component.html' with name='goal_type' %}
+    {% include 'components/start_end_date.html' %}
+    <button type="submit">Submit</button>
+</form>
+  
+<p><a href="{% url 'home' %}">home</a></p>
+<p><a href="{% url 'view_transactions' %}"> back</a></p>
+
+{% comment %} code above {% endcomment %}
+
+{% comment %} {% else %}
+<p>You are not logged in</p>
+<p><a href="{% url 'password_reset' %}">Password Reset</a></p>
+<p><a href="{% url 'login' %}">Log In</a></p>
+<p><a href="{% url 'signup' %}">Sign Up</a></p>
+{% endif %} {% endcomment %}
+
+{% endblock %}

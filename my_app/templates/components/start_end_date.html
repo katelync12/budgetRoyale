@@ -1,0 +1,31 @@
+{% block start_end_date %}
+<label for="start_date"> Start Date:</label>
+<input type="date" id="start_date" name="start_date" required><br><br>
+<label for="end_date"> End Date:</label>
+<input type="date" id="end_date" name="end_date" required><br><br>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var startDateInput = document.getElementById('start_date');
+    var endDateInput = document.getElementById('end_date');
+
+    startDateInput.addEventListener('change', function () {
+        validateDates();
+    });
+
+    endDateInput.addEventListener('change', function () {
+        validateDates();
+    });
+
+    function validateDates() {
+        var startDate = new Date(startDateInput.value);
+        var endDate = new Date(endDateInput.value);
+
+        if (endDate <= startDate) {
+            alert('End date must be after start date');
+            endDateInput.value = ''; // Clear the end date field
+            endDateInput.focus(); // Focus on the end date field
+        }
+    }
+});
+</script>
+{% endblock %}

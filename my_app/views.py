@@ -20,6 +20,66 @@ def create_transaction_page(request):
 
     return render(request, "create_transaction.html", {'categories': categories})
 
+@login_required
+def create_personal_goal_page(request):
+    current_user = request.user
+    categories = UserJoinCategory.objects.filter(user=current_user)
+
+    return render(request, "create_personal_goals.html", {'categories': categories})
+
+@login_required  # Requires the user to be logged in to access this view
+def create_personal_goals(request):
+    print("create_personal_goals ")
+    if request.method == "POST":
+        print("create_personal_goals POST")
+        amount = float(request.POST.get("amount"))
+        category_name = request.POST.get("type")
+        is_spending = request.POST.get("goal_type") == "off"
+        goal_name = request.POST.get("name")
+        goal_start_date = request.POST.get("start_date")
+        goal_end_date = request.POST.get("end_date")
+        # Access the user who sent the request
+        username = request.user.username
+        user = User.objects.get(username=username)
+        category = None
+        if category_name == "":
+            category = None
+        else:
+            try:
+                category = Category.objects.get(category_id=category_name)
+            except Category.DoesNotExist:
+                # Create a new category
+                category = Category(category_id=category_name)
+                category.save()
+        # Check if there's an existing relationship between user and category
+        if category:
+            try:
+                UserJoinCategory.objects.get(user=user, category=category)
+            except UserJoinCategory.DoesNotExist:
+                # Create a new relationship between user and category
+                user_category = UserJoinCategory(user=user, category=category)
+                user_category.save()
+        
+        # If it's a spending, make the amount negative
+
+        # Print out the amount, category, spending/savings status, and the user
+        print("Amount:", amount)
+        print("Category:", category_name)
+        print("Spending:", is_spending)
+        print("User:", username)
+        personal_goal = PersonalGoal(
+            user=user,
+            goal_amount=amount,
+            goal_name=goal_name,  # Provide a name for the transaction as needed
+            category=category,  # Assuming category is a valid value
+            sum_transaction = 0,
+            is_spending = is_spending,
+            start_date = goal_start_date,
+            end_date = goal_end_date
+        )
+        personal_goal.save()
+    return redirect('view_personal_goals')
+
 @login_required  # Requires the user to be logged in to access this view
 def create_transaction(request):
     if request.method == "POST":
@@ -68,7 +128,8 @@ def create_transaction(request):
         transaction.save()
     return redirect('view_transactions')
 
-def add_category(request):
+@login_required 
+def verify_unique_category(request):
     category_name = request.GET.get('name', '')
     username = request.user.username
     user = User.objects.get(username=username)
@@ -76,9 +137,28 @@ def add_category(request):
     try:
         category = Category.objects.get(category_id=category_name)
     except Category.DoesNotExist:
-        # Create a new category
-        category = Category(category_id=category_name)
-        category.save()
+        return JsonResponse({'unique': True})
+    try:
+        UserJoinCategory.objects.get(user=user, category=category)
+        return JsonResponse({'unique': False})
+    except UserJoinCategory.DoesNotExist:
+        return JsonResponse({'unique': True})
+    
+@login_required 
+def add_category(request):
+    category_name = request.GET.get('name', '')
+    username = request.user.username
+    user = User.objects.get(username=username)
+    category = None
+    if category_name == "":
+        category = None
+    else:
+        try:
+            category = Category.objects.get(category_id=category_name)
+        except Category.DoesNotExist:
+            # Create a new category
+            category = Category(category_id=category_name)
+            category.save()
 
     # Check if there's an existing relationship between user and category
     if category:
