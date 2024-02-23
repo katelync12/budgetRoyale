@@ -51,7 +51,6 @@ urlpatterns = [
     path("transactions/", TemplateView.as_view(template_name="view_transactions.html"), name="view_transactions"),
     path("transactions/create/", views.create_transaction_page, name="create_transactions"),
     path('login/', views.login_view, name='login'),
-    path('login/', views.logout_view, name='logout'),
     path('add_category/', views.add_category, name='add_category'),
     path('verify_unique_category/', views.verify_unique_category, name='verify_unique_category')
 ]
