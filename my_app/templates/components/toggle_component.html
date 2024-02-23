@@ -1,29 +1,42 @@
 {% block toggle_component %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/switch.css' %}">
+<link rel="stylesheet">
 
-<label class="switch">
-    <span class="savings-label">Savings</span> <br>
-    <span class="slider-container">
-      <input type="checkbox" name="{{ name }}">
-      <span class="slider round"></span>
-    </span>
-  </label>
+<div class="button-group">
+    <button class="spending-button active" onclick="selectOption('spending')">Spending</button>
+    <button class="savings-button" onclick="selectOption('savings')">Savings</button>
+</div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var switchInput = document.querySelector('.switch input');
-        var spendingLabel = document.querySelector('.savings-label');
-        
-        switchInput.addEventListener('change', function () {
-            if (this.checked) {
-                spendingLabel.textContent = 'Spendings'; // Change text to 'Savings' if checked
-            } else {
-                spendingLabel.textContent = 'Savings'; // Change text to 'Spendings' if unchecked
-            }
-            //
+<style>
+    .button-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .button-group button {
+        padding: 10px 20px;
+        margin: 2%;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background-color: #b9c3f1;
+        color: #fff;
+    }
+
+    .button-group button.active {
+        background-color: #5B5FC5;
+    }
+</style>
+
+<script>
+    function selectOption(option) {
+        var buttons = document.querySelectorAll('.button-group button');
+        buttons.forEach(function(button) {
+            button.classList.remove('active');
         });
-    });
-    
+        document.querySelector('.' + option + '-button').classList.add('active');
+    }
 </script>
 {% endblock %}

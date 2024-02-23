@@ -13,6 +13,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.models import User
 
+
 @login_required
 def create_transaction_page(request):
     current_user = request.user
