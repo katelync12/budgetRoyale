@@ -12,6 +12,13 @@ from django.utils import timezone
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('registration/login.html')
 
 
 @login_required
