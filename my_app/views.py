@@ -232,3 +232,11 @@ def login_view(request):
             messages.error(request, "Invalid username or password.")
             return redirect('login')  # Redirect back to the login page
     return render(request, 'registration/login.html')
+
+def delete_transaction(request, transaction_id):
+    if request.method == 'POST':
+        transaction = Transactions.objects.get(pk=transaction_id)
+        transaction.delete()
+        return JsonResponse({'message': 'Transaction deleted successfully.'})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)

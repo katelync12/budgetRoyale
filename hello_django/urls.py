@@ -32,6 +32,7 @@ urlpatterns = [
     # path("", include("my_app.urls")),
     path('create_transaction/', views.create_transaction, name='create_transaction_action'),
     path('create_personal_goal/', views.create_personal_goals, name='create_personal_goal_action'),
+    path('delete_transaction/<int:transaction_id>/', views.delete_transaction, name='delete_transaction'),
     path('transactions/', views.view_transactions, name='transactions'),
     path('admin/', admin.site.urls),
     path('create_data/', views.add, name='create_data'),
