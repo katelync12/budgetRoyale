@@ -9,10 +9,13 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Transactions
 from django.utils import timezone
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 
+# def logout_view(request):
+#     logout(request)
+#     return redirect('registration/login.html')
 
 @login_required
 def create_transaction_page(request):
