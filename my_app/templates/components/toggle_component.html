@@ -1,42 +1,31 @@
-{% block toggle_component %}
+{% block radio_component %}
 {% load static %}
-<link rel="stylesheet">
-
-<div class="button-group">
-    <button class="spending-button active" onclick="selectOption('spending')">Spending</button>
-    <button class="savings-button" onclick="selectOption('savings')">Savings</button>
-</div>
-
-<style>
-    .button-group {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .button-group button {
-        padding: 10px 20px;
-        margin: 2%;
-        font-size: 16px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        background-color: #b9c3f1;
-        color: #fff;
-    }
-
-    .button-group button.active {
-        background-color: #5B5FC5;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/switch.css' %}">
+<label class="radio">
+    <span class="savings-label">
+        <label>
+            <input type="radio" name="{{ name }}" value="savings" checked>
+            Savings
+        </label>
+        <label>
+            <input type="radio" name="{{ name }}" value="spendings">
+            Spendings
+        </label>
+    </span>
+</label>
 
 <script>
-    function selectOption(option) {
-        var buttons = document.querySelectorAll('.button-group button');
-        buttons.forEach(function(button) {
-            button.classList.remove('active');
+    document.addEventListener('DOMContentLoaded', function () {
+        var radioInputs = document.querySelectorAll('input[name="{{ name }}"]');
+        
+        radioInputs.forEach(function(input) {
+            input.addEventListener('change', function() {
+                var selectedValue = this.value;
+                // Now, you can send the selectedValue to the backend as needed
+                console.log(selectedValue); // Just for demonstration
+                // Add AJAX or other backend communication code here
+            });
         });
-        document.querySelector('.' + option + '-button').classList.add('active');
-    }
+    });
 </script>
 {% endblock %}
