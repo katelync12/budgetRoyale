@@ -8,8 +8,11 @@ class Student(models.Model):
     gpa = models.FloatField()
 
 class Group(models.Model):
-    groupID = models.AutoField(primary_key=True)
-    groupgoal_id = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    
+    #groupID = models.AutoField(primary_key=True)
+    #group_goal = models.ForeignKey(GroupGoal, on_delete=models.SET_NULL, null=True, blank=True)
+    
 
 class UserJoinGroup(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

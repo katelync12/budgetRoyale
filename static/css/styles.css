@@ -21,6 +21,10 @@ p {
     max-width: 100%;
 }
   
+.set-font {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
   /* Starts styling the order forms */
   
   
