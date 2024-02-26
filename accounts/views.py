@@ -56,23 +56,3 @@ def signup(request):
         return render(request, 'registration/signup.html', {'form': form})
     else:
         return render(request, 'home.html')
-
-
-# if request.method == 'POST':
-#     form = SignUpForm(request.POST)
-#     if form.is_valid():
-#         new_user = form.save()
-#         initialize_database_for_user(new_user)
-#         username = form.cleaned_data.get('username')
-#         password = form.cleaned_data.get('password1')
-#         user = authenticate(username=username, password=password)
-#         login(request, user)
-#         print("success")
-#         return redirect('/')
-#     else:
-#         # Form validation failed
-#         errors = dict(form.errors.items())
-#         return JsonResponse({'success': False, 'errors': errors})
-# else:
-#     form = SignUpForm()
-# return render(request, 'registration/signup.html', {'form': form})
