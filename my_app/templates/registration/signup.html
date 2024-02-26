@@ -27,4 +27,37 @@
 {% endblock %}
 {% block button_label %}Sign Up{% endblock %}
 
-{% block extra_buttons %}{% endblock %}
+{% block extra_buttons %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      var form = document.querySelector('form');
+
+      form.addEventListener('submit', function (event) {
+          event.preventDefault(); // Prevent default form submission
+
+          var formData = new FormData(form);
+
+          fetch(form.action, {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  console.log("script success")
+                  window.location.href = "{% url 'home' %}";
+              } else {
+                  // Display error messages
+                  var errorMessages = Object.values(data.errors).flat();
+                  alert(errorMessages.join('\n'));
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+          });
+      });
+  });
+</script>
+
+{% endblock %}
