@@ -1,42 +1,24 @@
-{% block toggle_component %}
+{% block radio_component %}
 {% load static %}
-<link rel="stylesheet">
-
-<div class="button-group">
-    <button class="spending-button active" onclick="selectOption('spending')">Spending</button>
-    <button class="savings-button" onclick="selectOption('savings')">Savings</button>
-</div>
-
+<link rel="stylesheet" href="{% static 'css/switch.css' %}">
 <style>
-    .button-group {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .button-group button {
-        padding: 10px 20px;
-        margin: 2%;
-        font-size: 16px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        background-color: #b9c3f1;
-        color: #fff;
-    }
-
-    .button-group button.active {
-        background-color: #5B5FC5;
+    .radio label {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        display: inline-block; /* Ensures each label is on its line */
+        margin-right: 10%; /* Adjust the margin between labels */
     }
 </style>
-
-<script>
-    function selectOption(option) {
-        var buttons = document.querySelectorAll('.button-group button');
-        buttons.forEach(function(button) {
-            button.classList.remove('active');
-        });
-        document.querySelector('.' + option + '-button').classList.add('active');
-    }
-</script>
+<label class="radio">
+    <span class="savings-label">
+        <label>
+            <input type="radio" name="{{ name }}" value="off" id="radio" checked>
+            Savings
+        </label>
+     
+        <label>
+            <input type="radio" name="{{ name }}" id="radio" value="on">
+            Spendings
+        </label>
+    </span>
+</label>
 {% endblock %}

@@ -39,7 +39,7 @@ def create_personal_goals(request):
         print("create_personal_goals POST")
         amount = float(request.POST.get("amount"))
         category_name = request.POST.get("type")
-        is_spending = request.POST.get("goal_type") == "off"
+        is_spending = request.POST.get("goal_type") == "on"
         goal_name = request.POST.get("name")
         goal_start_date = request.POST.get("start_date")
         goal_end_date = request.POST.get("end_date")
