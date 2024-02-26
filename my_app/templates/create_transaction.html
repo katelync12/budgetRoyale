@@ -2,16 +2,25 @@
 
 {% block content %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/input_field.css' %}">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<div class="button-container">
+    <button onclick="window.location.href='{% url 'home' %}'">Home</button>
+    <button onclick="window.location.href='{% url 'view_transactions' %}'">Back</button>
+</div>
 <div style="margin: 0 auto;
+<<<<<<< Updated upstream
 max-width: fit-content;
+=======
+width: fit-content;
+>>>>>>> Stashed changes
 height: fit-content;
-padding: 20px;
+padding: 30px 30px 20px 30px;
 background-color: #ffffff;
 border-radius: 8px;
 box-shadow: 0px 5px 10px #5B5FC5, 5px 0px 10px #5B5FC5;
 margin-top: 50px;
 text-align: center;
+overflow: visible;
 
 justify-content: space-around;">
 
@@ -19,6 +28,7 @@ justify-content: space-around;">
 
 <form method="POST" action="{% url 'create_transaction_action' %}">
     {% csrf_token %}
+<<<<<<< Updated upstream
     <div> <!-- Add inline styles for each input group -->
         <!--<label for="name" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Goal Name:</label> -->
 
@@ -26,18 +36,23 @@ justify-content: space-around;">
 
         <input type="text" placeholder = 'Transaction Name' id="name" name="name" required style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif"><br><br>
 
+=======
+    <div> 
+        <input type="text" placeholder = 'Transaction Name' id="name" name="name" required style="width: 90%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif"><br><br>
+>>>>>>> Stashed changes
     </div>
-    <!----<label for="amount">Amount:</label>
-    <input type="number" id="amount" name="amount" min="0" step="0.01" pattern="^\d+(\.\d{1,2})?$" required><br><br>-->
+    
     <div style="margin-bottom: 3%;">
-        <!--<label for="amount" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Amount:</label> -->
-        <!--<input id="amount" type="number" style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif;" placeholder="Amount" min="0" step="0.01" pattern="^\d+(\.\d{1,2})?$" required><br><br> -->
-        <!--<input type="number" id="amount" name="amount" min="0" step="0.01" pattern="^\d+(\.\d{1,2})?$" required><br><br>-->
+        
         <input type="number" 
         id="amount" 
         name = "amount"
         placeholder="Amount"
+<<<<<<< Updated upstream
 style="width: 80%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif;"
+=======
+style="width: 90%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif;"
+>>>>>>> Stashed changes
 min="0" 
 step="0.01" 
 pattern="^\d+(\.\d{1,2})?$" 
@@ -49,7 +64,7 @@ required
     
     <div> <!-- Add inline styles for each input group -->
         <!--<label for="type" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Type:  </label>-->
-        <select id="type" name="type" style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
+        <select id="type" name="type" style="width: 90%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
     <!--<select id="type" name="type"> -->
             <option value="">Any Category</option> <!-- Option for Any Category -->
             <optgroup label="Category Options">
@@ -65,8 +80,7 @@ required
     <label for="date" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Date:</label>
     <input type="date" id="date" name="date" style="font-family: Verdana, Geneva, Tahoma, sans-serif; background-color: #E9ECFA; padding: 5px; border-radius: 5px; border: none;" required><br><br>
 
-    <!--<label for="name">Transaction Name:</label>-->
-    <!--<input type="text" id="name" name="name" required><br><br>-->
+    
     <div>
     {% include 'components/toggle_component.html' with name='transaction_type' %}
     </div>
@@ -81,8 +95,6 @@ required
 </form>
 </div>
   
-<p><a href="{% url 'home' %}">home</a></p>
-<p><a href="{% url 'view_transactions' %}"> back</a></p>
 
 
 {% endblock %}
