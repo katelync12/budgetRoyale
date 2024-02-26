@@ -9,10 +9,13 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Transactions
 from django.utils import timezone
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 
+# def logout_view(request):
+#     logout(request)
+#     return redirect('registration/login.html')
 
 @login_required
 def create_transaction_page(request):
@@ -35,7 +38,7 @@ def create_personal_goals(request):
         print("create_personal_goals POST")
         amount = float(request.POST.get("amount"))
         category_name = request.POST.get("type")
-        is_spending = request.POST.get("goal_type") == "off"
+        is_spending = request.POST.get("goal_type") == "on"
         goal_name = request.POST.get("name")
         goal_start_date = request.POST.get("start_date")
         goal_end_date = request.POST.get("end_date")
@@ -240,3 +243,45 @@ def delete_transaction(request, transaction_id):
         return JsonResponse({'message': 'Transaction deleted successfully.'})
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+@login_required 
+def group_goals(request):
+    # Ensure user is authenticated before accessing request.user
+    if request.user.is_authenticated:
+        current_user = request.user
+        
+        if 5 == 5:
+            return render(request, 'group_goals.html')
+        else:
+            return render(request, 'groups.html')
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+
+@login_required
+def group_settings(request):
+    # Ensure user is authenticated before accessing request.user
+    if request.user.is_authenticated:
+        current_user = request.user
+        
+        if 4 == 5:
+            return render(request, 'group_settings.html')
+        else:
+            return render(request, 'groups.html')
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+    
+@login_required
+def leaderboard(request):
+    # Ensure user is authenticated before accessing request.user
+    if request.user.is_authenticated:
+        current_user = request.user
+        
+        if 4 == 5:
+            return render(request, 'leaderboard.html')
+        else:
+            return render(request, 'groups.html')
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
