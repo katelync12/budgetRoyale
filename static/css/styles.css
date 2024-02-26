@@ -231,3 +231,29 @@ a.nav-headers.active {
   font-weight: 800;
 }
 /* End transactions table styling */
+
+/* styling buttons in transactions */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 5%;
+  /*width: 90%;*/
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+
+.button-container button {
+  padding: 10px 20px;
+  background-color: #5B5FC5;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: #3c40a0;
+}
+
+/* end styling button in transactions */
