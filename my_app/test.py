@@ -20,6 +20,13 @@ def login(username, password):
     url = "http://127.0.0.1:8000/login"
     driver.get(url)
     time.sleep(2)
+    username_input = driver.find_element("name", "username")
+    username_input.send_keys(username)
+    password_input = driver.find_element("name", "password")
+    password_input.send_keys(password)
+    button = driver.find_element("xpath", "//button[text()='Log In']")
+    button.click()
+    time.sleep(2)
 
 def login_success(username, password):
     try:
