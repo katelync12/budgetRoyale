@@ -8,12 +8,16 @@ BEGIN
         UPDATE my_app_personalgoal
         SET sum_transaction = sum_transaction + NEW.amount
         WHERE user_id = NEW.user_id
-        AND is_spending = FALSE;
+        AND is_spending = FALSE
+        AND NEW.week BETWEEN start_date AND end_date
+        AND (category_id = NEW.category_id OR category_id IS NULL);
     ELSE
         UPDATE my_app_personalgoal
         SET sum_transaction = sum_transaction + NEW.amount
         WHERE user_id = NEW.user_id
-        AND is_spending = TRUE;
+        AND is_spending = TRUE
+        AND NEW.week BETWEEN start_date AND end_date
+        AND (category_id = NEW.category_id OR category_id IS NULL);
     END IF;
     RETURN NEW;
 END;
@@ -23,3 +27,87 @@ CREATE TRIGGER increment_personal_trigger
 AFTER INSERT ON my_app_transactions
 FOR EACH ROW
 EXECUTE FUNCTION increment_personal();
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION decrement_personal()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF OLD.amount > 0 THEN
+        UPDATE my_app_personalgoal
+        SET sum_transaction = sum_transaction - OLD.amount
+        WHERE user_id = OLD.user_id
+        AND is_spending = FALSE
+        AND OLD.week BETWEEN start_date AND end_date
+        AND (category_id = OLD.category_id OR category_id IS NULL);
+    ELSE
+        UPDATE my_app_personalgoal
+        SET sum_transaction = sum_transaction - OLD.amount
+        WHERE user_id = OLD.user_id
+        AND is_spending = TRUE
+        AND OLD.week BETWEEN start_date AND end_date
+        AND (category_id = OLD.category_id OR category_id IS NULL);
+    END IF;
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER decrement_personal_trigger
+AFTER DELETE ON my_app_transactions
+FOR EACH ROW
+EXECUTE FUNCTION decrement_personal();
+
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION update_personal()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Subtract OLD amount from sum_transaction if OLD.amount > 0
+    IF OLD.amount > 0 THEN
+        UPDATE my_app_personalgoal
+        SET sum_transaction = sum_transaction - OLD.amount
+        WHERE user_id = OLD.user_id
+        AND is_spending = FALSE
+        AND OLD.week BETWEEN start_date AND end_date
+        AND (category_id = OLD.category_id OR category_id IS NULL);
+    ELSE
+        UPDATE my_app_personalgoal
+        SET sum_transaction = sum_transaction - OLD.amount
+        WHERE user_id = OLD.user_id
+        AND is_spending = TRUE
+        AND OLD.week BETWEEN start_date AND end_date
+        AND (category_id = OLD.category_id OR category_id IS NULL);
+    END IF;
+    
+    -- Add NEW amount to sum_transaction if NEW.amount > 0
+    IF NEW.amount > 0 THEN
+        UPDATE my_app_personalgoal
+        SET sum_transaction = sum_transaction + NEW.amount
+        WHERE user_id = NEW.user_id
+        AND is_spending = FALSE
+        AND NEW.week BETWEEN start_date AND end_date
+        AND (category_id = NEW.category_id OR category_id IS NULL);
+    ELSE
+        UPDATE my_app_personalgoal
+        SET sum_transaction = sum_transaction + NEW.amount
+        WHERE user_id = NEW.user_id
+        AND is_spending = TRUE
+        AND NEW.week BETWEEN start_date AND end_date
+        AND (category_id = NEW.category_id OR category_id IS NULL);
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_personal_trigger
+AFTER UPDATE ON my_app_transactions
+FOR EACH ROW
+EXECUTE FUNCTION update_personal();

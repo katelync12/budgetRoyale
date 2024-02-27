@@ -23,7 +23,7 @@
                 <th style="display: flex; justify-content: space-between;">
                     <span>{{ transaction.category.category_id }}</span>
                     <div>
-                        <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update"></i>
+                        <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editTransaction({{ transaction.id }})"></i>
                         <i class="fas fa-trash-alt delete-transaction" data-transaction-id="{{ transaction.id }}" data-transaction-name="{{ transaction.name }}"></i>
                     </div>
                 </th>
@@ -68,6 +68,11 @@
     });
 </script>
 
+<script>
+    function editTransaction(transactionId) {
+        window.location.href = `/edit_transaction/${transactionId}/`;
+    }    
+</script>
 
 
 {% endblock %}

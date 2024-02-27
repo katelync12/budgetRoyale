@@ -6,16 +6,34 @@ from django.db import models
 from django.http import FileResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .models import Transactions
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Transactions    
 from .models import Group
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
 
-
-
+# def logout_view(request):
+#     logout(request)
+#     return redirect('registration/login.html')
+@login_required
+def send_form(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        firstname = request.POST.get("firstname")
+        lastname = request.POST.get("lastname")
+        subject = request.POST.get("subject")
+        send_mail(
+            "Form Submission from " + firstname + " " + lastname, 
+            "Feedback:\n\n" + subject + "\n\n" + "From: " + email,
+            settings.EMAIL_HOST_USER,
+            [settings.EMAIL_HOST_USER],
+            fail_silently=False
+        )
+    return redirect('form_confirm')
 @login_required
 def create_transaction_page(request):
     current_user = request.user
@@ -317,3 +335,36 @@ def delete_goal(request, goal_id):
         return JsonResponse({'message': 'Goal deleted successfully.'})
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+def edit_transaction_action(request, transaction_id):
+    transaction = get_object_or_404(Transactions, pk=transaction_id)
+    print("testing")
+    if request.method == 'POST':
+        # Retrieve the form data from the POST request
+        week = request.POST.get('date')
+        amount = request.POST.get('amount')
+        name = request.POST.get('name')
+        category_id = request.POST.get('type')
+        is_spending = request.POST.get("transaction_type") == "on"
+        print("Amount receivd:" + amount)
+        print(type(amount))
+        print(is_spending)
+        if is_spending:
+            amount = str(float(amount) * -1)
+        
+        # Update the transaction object with the new data
+        transaction.week = week
+        transaction.amount = amount
+        transaction.name = name
+        transaction.category_id = category_id
+        transaction.save()
+        print("saved>")
+        return redirect('view_transactions')
+    
+    # Retrieve all categories for populating the dropdown
+    categories = Category.objects.all()
+    is_negative = transaction.amount < 0
+    if is_negative:
+        transaction.amount = abs(transaction.amount)
+    
+    return render(request, 'edit_transaction.html', {'transaction': transaction, 'categories': categories, 'is_negative': is_negative})
