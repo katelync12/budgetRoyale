@@ -41,6 +41,7 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path("form/", TemplateView.as_view(template_name="form.html"), name="form"),
+    path("send_form/", views.send_form, name="send_form"),
     path("form_confirm/", TemplateView.as_view(template_name="form_confirm.html"), name="form_confirm"),
     path("personal-goals/", TemplateView.as_view(template_name="view_personal_goals.html"), name="view_personal_goals"),
     path("personal-goals/create/", views.create_personal_goal_page, name="create_personal_goals"),

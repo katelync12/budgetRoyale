@@ -13,11 +13,27 @@ from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
 
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
-
+@login_required
+def send_form(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        firstname = request.POST.get("firstname")
+        lastname = request.POST.get("lastname")
+        subject = request.POST.get("subject")
+        send_mail(
+            "Form Submission from " + firstname + " " + lastname, 
+            "Feedback:\n\n" + subject + "\n\n" + "From: " + email,
+            settings.EMAIL_HOST_USER,
+            [settings.EMAIL_HOST_USER],
+            fail_silently=False
+        )
+    return redirect('form_confirm')
 @login_required
 def create_transaction_page(request):
     current_user = request.user
