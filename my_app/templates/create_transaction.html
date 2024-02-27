@@ -54,7 +54,7 @@
     {% endblock %}
 
     <div>
-    {% include 'components/toggle_component.html' with name='transaction_type' %}
+    {% block toggle %}{% include 'components/toggle_component.html' with name='transaction_type' %}{% endblock %}
     </div>
     <button type="button" {% block back %}onclick="window.location.href='{% url 'view_transactions' %}'"{% endblock %}  
         style="background-color: #5B5FC5;

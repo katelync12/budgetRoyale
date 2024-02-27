@@ -34,7 +34,7 @@
                 <th style="display: flex; justify-content: space-between;">
                     <span>{{ goal.category.category_id }}</span>
                     <div>
-                        <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update"></i>
+                        <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editPersonalGoal({{ goal.id }})"></i>
                         <i class="fas fa-trash-alt delete-personal-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
                     </div>
                 </th>
@@ -77,6 +77,12 @@
             });
         });
     });
+</script>
+
+<script>
+    function editPersonalGoal(goalId) {
+        window.location.href = `/edit_personal_goal/${goalId}/`;
+    }    
 </script>
 
 {% endblock %}

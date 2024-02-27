@@ -338,7 +338,6 @@ def delete_goal(request, goal_id):
 
 def edit_transaction_action(request, transaction_id):
     transaction = get_object_or_404(Transactions, pk=transaction_id)
-    print("testing")
     if request.method == 'POST':
         # Retrieve the form data from the POST request
         week = request.POST.get('date')
@@ -346,9 +345,6 @@ def edit_transaction_action(request, transaction_id):
         name = request.POST.get('name')
         category_id = request.POST.get('type')
         is_spending = request.POST.get("transaction_type") == "on"
-        print("Amount receivd:" + amount)
-        print(type(amount))
-        print(is_spending)
         if is_spending:
             amount = str(float(amount) * -1)
         
@@ -358,7 +354,6 @@ def edit_transaction_action(request, transaction_id):
         transaction.name = name
         transaction.category_id = category_id
         transaction.save()
-        print("saved>")
         return redirect('view_transactions')
     
     # Retrieve all categories for populating the dropdown
@@ -368,3 +363,47 @@ def edit_transaction_action(request, transaction_id):
         transaction.amount = abs(transaction.amount)
     
     return render(request, 'edit_transaction.html', {'transaction': transaction, 'categories': categories, 'is_negative': is_negative})
+
+def edit_personal_goal_action(request, goal_id):
+    goal = get_object_or_404(PersonalGoal, pk=goal_id)
+    if request.method == 'POST':
+        # Retrieve the form data from the POST request
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        amount = request.POST.get('amount')
+        name = request.POST.get('name')
+        category_id = request.POST.get('type')
+        is_spending = request.POST.get("transaction_type") == "on"
+    
+        if is_spending:
+            amount = str(float(amount) * -1)
+        
+        # Update the goal object with the new data
+            
+            # category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+            # goal_amount = models.FloatField()
+            # sum_transaction = models.FloatField(default=0)
+            # is_spending = models.BooleanField(default=True)
+            # start_date = models.DateTimeField()
+            # end_date = models.DateTimeField()
+            # goal_name = models.CharField(max_length=255)
+
+        goal.start_date = start_date
+        goal.end_date = end_date
+        goal.goal_amount = amount
+        goal.goal_name = name
+        goal.category = category_id
+        goal.is_spending = is_spending
+        goal.save()
+
+        print("saved>")
+        return redirect('view_personal_goal')
+    
+    # Retrieve all categories for populating the dropdown
+    categories = Category.objects.all()
+    is_negative = goal.goal_amount < 0
+    print(is_negative)
+    if is_negative:
+        goal.goal_amount = abs(goal.goal_amount)
+    
+    return render(request, 'edit_personal_goal.html', {'goal': goal, 'categories': categories, 'is_negative': is_negative})

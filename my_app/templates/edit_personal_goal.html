@@ -1,0 +1,23 @@
+{% extends "edit_transaction.html" %}
+
+{% block mainTitle %}Edit Personal Goal{% endblock %}
+
+{% block action %}
+    {% url 'create_personal_goal_action' %}
+{% endblock %}
+
+{% block namePlaceholder %}'Goal Name'{% endblock %}
+{% block namePlaceholderValue %}value="{{ goal.goal_name }}"{% endblock %}
+{% block amountValue %}required value="{{ goal.goal_amount }}"{% endblock %}
+{% block categoryValue %}
+<option value="{{ category.category_id }}" {% if category.category_id == goal.category.category_id %} selected {% endif %}>{{ category.category_id }}</option>
+{% endblock %}
+
+{% block dates %}
+    {% include 'components/start_end_date.html' %}
+{% endblock %}
+
+{% block toggleName1 %}"goal_type"{% endblock %}
+{% block toggleName2 %}"goal_type"{% endblock %}
+
+{% block back %}onclick="window.location.href='{% url 'view_personal_goals' %}'"{% endblock %}
