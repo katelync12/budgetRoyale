@@ -1,0 +1,25 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on 127.0.0.1:8000
+From: webmaster@localhost
+To: andrew.z.liu22@gmail.com
+Date: Mon, 26 Feb 2024 03:02:13 -0000
+Message-ID: <170891653303.70619.13652591126354669454@Paxys-MacBook-Pro.local>
+
+
+You're receiving this email because you requested a password reset for your user account at 127.0.0.1:8000.
+
+Please go to the following page and choose a new password:
+
+http://127.0.0.1:8000/accounts/reset/OA/c2zhrp-2a469b3f5d00792f6fadd965b8596c61/
+
+Your username, in case you’ve forgotten: andrewzacharyliu
+
+Thanks for using our site!
+
+The 127.0.0.1:8000 team
+
+
+
+-------------------------------------------------------------------------------

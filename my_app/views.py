@@ -16,7 +16,9 @@ from django.contrib.auth.models import User
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
-
+@login_required
+def send_form(request):
+    return redirect('')
 @login_required
 def create_transaction_page(request):
     current_user = request.user
