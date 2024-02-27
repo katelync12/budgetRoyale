@@ -6,8 +6,8 @@ from django.db import models
 from django.http import FileResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .models import Transactions
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Transactions    
 from .models import Group
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
@@ -287,3 +287,36 @@ def create_group(request):
             user_group.save()
             print("exception")
     return render(request, 'group_settings.html')
+
+def edit_transaction_action(request, transaction_id):
+    transaction = get_object_or_404(Transactions, pk=transaction_id)
+    print("testing")
+    if request.method == 'POST':
+        # Retrieve the form data from the POST request
+        week = request.POST.get('date')
+        amount = request.POST.get('amount')
+        name = request.POST.get('name')
+        category_id = request.POST.get('type')
+        is_spending = request.POST.get("transaction_type") == "on"
+        print("Amount receivd:" + amount)
+        print(type(amount))
+        print(is_spending)
+        if is_spending:
+            amount = str(float(amount) * -1)
+        
+        # Update the transaction object with the new data
+        transaction.week = week
+        transaction.amount = amount
+        transaction.name = name
+        transaction.category_id = category_id
+        transaction.save()
+        print("saved>")
+        return redirect('view_transactions')
+    
+    # Retrieve all categories for populating the dropdown
+    categories = Category.objects.all()
+    is_negative = transaction.amount < 0
+    if is_negative:
+        transaction.amount = abs(transaction.amount)
+    
+    return render(request, 'edit_transaction.html', {'transaction': transaction, 'categories': categories, 'is_negative': is_negative})
