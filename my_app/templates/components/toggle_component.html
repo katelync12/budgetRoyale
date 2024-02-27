@@ -1,31 +1,24 @@
 {% block radio_component %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/switch.css' %}">
+<style>
+    .radio label {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        display: inline-block; /* Ensures each label is on its line */
+        margin-right: 10%; /* Adjust the margin between labels */
+    }
+</style>
 <label class="radio">
     <span class="savings-label">
         <label>
-            <input type="radio" name="{{ name }}" value="off" checked>
+            <input type="radio" name="{{ name }}" value="off" id="radio" checked>
             Savings
         </label>
+     
         <label>
-            <input type="radio" name="{{ name }}" value="on">
+            <input type="radio" name="{{ name }}" id="radio" value="on">
             Spendings
         </label>
     </span>
 </label>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var radioInputs = document.querySelectorAll('input[name="{{ name }}"]');
-        
-        radioInputs.forEach(function(input) {
-            input.addEventListener('change', function() {
-                var selectedValue = this.value;
-                // Now, you can send the selectedValue to the backend as needed
-                console.log(selectedValue); // Just for demonstration
-                // Add AJAX or other backend communication code here
-            });
-        });
-    });
-</script>
 {% endblock %}

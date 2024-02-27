@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import Transactions
+from .models import Group
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -178,20 +179,19 @@ def add_category(request):
 
 def add(request):
     # Check if Student table exists
-    if not PersonalGoal._meta.db_table in connection.introspection.table_names():
+    if not Group._meta.db_table in connection.introspection.table_names():
         # Create the Student table if it doesn't exist
         with connection.schema_editor() as schema_editor:
-            schema_editor.create_model(PersonalGoal)
-            schema_editor.create_model(GroupGoal)
+            schema_editor.create_model(Group)
 
-    # Insert a new student named "Mark" with a GPA of 4.0
-    mark = Student(grade="Mark", gpa=4.0)
-    mark.save()
-    all_students = Student.objects.all()
+    # # Insert a new student named "Mark" with a GPA of 4.0
+    # mark = Student(grade="Mark", gpa=4.0)
+    # mark.save()
+    # all_students = Student.objects.all()
 
     # Print student data (for demonstration purposes)
-    for student in all_students:
-        print(f"Student: {student.grade}, GPA: {student.gpa}")
+    # for student in all_students:
+    #     print(f"Student: {student.grade}, GPA: {student.gpa}")
 
     result = 1
     return JsonResponse({'result': result})
@@ -245,45 +245,47 @@ def delete_transaction(request, transaction_id):
         return JsonResponse({'message': 'Transaction deleted successfully.'})
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
-
-@login_required 
-def group_goals(request):
-    # Ensure user is authenticated before accessing request.user
-    if request.user.is_authenticated:
-        current_user = request.user
-        
-        if 5 == 5:
-            return render(request, 'group_goals.html')
-        else:
-            return render(request, 'groups.html')
-    else:
-        # Redirect to login page if user is not authenticated
-        return redirect('login')
-
+    
 @login_required
-def group_settings(request):
+def check_user_group(request, page):
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
-        current_user = request.user
-        
-        if 4 == 5:
-            return render(request, 'group_settings.html')
+        username = request.user.username
+        user = User.objects.get(username=username)
+        # Check if there's an existing relationship between user and category
+        if UserJoinGroup.objects.filter(user=user).exists():
+            return render(request, page + '.html')
         else:
-            return render(request, 'groups.html')
+            return redirect('groups')
     else:
         # Redirect to login page if user is not authenticated
         return redirect('login')
     
-@login_required
-def leaderboard(request):
-    # Ensure user is authenticated before accessing request.user
-    if request.user.is_authenticated:
-        current_user = request.user
-        
-        if 4 == 5:
-            return render(request, 'leaderboard.html')
-        else:
-            return render(request, 'groups.html')
-    else:
-        # Redirect to login page if user is not authenticated
-        return redirect('login')
+
+
+@login_required  # Requires the user to be logged in to access this view
+def create_group(request):
+    group_name = request.POST.get("name")
+    print(group_name)
+    username = request.user.username
+    user = User.objects.get(username=username)
+    group = None
+
+    if UserJoinGroup.objects.filter(user=user).exists():
+        # any popup?
+        return render(request, 'group_settings.html')
+    
+    group = Group(name=group_name)
+    group.save()
+    # Check if there's an existing relationship between user and category
+    print(group.name)
+    if group:
+        try:
+            print("try")
+            UserJoinGroup.objects.get(user=user, group=group)
+        except UserJoinGroup.DoesNotExist:
+            # Create a new relationship between user and category
+            user_group = UserJoinGroup(user=user, group=group)
+            user_group.save()
+            print("exception")
+    return render(request, 'group_settings.html')
