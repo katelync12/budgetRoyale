@@ -6,6 +6,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import subprocess
 import time
+import sys
+
 def install_bs4():
     subprocess.check_call([sys.executable, "-m", "pip", "install", "bs4"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])

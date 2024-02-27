@@ -7,4 +7,76 @@
 <p><a href="{% url 'home' %}">home</a></p>
 <p><a href="{% url 'create_personal_goals' %}">create</a></p>
 
+<div class="table-container">
+    <table class="styled-table">
+        <tr>
+            <th>name</th>
+            <th>amount</th>
+            <th>is spending</th>
+            <th>category</th>
+            <th>sum transaction</th>
+            <th>start date</th>
+            <th>end date</th>
+            <th>category</th>
+        </tr>
+        {% for goal in goals %}
+            <tr>
+                <th>{{ goal.goal_name }}</th>
+                <th>{{ goal.goal_amount }}</th>
+                <th>{{ goal.is_spending }}</th>
+                <th>{{ goal.category }}</th>
+                <th>{{ goal.sum_transaction }}</th>
+                <th>{{ goal.start_date }}</th>
+                <th>{{ goal.end_date }}</th>
+                
+
+
+                <th style="display: flex; justify-content: space-between;">
+                    <span>{{ goal.category.category_id }}</span>
+                    <div>
+                        <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update"></i>
+                        <i class="fas fa-trash-alt delete-personal-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
+                    </div>
+                </th>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<ul>
+</ul>
+
+<script>
+    document.querySelectorAll('.delete-personal-goal').forEach(item => {
+        item.addEventListener('click', event => {
+            const goalId = event.target.dataset.goalId;
+            const goalName = event.target.dataset.goalName;
+            
+            // Prompt user for confirmation
+            const isConfirmed = confirm(`Are you sure you want to delete ${goalName} goal?`);
+            if (!isConfirmed) {
+                return; // Abort deletion if user cancels
+            }
+            
+            fetch(`/delete_goal/${goalId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    // Remove the transaction row from the table
+                    event.target.closest('tr').remove();
+                } else {
+                    console.error('Error deleting transaction:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting transaction:', error);
+            });
+        });
+    });
+</script>
+
 {% endblock %}

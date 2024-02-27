@@ -14,9 +14,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-# def logout_view(request):
-#     logout(request)
-#     return redirect('registration/login.html')
+
 
 @login_required
 def create_transaction_page(request):
@@ -287,3 +285,35 @@ def create_group(request):
             user_group.save()
             print("exception")
     return render(request, 'group_settings.html')
+
+def view_personal_goals(request):
+    # Ensure user is authenticated before accessing request.user
+    if request.user.is_authenticated:
+        current_user = request.user
+        
+        # Gets all goals
+        username = request.user.username
+        user = User.objects.get(username=username)
+        goals = PersonalGoal.objects.all()
+        sorted = []
+        for goal in goals:
+            # Only gets the transactions of the currently logged in user
+            if (goal.user.username == username):
+                sorted.append(goal)
+        context = {
+            'goals': sorted,
+            'current_user': current_user,
+        }
+        # Render the template with the transactions data
+        return render(request, 'view_personal_goals.html', context)
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+    
+def delete_goal(request, goal_id):
+    if request.method == 'POST':
+        goal = PersonalGoal.objects.get(pk=goal_id)
+        goal.delete()
+        return JsonResponse({'message': 'Goal deleted successfully.'})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)

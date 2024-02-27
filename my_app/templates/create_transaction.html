@@ -15,12 +15,12 @@
     justify-content: space-around;
     margin-bottom: 30px;">
 
-<h2 style="font-family: Verdana, Geneva, Tahoma, sans-serif; color: #5B5FC5; margin-bottom: 10%;">Create Transaction!</h2>
+<h2 style="font-family: Verdana, Geneva, Tahoma, sans-serif; color: #5B5FC5; margin-bottom: 10%;">{% block mainTitle %}Create Transaction!{% endblock %}</h2>
 
-<form method="POST" action="{% url 'create_transaction_action' %}">
+<form method="POST" action="{% block action %}{% url 'create_transaction_action' %}{% endblock %}">
     {% csrf_token %}
     <div>
-        <input type="text" placeholder = 'Transaction Name' id="name" name="name" required style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
+        <input type="text" placeholder = {% block namePlaceholder %}'Transaction Name'{% endblock %} id="name" name="name" required style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
     </div>
     <div style="margin-bottom: 3%;">
         <input type="number" 
@@ -48,13 +48,15 @@
         {% endblock %}
     </div>
 
+    {% block dates %}
     <label for="date" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Date:</label>
     <input type="date" id="date" name="date" style="font-family: Verdana, Geneva, Tahoma, sans-serif; background-color: #E9ECFA; padding: 5px; border-radius: 5px; border: none;" required>
+    {% endblock %}
 
     <div>
     {% include 'components/toggle_component.html' with name='transaction_type' %}
     </div>
-    <button type="button" onclick="window.location.href='{% url 'view_transactions' %}'"  
+    <button type="button" {% block back %}onclick="window.location.href='{% url 'view_transactions' %}'"{% endblock %}  
         style="background-color: #5B5FC5;
         background-color: #ffffff;
         border: 2px solid #5B5FC5;
