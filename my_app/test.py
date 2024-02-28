@@ -7,6 +7,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 import subprocess
 import time
+import sys
 def install_bs4():
     subprocess.check_call([sys.executable, "-m", "pip", "install", "bs4"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
@@ -166,19 +167,28 @@ def delete_transaction():
         return "Failed"
 
 browser_options = ChromeOptions()
-browser_options.headless = True
+browser_options.headless = False
 browser_options.add_argument('--ignore-certificate-errors-spki-list')
 browser_options.add_argument('--ignore-ssl-errors')
+browser_options.add_argument("--disable-web-security")
 browser_options.add_argument('log-level=3')
 driver = Chrome(options=browser_options)
 
 # ADD TEST CASES HERE
 # At the start of each function, call the login function at the top of the page
-print(f"{'Login success':<30} {login_success("sam", "testpassword")}")
-print(f"{'Login failed':<30} {login_failed("sam", "test")}")
-print(f"{'Create transaction':<30} {(create_transaction())}")
-print(f"{'Cancel transaction':<30} {cancel_transaction()}")
-print(f"{'Cancel delete transaction':<30} {cancel_delete_transaction()}")
-print(f"{'Delete transaction':<30} {delete_transaction()}")
+temp_result = login_failed("sam", "test")
+print(f"{'Login failed':<30} {temp_result}")
+temp_result = login_success("sam", "testpassword")
+print(f"{'Login success':<30} {temp_result}")
+temp_result =login_failed("sam", "test")
+print(f"{'Login failed':<30} {temp_result}")
+temp_result = create_transaction()
+print(f"{'Create transaction':<30} {temp_result}")
+temp_result = cancel_transaction()
+print(f"{'Cancel transaction':<30} {temp_result}")
+temp_result = cancel_delete_transaction()
+print(f"{'Cancel delete transaction':<30} {temp_result}")
+temp_result = delete_transaction()
+print(f"{'Delete transaction':<30} {temp_result}")
 
 driver.quit()
