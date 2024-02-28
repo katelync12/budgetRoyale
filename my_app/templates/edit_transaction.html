@@ -22,45 +22,50 @@
     justify-content: space-around;
     margin-bottom: 30px;">
 
-<h2 style="font-family: Verdana, Geneva, Tahoma, sans-serif; color: #5B5FC5; margin-bottom: 10%;">Edit Transaction</h2>
+<h2 style="font-family: Verdana, Geneva, Tahoma, sans-serif; color: #5B5FC5; margin-bottom: 10%;">{% block mainTitle %}Edit Transaction{% endblock %}</h2>
 
-<form method="POST" action="{% url 'edit_transaction_action' transaction.id %}">
+<form method="POST" action="{% block action %}{% url 'edit_transaction_action' transaction.id %}{% endblock %}">
     {% csrf_token %}
     <div>
-        <input type="text" placeholder='Transaction Name' id="name" name="name" required style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif" value="{{ transaction.name }}">
+        <input type="text" placeholder={% block namePlaceholder %}'Transaction Name'{% endblock %} id="name" name="name" required style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif" {% block namePlaceholderValue %}value="{{ transaction.name }}"{% endblock %}>
     </div>
     <div style="margin-bottom: 3%;">
-        <input type="number" id="amount" name="amount" placeholder="Amount" style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif;" min="0" step="0.01" pattern="^\d+(\.\d{1,2})?$" required value="{{ transaction.amount }}">
+        <input type="number" id="amount" name="amount" placeholder="Amount" style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif;" min="0" step="0.01" pattern="^\d+(\.\d{1,2})?$" {% block amountValue %}required value="{{ transaction.amount }}"{% endblock %}>
     </div>
     
     <div>
         <select id="type" name="type" style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
             <optgroup label="Category Options">
                 {% for category in categories %}
+                    {% block categoryValue %}
                     <option value="{{ category.category_id }}" {% if category.category_id == transaction.category.category_id %} selected {% endif %}>{{ category.category_id }}</option>
+                    {% endblock %}
                 {% endfor %}
             </optgroup>
         </select>
     </div>
 
+    {% block dates %}
     <label for="date" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Date:</label>
     <input type="date" id="date" name="date" style="font-family: Verdana, Geneva, Tahoma, sans-serif; background-color: #E9ECFA; padding: 5px; border-radius: 5px; border: none;" required value="{{ transaction.week|date:'Y-m-d' }}">
+    {% endblock %}
     <div>
         <label class="radio">
             <span class="savings-label">
                 <label>
-                    <input type="radio" name="transaction_type" value="off" {% if not is_negative %} checked {% endif %}>
+                    <input type="radio" name={% block toggleName1 %}"transaction_type"{% endblock %} value="off" {% if not is_negative %} checked {% endif %}>
                     Savings
                 </label>
              
                 <label>
-                    <input type="radio" name="transaction_type" value="on" {% if is_negative %} checked {% endif %}>
+                    <input type="radio" name={% block toggleName2 %}"transaction_type"{% endblock %} value="on" {% if is_negative %} checked {% endif %}>
                     Spendings
                 </label>
             </span>
         </label>
     </div>
-    <button type="button" onclick="window.location.href='{% url 'view_transactions' %}'"  
+
+    <button type="button" {% block back %}onclick="window.location.href='{% url 'view_transactions' %}'"{% endblock %}  
         style="background-color: #5B5FC5;
         background-color: #ffffff;
         border: 2px solid #5B5FC5;
