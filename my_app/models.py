@@ -38,8 +38,8 @@ class PersonalGoal(models.Model):
     goal_amount = models.FloatField()
     sum_transaction = models.FloatField(default=0)
     is_spending = models.BooleanField(default=True)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
     goal_name = models.CharField(max_length=255)
 
 class GroupGoal(models.Model):
@@ -47,6 +47,6 @@ class GroupGoal(models.Model):
     amount = models.FloatField()
     sum_transaction = models.FloatField(default=0)
     is_spending = models.BooleanField(default=True)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
     goal_name = models.CharField(max_length=255)
