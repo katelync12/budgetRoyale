@@ -121,7 +121,7 @@ def cancel_transaction():
     except:
         return "Failed"
     
-def cancel_delete_transaction():
+def edit_transaction():
     try:
         login("sam", "testpassword")
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
@@ -131,13 +131,37 @@ def cancel_delete_transaction():
         time.sleep(2)
         row = driver.find_element("xpath", "//th[text()='Testing Transaction']")
         row_element = row.find_element("xpath", "./parent::tr")
+        edit = row_element.find_element("xpath", ".//i[@class='fas fa-pencil-alt fa-fw my-own-icon']")
+        edit.click()
+        time.sleep(1)
+        transaction_name = driver.find_element("xpath", "//input[@placeholder='Transaction Name']")
+        transaction_name.clear()
+        transaction_name.send_keys("Testing Edited")
+        submit = driver.find_element("xpath", '//button[contains(text(), "Save")]')
+        submit.click()
+        time.sleep(2)
+        check = driver.find_element("xpath", '//th[contains(text(), "Testing Edited")]')
+        return "Passed"
+    except:
+        "Failed"
+    
+def cancel_delete_transaction():
+    try:
+        login("sam", "testpassword")
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(2)
+        row = driver.find_element("xpath", "//th[text()='Testing Edited']")
+        row_element = row.find_element("xpath", "./parent::tr")
         trash = row_element.find_element("xpath", ".//i[@class='fas fa-trash-alt delete-transaction']")
         trash.click()
         time.sleep(1)
         alert = driver.switch_to.alert
         alert.dismiss()
         time.sleep(2)
-        check = driver.find_element("xpath", '//th[contains(text(), "Testing Transaction")]')
+        check = driver.find_element("xpath", '//th[contains(text(), "Testing Edited")]')
         return "Passed"
     except:
         return "Failed"
@@ -150,7 +174,7 @@ def delete_transaction():
         button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
         button.click()
         time.sleep(2)
-        row = driver.find_element("xpath", "//th[text()='Testing Transaction']")
+        row = driver.find_element("xpath", "//th[text()='Testing Edited']")
         row_element = row.find_element("xpath", "./parent::tr")
         trash = row_element.find_element("xpath", ".//i[@class='fas fa-trash-alt delete-transaction']")
         trash.click()
@@ -159,7 +183,7 @@ def delete_transaction():
         alert.accept()
         time.sleep(2)
         try:
-            check = driver.find_element("xpath", '//th[contains(text(), "Testing Transaction")]')
+            check = driver.find_element("xpath", '//th[contains(text(), "Testing Edited")]')
             return "Failed"
         except:
             return "Passed"
@@ -186,6 +210,8 @@ temp_result = create_transaction()
 print(f"{'Create transaction':<30} {temp_result}")
 temp_result = cancel_transaction()
 print(f"{'Cancel transaction':<30} {temp_result}")
+temp_result = edit_transaction()
+print(f"{'Edit transaction':<30} {temp_result}")
 temp_result = cancel_delete_transaction()
 print(f"{'Cancel delete transaction':<30} {temp_result}")
 temp_result = delete_transaction()
