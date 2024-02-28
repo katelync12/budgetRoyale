@@ -119,6 +119,51 @@ def cancel_transaction():
             return "Passed"
     except:
         return "Failed"
+    
+def cancel_delete_transaction():
+    try:
+        login("sam", "testpassword")
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(2)
+        row = driver.find_element("xpath", "//th[text()='Testing Transaction']")
+        row_element = row.find_element("xpath", "./parent::tr")
+        trash = row_element.find_element("xpath", ".//i[@class='fas fa-trash-alt delete-transaction']")
+        trash.click()
+        time.sleep(1)
+        alert = driver.switch_to.alert
+        alert.dismiss()
+        time.sleep(2)
+        check = driver.find_element("xpath", '//th[contains(text(), "Testing Transaction")]')
+        return "Passed"
+    except:
+        return "Failed"
+    
+def delete_transaction():
+    try:
+        login("sam", "testpassword")
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(2)
+        row = driver.find_element("xpath", "//th[text()='Testing Transaction']")
+        row_element = row.find_element("xpath", "./parent::tr")
+        trash = row_element.find_element("xpath", ".//i[@class='fas fa-trash-alt delete-transaction']")
+        trash.click()
+        time.sleep(1)
+        alert = driver.switch_to.alert
+        alert.accept()
+        time.sleep(2)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Testing Transaction")]')
+            return "Failed"
+        except:
+            return "Passed"
+    except:
+        return "Failed"
 
 browser_options = ChromeOptions()
 browser_options.headless = True
@@ -129,10 +174,11 @@ driver = Chrome(options=browser_options)
 
 # ADD TEST CASES HERE
 # At the start of each function, call the login function at the top of the page
-print(f"{'Login success':<25} {login_success("sam", "testpassword")}")
-print(f"{'Login failed':<25} {login_failed("sam", "test")}")
-print(f"{'Create transaction':<25} {(create_transaction())}")
-print(f"{'Cancel transaction':<25} {cancel_transaction()}")
-
+print(f"{'Login success':<30} {login_success("sam", "testpassword")}")
+print(f"{'Login failed':<30} {login_failed("sam", "test")}")
+print(f"{'Create transaction':<30} {(create_transaction())}")
+print(f"{'Cancel transaction':<30} {cancel_transaction()}")
+print(f"{'Cancel delete transaction':<30} {cancel_delete_transaction()}")
+print(f"{'Delete transaction':<30} {delete_transaction()}")
 
 driver.quit()
