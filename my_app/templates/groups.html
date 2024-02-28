@@ -1,18 +1,46 @@
 {% extends "base.html" %} 
 
 {% block content %}
+{% load static %}
+
 
 <p class="header">GROUP!</p>
 
-<p><a href="{% url 'groups' %}">Add Group</a></p>
-<p><a href="{% url 'groups' %}">Create Group</a></p>
+
+
+<div class="button-container">
+    <button onclick="window.location.href='{% url 'groups' %}'">Add Group</button>
+    <button onclick="window.location.href='{% url 'groups' %}'">Create Group</button>
+</div>
 
 <form method="POST" action="{% url 'create_group_action' %}">
     {% csrf_token %}
-    <label for="name">Group Name:</label>
-    <input type="text" id="name" name="name" required><br><br>
+    <div style="margin: 0 auto;
+    max-width: fit-content;
+    height: fit-content;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 5px 10px #5B5FC5, 5px 0px 10px #5B5FC5;
+    margin-top: 50px;
+    text-align: center;
+    justify-content: space-around;
+    margin-bottom: 30px;">
+         <label for="name" style="font-size: medium; font-family: Verdana, Geneva, Tahoma, sans-serif;">Name your group!</label>
+        <input type="text" id="name" name="name" required><br><br>
 
-    <button type="submit">Submit</button>
+        <div class="submit_button">
+            <button type="submit"> Submit </button>
+        </div>
+
+        <button type="submit" style="background-color: #5B5FC5; /* Blue button color */
+      color: #ffffff; /* White button text color */
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      cursor: pointer;"> Submit </button>
+    </div>
 </form>
 
 
