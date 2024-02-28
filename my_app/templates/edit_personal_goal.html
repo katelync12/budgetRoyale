@@ -3,7 +3,7 @@
 {% block mainTitle %}Edit Personal Goal{% endblock %}
 
 {% block action %}
-    {% url 'create_personal_goal_action' %}
+    {% url 'edit_personal_goal_action' goal.id %}
 {% endblock %}
 
 {% block namePlaceholder %}'Goal Name'{% endblock %}

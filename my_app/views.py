@@ -353,7 +353,7 @@ def edit_transaction_action(request, transaction_id):
         transaction.week = week
         transaction.amount = amount
         transaction.name = name
-        transaction.category_id = category_id
+        transaction.category.category_id = category_id
         transaction.save()
         return redirect('view_transactions')
     
@@ -393,16 +393,15 @@ def edit_personal_goal_action(request, goal_id):
         goal.end_date = end_date
         goal.goal_amount = amount
         goal.goal_name = name
-        goal.category = category_id
+        goal.category.category_id = category_id
         goal.is_spending = is_spending
         goal.save()
 
-        print("saved>")
-        return redirect('view_personal_goal')
+        return redirect('view_personal_goals')
     
     # Retrieve all categories for populating the dropdown
     categories = Category.objects.all()
     if goal.is_spending:
         goal.goal_amount = abs(goal.goal_amount)
     
-    return render(request, 'edit_personal_goal.html', {'goal': goal, 'categories': categories, 'is_negative': goal.is_spending})
+    return render(request, 'edit_personal_goal.html', {'goal': goal, 'categories': categories, 'is_spending': goal.is_spending})
