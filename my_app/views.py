@@ -373,7 +373,7 @@ def edit_personal_goal_action(request, goal_id):
         amount = request.POST.get('amount')
         name = request.POST.get('name')
         category_id = request.POST.get('type')
-        is_spending = request.POST.get("transaction_type") == "on"
+        is_spending = request.POST.get("goal_type") == "on"
     
         if is_spending:
             amount = str(float(amount) * -1)
@@ -401,9 +401,7 @@ def edit_personal_goal_action(request, goal_id):
     
     # Retrieve all categories for populating the dropdown
     categories = Category.objects.all()
-    is_negative = goal.goal_amount < 0
-    print(is_negative)
-    if is_negative:
+    if goal.is_spending:
         goal.goal_amount = abs(goal.goal_amount)
     
-    return render(request, 'edit_personal_goal.html', {'goal': goal, 'categories': categories, 'is_negative': is_negative})
+    return render(request, 'edit_personal_goal.html', {'goal': goal, 'categories': categories, 'is_negative': goal.is_spending})
