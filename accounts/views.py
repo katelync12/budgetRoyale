@@ -29,6 +29,7 @@ def initialize_database_for_user(user):
             category = Category.objects.get(category_id=category_name)
         except Category.DoesNotExist:
             # Create a new category
+            print("Creating category" + category_name)
             category = Category(category_id=category_name)
             category.save()
         user_category = UserJoinCategory(user=user, category=category)

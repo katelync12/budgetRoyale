@@ -11,20 +11,15 @@
     <button onclick="window.location.href='{% url 'view_transactions' %}'">Back</button>
 </div>
 <div style="margin: 0 auto;
-<<<<<<< Updated upstream
 
 width:fit-content;
 height: fit-content;
 padding: 2% 5% 5% 5%;
-=======
-width: fit-content;
-height: fit-content;
-padding: 30px;
->>>>>>> Stashed changes
 background-color: #ffffff;
 border-radius: 8px;
 box-shadow: 0px 5px 10px #5B5FC5, 5px 0px 10px #5B5FC5;
 margin-top: 50px;
+
 text-align: center;
 
 justify-content: space-around;"> <!-- Add inline styles for container -->
@@ -34,11 +29,7 @@ justify-content: space-around;"> <!-- Add inline styles for container -->
         {% csrf_token %}
         <div> <!-- Add inline styles for each input group -->
             <!--<label for="name" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Goal Name:</label> -->
-<<<<<<< Updated upstream
             <input type="text" placeholder = 'Goal Name' id="name" name="name" required style="width: auto; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif"><br><br>
-=======
-            <input type="text" placeholder = 'Goal Name' id="name" name="name" required style="width: 90%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif"><br><br>
->>>>>>> Stashed changes
         </div>
         <div style="margin-bottom: 3%;">
             <!--<label for="amount" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Amount:</label> -->
@@ -48,11 +39,7 @@ justify-content: space-around;"> <!-- Add inline styles for container -->
             id="amount" 
             name = "amount"
             placeholder="Amount"
-<<<<<<< Updated upstream
     style="width: auto; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif;"
-=======
-    style="width: 90%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif;"
->>>>>>> Stashed changes
     min="0" 
     step="0.01" 
     pattern="^\d+(\.\d{1,2})?$" 
@@ -62,11 +49,7 @@ justify-content: space-around;"> <!-- Add inline styles for container -->
         </div>
         <div> <!-- Add inline styles for each input group -->
             <!--<label for="type" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Type:  </label>-->
-<<<<<<< Updated upstream
             <select id="type" name="type" style="width: 80%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
-=======
-            <select id="type" name="type" style="width: 90%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
->>>>>>> Stashed changes
         <!--<select id="type" name="type"> -->
                 <option value="">Any Category</option> <!-- Option for Any Category -->
                 <optgroup label="Category Options">
@@ -90,13 +73,8 @@ justify-content: space-around;"> <!-- Add inline styles for container -->
         <button type="submit" style="background-color: #5B5FC5; /* Blue button color */
       color: #ffffff; /* White button text color */
       border: none;
-<<<<<<< Updated upstream
       padding: 10px 20px;
       max-width: fit-content;
-=======
-      padding: 10px;
-      width: 30%;
->>>>>>> Stashed changes
       border-radius: 5px;
       font-family: Verdana, Geneva, Tahoma, sans-serif;
       ;
