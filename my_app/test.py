@@ -850,6 +850,8 @@ temp_result = savings_personal_goal_value_groceries()
 print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
 temp_result = savings_personal_goal_value_transportation()
 print(f"{'Savings personal goal: Transportation':<45} {temp_result}")
+temp_result = spendings_personal_goal_value_groceries()
+print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
 temp_result = spendings_multiple_and_edit()
 print(f"{'Spendings multiple and edit':<45} {temp_result}")
 
