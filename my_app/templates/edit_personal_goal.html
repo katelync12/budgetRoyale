@@ -1,0 +1,60 @@
+{% extends "edit_transaction.html" %}
+
+{% block mainTitle %}Edit Personal Goal{% endblock %}
+
+{% block action %}
+    {% url 'edit_personal_goal_action' goal.id %}
+{% endblock %}
+
+{% block namePlaceholder %}'Goal Name'{% endblock %}
+{% block namePlaceholderValue %}value="{{ goal.goal_name }}"{% endblock %}
+{% block amountValue %}required value="{{ goal.goal_amount }}"{% endblock %}
+{% block categoryValue %}
+<option value="{{ category.category_id }}" {% if category.category_id == goal.category.category_id %} selected {% endif %}>{{ category.category_id }}</option>
+{% endblock %}
+
+{% block dates %}
+
+<div style="margin-bottom: 3%;">
+    <label for="start_date" style="font-family: Verdana, sans-serif; display: block;"> Start Date:</label>
+    <input type="date" id="start_date" name="start_date" style="font-family: Verdana, sans-serif; background-color: #E9ECFA; padding: 5px; border-radius: 5px; border: none;" required value="{{ goal.start_date|date:"Y-m-d" }}">
+</div>
+<div>
+    <label for="end_date" style="font-family: Verdana, sans-serif; display: block;"> End Date:</label>
+    <input type="date" id="end_date" name="end_date" required style="font-family: Verdana, sans-serif; background-color: #E9ECFA; padding: 5px; border-radius: 5px; border: none;" value="{{ goal.end_date|date:"Y-m-d" }}">
+</div>
+<br><br>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var startDateInput = document.getElementById('start_date');
+    var endDateInput = document.getElementById('end_date');
+
+    startDateInput.addEventListener('change', function () {
+        validateDates();
+    });
+
+    endDateInput.addEventListener('change', function () {
+        validateDates();
+    });
+
+    function validateDates() {
+        var startDate = new Date(startDateInput.value);
+        var endDate = new Date(endDateInput.value);
+
+        if (endDate <= startDate) {
+            alert('End date must be after start date');
+            endDateInput.value = ''; // Clear the end date field
+            endDateInput.focus(); // Focus on the end date field
+        }
+    }
+});
+</script>
+{% endblock %}
+
+
+
+
+{% block toggleName1 %}"goal_type"{% endblock %}
+{% block toggleName2 %}"goal_type"{% endblock %}
+
+{% block back %}onclick="window.location.href='{% url 'view_personal_goals' %}'"{% endblock %}

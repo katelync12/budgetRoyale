@@ -305,9 +305,40 @@ def create_group(request):
             print("exception")
     return render(request, 'group_settings.html')
 
+def view_personal_goals(request):
+    # Ensure user is authenticated before accessing request.user
+    if request.user.is_authenticated:
+        current_user = request.user
+        
+        # Gets all goals
+        username = request.user.username
+        user = User.objects.get(username=username)
+        goals = PersonalGoal.objects.all()
+        sorted = []
+        for goal in goals:
+            # Only gets the transactions of the currently logged in user
+            if (goal.user.username == username):
+                sorted.append(goal)
+        context = {
+            'goals': sorted,
+            'current_user': current_user,
+        }
+        # Render the template with the transactions data
+        return render(request, 'view_personal_goals.html', context)
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+    
+def delete_goal(request, goal_id):
+    if request.method == 'POST':
+        goal = PersonalGoal.objects.get(pk=goal_id)
+        goal.delete()
+        return JsonResponse({'message': 'Goal deleted successfully.'})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
 def edit_transaction_action(request, transaction_id):
     transaction = get_object_or_404(Transactions, pk=transaction_id)
-    print("testing")
     if request.method == 'POST':
         # Retrieve the form data from the POST request
         week = request.POST.get('date')
@@ -315,9 +346,6 @@ def edit_transaction_action(request, transaction_id):
         name = request.POST.get('name')
         category_id = request.POST.get('type')
         is_spending = request.POST.get("transaction_type") == "on"
-        print("Amount receivd:" + amount)
-        print(type(amount))
-        print(is_spending)
         if is_spending:
             amount = str(float(amount) * -1)
         
@@ -325,9 +353,8 @@ def edit_transaction_action(request, transaction_id):
         transaction.week = week
         transaction.amount = amount
         transaction.name = name
-        transaction.category_id = category_id
+        transaction.category.category_id = category_id
         transaction.save()
-        print("saved>")
         return redirect('view_transactions')
     
     # Retrieve all categories for populating the dropdown
@@ -337,3 +364,44 @@ def edit_transaction_action(request, transaction_id):
         transaction.amount = abs(transaction.amount)
     
     return render(request, 'edit_transaction.html', {'transaction': transaction, 'categories': categories, 'is_negative': is_negative})
+
+def edit_personal_goal_action(request, goal_id):
+    goal = get_object_or_404(PersonalGoal, pk=goal_id)
+    if request.method == 'POST':
+        # Retrieve the form data from the POST request
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        amount = request.POST.get('amount')
+        name = request.POST.get('name')
+        category_id = request.POST.get('type')
+        is_spending = request.POST.get("goal_type") == "on"
+    
+        if is_spending:
+            amount = str(float(amount) * -1)
+        
+        # Update the goal object with the new data
+            
+            # category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+            # goal_amount = models.FloatField()
+            # sum_transaction = models.FloatField(default=0)
+            # is_spending = models.BooleanField(default=True)
+            # start_date = models.DateTimeField()
+            # end_date = models.DateTimeField()
+            # goal_name = models.CharField(max_length=255)
+
+        goal.start_date = start_date
+        goal.end_date = end_date
+        goal.goal_amount = amount
+        goal.goal_name = name
+        goal.category.category_id = category_id
+        goal.is_spending = is_spending
+        goal.save()
+
+        return redirect('view_personal_goals')
+    
+    # Retrieve all categories for populating the dropdown
+    categories = Category.objects.all()
+    if goal.is_spending:
+        goal.goal_amount = abs(goal.goal_amount)
+    
+    return render(request, 'edit_personal_goal.html', {'goal': goal, 'categories': categories, 'is_spending': goal.is_spending})

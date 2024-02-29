@@ -20,7 +20,7 @@
                 <th>{{ transaction.week }}</th>
                 <th>{{ transaction.name }}</th>
                 <th>{{ transaction.amount }}</th>
-                <th style="display: flex; justify-content: space-between;">
+                <th class="category-cell" style="display: flex; justify-content: space-between;">
                     <span>{{ transaction.category.category_id }}</span>
                     <div>
                         <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editTransaction({{ transaction.id }})"></i>
