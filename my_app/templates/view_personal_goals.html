@@ -1,11 +1,8 @@
 {% extends "base.html" %} 
-
 {% block content %}
-
-
 <p>Personal Goals</p>
 <p><a href="{% url 'home' %}">home</a></p>
-<p><a href="{% url 'create_personal_goals' %}">create</a></p>
+<a href="{% url 'create_personal_goals' %}">Create</a>
 
 <div class="table-container">
     <table class="styled-table">
@@ -13,7 +10,6 @@
             <th>name</th>
             <th>amount</th>
             <th>is spending</th>
-            <th>category</th>
             <th>sum transaction</th>
             <th>start date</th>
             <th>end date</th>
@@ -22,17 +18,19 @@
         {% for goal in goals %}
             <tr>
                 <th>{{ goal.goal_name }}</th>
-                <th>{{ goal.goal_amount }}</th>
+                <th>{{ goal.goal_amount|floatformat:2 }}</th> {# Ensure amount is displayed with 2 decimal points #}
                 <th>{{ goal.is_spending }}</th>
-                <th>{{ goal.category }}</th>
-                <th>{{ goal.sum_transaction }}</th>
+                <th>{{ goal.sum_transaction|floatformat:2 }}</th> {# Ensure sum_transaction is displayed with 2 decimal points #}
                 <th>{{ goal.start_date }}</th>
                 <th>{{ goal.end_date }}</th>
-                
-
-
                 <th style="display: flex; justify-content: space-between;">
-                    <span>{{ goal.category.category_id }}</span>
+                    <span>
+                        {% if goal.category %}
+                        {{ goal.category.category_id }}
+                    {% else %}
+                        Any Category
+                    {% endif %}
+                    </span>
                     <div>
                         <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editPersonalGoal({{ goal.id }})"></i>
                         <i class="fas fa-trash-alt delete-personal-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>

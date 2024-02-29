@@ -350,10 +350,11 @@ def edit_transaction_action(request, transaction_id):
             amount = str(float(amount) * -1)
         
         # Update the transaction object with the new data
+        category = Category.objects.get(category_id=category_id)
         transaction.week = week
         transaction.amount = amount
         transaction.name = name
-        transaction.category.category_id = category_id
+        transaction.category = category
         transaction.save()
         return redirect('view_transactions')
     
@@ -388,12 +389,12 @@ def edit_personal_goal_action(request, goal_id):
             # start_date = models.DateTimeField()
             # end_date = models.DateTimeField()
             # goal_name = models.CharField(max_length=255)
-
+        category = Category.objects.get(category_id=category_id)
         goal.start_date = start_date
         goal.end_date = end_date
         goal.goal_amount = amount
         goal.goal_name = name
-        goal.category.category_id = category_id
+        goal.category= category
         goal.is_spending = is_spending
         goal.save()
 

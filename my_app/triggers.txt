@@ -13,7 +13,7 @@ BEGIN
         AND (category_id = NEW.category_id OR category_id IS NULL);
     ELSE
         UPDATE my_app_personalgoal
-        SET sum_transaction = sum_transaction + NEW.amount
+        SET sum_transaction = sum_transaction - NEW.amount
         WHERE user_id = NEW.user_id
         AND is_spending = TRUE
         AND NEW.week BETWEEN start_date AND end_date
@@ -45,7 +45,7 @@ BEGIN
         AND (category_id = OLD.category_id OR category_id IS NULL);
     ELSE
         UPDATE my_app_personalgoal
-        SET sum_transaction = sum_transaction - OLD.amount
+        SET sum_transaction = sum_transaction + OLD.amount
         WHERE user_id = OLD.user_id
         AND is_spending = TRUE
         AND OLD.week BETWEEN start_date AND end_date
@@ -79,7 +79,7 @@ BEGIN
         AND (category_id = OLD.category_id OR category_id IS NULL);
     ELSE
         UPDATE my_app_personalgoal
-        SET sum_transaction = sum_transaction - OLD.amount
+        SET sum_transaction = sum_transaction + OLD.amount
         WHERE user_id = OLD.user_id
         AND is_spending = TRUE
         AND OLD.week BETWEEN start_date AND end_date
@@ -96,7 +96,7 @@ BEGIN
         AND (category_id = NEW.category_id OR category_id IS NULL);
     ELSE
         UPDATE my_app_personalgoal
-        SET sum_transaction = sum_transaction + NEW.amount
+        SET sum_transaction = sum_transaction - NEW.amount
         WHERE user_id = NEW.user_id
         AND is_spending = TRUE
         AND NEW.week BETWEEN start_date AND end_date
