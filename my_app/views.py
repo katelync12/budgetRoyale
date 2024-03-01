@@ -221,12 +221,16 @@ def view_transactions(request):
         
         # Gets all transactions
         sorted = []
-        today = date.today()
-        week_ago = today - timedelta(days=7)
-        print(today)
-        print(week_ago)
         username = request.user.username
-        transactions = Transactions.objects.filter(week__gte=week_ago, week__lte=today)
+        week = False
+        week = request.GET.get('week') == 'True'
+        if (week):
+            today = date.today()
+            week_ago = today - timedelta(days=7)
+            transactions = Transactions.objects.filter(week__gte=week_ago, week__lte=today)
+            print("hit")
+        else:
+            transactions = Transactions.objects.all()
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
             if (transaction.user.username == username):
@@ -317,7 +321,6 @@ def view_personal_goals(request):
         
         # Gets all goals
         username = request.user.username
-        user = User.objects.get(username=username)
         goals = PersonalGoal.objects.all()
         sorted = []
         for goal in goals:
