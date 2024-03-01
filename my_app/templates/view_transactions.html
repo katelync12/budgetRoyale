@@ -31,8 +31,11 @@
         {% endfor %}
     </table>
 </div>
-<ul>
-</ul>
+<div class="button-single" id="transactions-for-week-button">
+    <button onclick="window.location.href='{% url 'view_transactions' %}?week=True'; toggleButtons();">Transactions for the Week</button>
+</div>
+
+<br></br>
 
 <script>
     document.querySelectorAll('.delete-transaction').forEach(item => {
@@ -73,6 +76,5 @@
         window.location.href = `/edit_transaction/${transactionId}/`;
     }    
 </script>
-
 
 {% endblock %}
