@@ -15,6 +15,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
+from datetime import date
+from datetime import timedelta
 
 # def logout_view(request):
 #     logout(request)
@@ -218,10 +220,13 @@ def view_transactions(request):
         current_user = request.user
         
         # Gets all transactions
-        username = request.user.username
-        user = User.objects.get(username=username)
-        transactions = Transactions.objects.all()
         sorted = []
+        today = date.today()
+        week_ago = today - timedelta(days=7)
+        print(today)
+        print(week_ago)
+        username = request.user.username
+        transactions = Transactions.objects.filter(week__gte=week_ago, week__lte=today)
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
             if (transaction.user.username == username):
