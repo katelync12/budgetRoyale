@@ -61,5 +61,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('accounts/logout/', views.logout, name='logout'),
     path('add_category/', views.add_category, name='add_category'),
-    path('verify_unique_category/', views.verify_unique_category, name='verify_unique_category')
+    path('verify_unique_category/', views.verify_unique_category, name='verify_unique_category'),
+    path('generate_expenses_pie_chart/', views.generate_expenses_pie_chart, name='generate_expenses_pie_chart'),
+    path('generate_income_pie_chart/', views.generate_income_pie_chart, name='generate_income_pie_chart'),
 ]

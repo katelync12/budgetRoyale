@@ -2,6 +2,10 @@
 
 {% block content %}
 
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
 <p class="header">Hi {{ user.username }}!</p>
 <p><a href="{% url 'create_data' %}">password change</a></p>
 <p><a href="{% url 'view_transactions' %}">transactions</a></p>
@@ -13,5 +17,97 @@
   {% csrf_token %}
   <button type="submit">Log Out</button>
 </form>
+
+<body>
+  <div class="container-line">
+    <div class="pie_chart">
+      <h2>Expenses Breakdown</h2>
+      <canvas id="expensesChart" width="400" height="400"></canvas>
+    </div>
+    <div class="pie_chart">
+      <h2>Income Breakdown</h2>
+      <canvas id="incomeChart" width="400" height="400"></canvas>
+    </div>
+  </div>
+
+  <script>
+      console.log("pie")
+      fetch('/generate_expenses_pie_chart/')
+          .then(response => response.json())
+          .then(data => {
+              var ctx = document.getElementById('expensesChart').getContext('2d');
+              var myChart = new Chart(ctx, {
+                  type: 'pie',
+                  data: {
+                      labels: data.labels,
+                      datasets: [{
+                          label: 'Spending by Category',
+                          data: data.data,
+                          backgroundColor: [
+                              'rgba(255, 99, 132, 0.6)',
+                              'rgba(54, 162, 235, 0.6)',
+                              'rgba(255, 206, 86, 0.6)',
+                              'rgba(75, 192, 192, 0.6)',
+                              'rgba(153, 102, 255, 0.6)',
+                              'rgba(255, 159, 64, 0.6)'
+                          ],
+                          borderColor: [
+                              'rgba(255, 99, 132, 1)',
+                              'rgba(54, 162, 235, 1)',
+                              'rgba(255, 206, 86, 1)',
+                              'rgba(75, 192, 192, 1)',
+                              'rgba(153, 102, 255, 1)',
+                              'rgba(255, 159, 64, 1)'
+                          ],
+                          borderWidth: 1
+                      }]
+                  },
+                  options: {
+                      // Customize options here
+                  }
+              });
+          });
+  </script>
+
+  <script>
+    console.log("pie")
+    fetch('/generate_income_pie_chart/')
+        .then(response => response.json())
+        .then(data => {
+            var ctx = document.getElementById('incomeChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Income by Category',
+                        data: data.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)',
+                            'rgba(255, 159, 64, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    // Customize options here
+                }
+            });
+        });
+</script>
+  <br></br>
+</body>
 
 {% endblock %}
