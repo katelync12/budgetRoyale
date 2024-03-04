@@ -63,7 +63,23 @@
             <a class="dropdown-toggle nav-headers set-font" data-toggle="dropdown">Profile<span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li><a href="{% url 'profile_settings' %}" class="sub-headers set-font">Settings</a></li>
-                <li><a href="{% url 'logout' %}" class="sub-headers set-font">Logout</a></li>
+                <li><a href="{% url 'logout' %}" class="sub-headers set-font">
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button
+                        style="border: none;
+                        background: none;
+                        padding: 0;
+                        margin: 0;
+                        font: inherit;
+                        cursor: pointer;
+                        outline: none;
+                        display: inline;
+                        color: inherit;"
+                         type="submit">Log Out</button>
+                      </form>
+
+                </a></li>
             </ul>
             </li>
         </ul>
