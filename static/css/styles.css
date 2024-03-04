@@ -326,3 +326,16 @@ a.nav-headers.active {
     width: 100%;
   }
 }
+
+.date-input {
+  background-color: #E9ECFA;
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+}
+
+.date-container {
+  margin-left: 10px;
+  margin-top: 20px;
+  display: flex;
+}
