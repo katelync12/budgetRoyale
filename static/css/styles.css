@@ -307,3 +307,22 @@ a.nav-headers.active {
       font-family: Verdana, Geneva, Tahoma, sans-serif;
       cursor: pointer;
 }
+
+.pie_chart {
+  height: 400px;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+
+@media screen and (max-width: 800px) {
+  .container-line {
+    display: block;
+    width: 100%;
+  }
+}
+@media screen and (min-width: 801px) {
+  .container-line {
+    display: flex;
+    width: 100%;
+  }
+}

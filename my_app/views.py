@@ -387,16 +387,6 @@ def edit_personal_goal_action(request, goal_id):
     
         if is_spending:
             amount = str(float(amount) * -1)
-        
-        # Update the goal object with the new data
-            
-            # category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
-            # goal_amount = models.FloatField()
-            # sum_transaction = models.FloatField(default=0)
-            # is_spending = models.BooleanField(default=True)
-            # start_date = models.DateTimeField()
-            # end_date = models.DateTimeField()
-            # goal_name = models.CharField(max_length=255)
         category = Category.objects.get(category_id=category_id)
         goal.start_date = start_date
         goal.end_date = end_date
@@ -414,3 +404,55 @@ def edit_personal_goal_action(request, goal_id):
         goal.goal_amount = abs(goal.goal_amount)
     
     return render(request, 'edit_personal_goal.html', {'goal': goal, 'categories': categories, 'is_spending': goal.is_spending})
+
+@login_required
+def generate_expenses_pie_chart(request):
+    # Filter transactions with negative amounts
+    negative_transactions = Transactions.objects.filter(amount__lt=0)
+    username = request.user
+
+    # Aggregate expenses based on categories
+    category_spending = {}
+    for transaction in negative_transactions:
+        if (str(transaction.user.username) == str(username)):
+            category_name = transaction.category.category_id
+            if category_name in category_spending:
+                category_spending[category_name] += transaction.amount * -1
+            else:
+                category_spending[category_name] = transaction.amount * -1
+
+    # Prepare data for the pie chart
+    labels = list(category_spending.keys())
+    data = list(category_spending.values())
+
+    chart_data = {
+        'labels': labels,
+        'data': data,
+    }
+    return JsonResponse(chart_data)
+
+@login_required
+def generate_income_pie_chart(request):
+    # Filter transactions with negative amounts
+    positive_transactions = Transactions.objects.filter(amount__gt=0)
+    username = request.user
+
+    # Aggregate spendings based on categories
+    category_income = {}
+    for transaction in positive_transactions:
+        if (str(transaction.user.username) == str(username)):
+            category_name = transaction.category.category_id
+            if category_name in category_income:
+                category_income[category_name] += transaction.amount
+            else:
+                category_income[category_name] = transaction.amount
+
+    # Prepare data for the pie chart
+    labels = list(category_income.keys())
+    data = list(category_income.values())
+
+    chart_data = {
+        'labels': labels,
+        'data': data,
+    }
+    return JsonResponse(chart_data)
