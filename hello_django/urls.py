@@ -44,6 +44,7 @@ urlpatterns = [
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path("form/", TemplateView.as_view(template_name="form.html"), name="form"),
     path("send_form/", views.send_form, name="send_form"),
+    path("delete_account/", views.delete_account, name="delete_account"),
     path("form_confirm/", TemplateView.as_view(template_name="form_confirm.html"), name="form_confirm"),
     path("personal-goals/", views.view_personal_goals, name="view_personal_goals"),
     path("personal-goals/create/", views.create_personal_goal_page, name="create_personal_goals"),
