@@ -16,7 +16,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
 from datetime import date
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 # def logout_view(request):
 #     logout(request)
@@ -414,8 +414,21 @@ def edit_personal_goal_action(request, goal_id):
 
 @login_required
 def generate_expenses_pie_chart(request):
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+
+    # Convert date strings to datetime objects
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
+
     # Filter transactions with negative amounts
     negative_transactions = Transactions.objects.filter(amount__lt=0)
+
+    if start_date:
+        negative_transactions = negative_transactions.filter(week__gte=start_date)
+    if end_date:
+        negative_transactions = negative_transactions.filter(week__lte=end_date)
+
     username = request.user
 
     # Aggregate expenses based on categories
@@ -440,8 +453,20 @@ def generate_expenses_pie_chart(request):
 
 @login_required
 def generate_income_pie_chart(request):
-    # Filter transactions with negative amounts
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+
+    # Convert date strings to datetime objects
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
+
     positive_transactions = Transactions.objects.filter(amount__gt=0)
+
+    if start_date:
+        positive_transactions = positive_transactions.filter(week__gte=start_date)
+    if end_date:
+        positive_transactions = positive_transactions.filter(week__lte=end_date)
+
     username = request.user
 
     # Aggregate spendings based on categories
@@ -462,4 +487,5 @@ def generate_income_pie_chart(request):
         'labels': labels,
         'data': data,
     }
+    print(chart_data)
     return JsonResponse(chart_data)
