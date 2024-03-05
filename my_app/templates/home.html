@@ -23,25 +23,29 @@
 <body>
   <h1 style="margin-left: 10px;">Dashboard</h1>
   <div class="date-container">
-    <div style="margin-right: 10px;">
-        <p>Start date</p>
-        <input type="date" id="date" name="date" class="date-input">
+    <div style="margin-right: 10px; margin-top: 10px;">
+        <p>From</p>
     </div>
     <div style="margin-right: 10px;">
-        <p>End date</p>
-        <input type="date" id="date" name="date" class="date-input">
+        <input type="date" id="start_date" name="start_date" class="date-input" required>
     </div>
-    <div style="margin-top: 35px">
-        <button>Submit</button>
+    <div style="margin-right: 10px; margin-top: 10px;">
+        <p>to</p>
+    </div>
+    <div style="margin-right: 10px;">
+        <input type="date" id="end_date" name="end_date" class="date-input" required>
+    </div>
+    <div>
+        <button onclick="submitDates()">Submit</button>
     </div>
   </div>
   <div class="container-line">
     <div class="pie_chart">
-      <h2>Expenses Breakdown</h2>
+      <h2 style="text-align: center">Expenses Breakdown</h2>
       <canvas id="expensesChart" width="400" height="400"></canvas>
     </div>
     <div class="pie_chart">
-      <h2>Income Breakdown</h2>
+      <h2 style="text-align: center">Income Breakdown</h2>
       <canvas id="incomeChart" width="400" height="400"></canvas>
     </div>
   </div>
@@ -60,12 +64,13 @@
             return false;
         }
     }
-      console.log("pie")
+      var myChart;
+      var myChart2;
       fetch('/generate_expenses_pie_chart/')
           .then(response => response.json())
           .then(data => {
               var ctx = document.getElementById('expensesChart').getContext('2d');
-              var myChart = new Chart(ctx, {
+              myChart = new Chart(ctx, {
                   type: 'pie',
                   data: {
                       labels: data.labels,
@@ -78,7 +83,10 @@
                               'rgba(255, 206, 86, 0.6)',
                               'rgba(75, 192, 192, 0.6)',
                               'rgba(153, 102, 255, 0.6)',
-                              'rgba(255, 159, 64, 0.6)'
+                              'rgba(255, 159, 64, 0.6)',
+                              'rgba(1, 50, 32, 0.6)',
+                              'rgba(144, 238, 144, 0.6)',
+                              'rgba(11, 106, 161, 0.6)'
                           ],
                           borderColor: [
                               'rgba(255, 99, 132, 1)',
@@ -86,7 +94,10 @@
                               'rgba(255, 206, 86, 1)',
                               'rgba(75, 192, 192, 1)',
                               'rgba(153, 102, 255, 1)',
-                              'rgba(255, 159, 64, 1)'
+                              'rgba(255, 159, 64, 1)',
+                              'rgba(1, 50, 32, 0.6)',
+                              'rgba(144, 238, 144, 0.6)',
+                              'rgba(11, 106, 161, 0.6)'
                           ],
                           borderWidth: 1
                       }]
@@ -96,15 +107,12 @@
                   }
               });
           });
-  </script>
 
-  <script>
-    console.log("pie")
-    fetch('/generate_income_pie_chart/')
+          fetch('/generate_income_pie_chart/')
         .then(response => response.json())
         .then(data => {
             var ctx = document.getElementById('incomeChart').getContext('2d');
-            var myChart = new Chart(ctx, {
+            myChart2 = new Chart(ctx, {
                 type: 'pie',
                 data: {
                     labels: data.labels,
@@ -117,7 +125,10 @@
                             'rgba(255, 206, 86, 0.6)',
                             'rgba(75, 192, 192, 0.6)',
                             'rgba(153, 102, 255, 0.6)',
-                            'rgba(255, 159, 64, 0.6)'
+                            'rgba(255, 159, 64, 0.6)',
+                            'rgba(1, 50, 32, 0.6)',
+                            'rgba(144, 238, 144, 0.6)',
+                            'rgba(11, 106, 161, 0.6)',
                         ],
                         borderColor: [
                             'rgba(255, 99, 132, 1)',
@@ -125,7 +136,10 @@
                             'rgba(255, 206, 86, 1)',
                             'rgba(75, 192, 192, 1)',
                             'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(1, 50, 32, 0.6)',
+                            'rgba(144, 238, 144, 0.6)',
+                            'rgba(11, 106, 161, 0.6)',
                         ],
                         borderWidth: 1
                     }]
@@ -135,7 +149,34 @@
                 }
             });
         });
-</script>
+
+        function submitDates() {
+            var startDate = document.getElementById('start_date').value;
+            var endDate = document.getElementById('end_date').value;
+    
+            fetch(`/generate_expenses_pie_chart/?start_date=${startDate}&end_date=${endDate}`)
+            .then(response => response.json())
+            .then(data => {
+                var ctx = document.getElementById('expensesChart').getContext('2d');
+                updateData(myChart, data.labels, data.data);
+            });
+        
+            fetch(`/generate_income_pie_chart/?start_date=${startDate}&end_date=${endDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    var ctx = document.getElementById('incomeChart').getContext('2d');
+                    updateData(myChart2, data.labels, data.data);
+                });
+        }
+        
+        function updateData(chart, label, data) {
+            chart.data.labels = label
+            chart.data.datasets.forEach((dataset) => {
+                dataset.data = data;
+            });
+            chart.update();
+        }
+  </script>
   <br></br>
 </body>
 

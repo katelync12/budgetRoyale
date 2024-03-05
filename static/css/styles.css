@@ -318,12 +318,16 @@ a.nav-headers.active {
   .container-line {
     display: block;
     width: 100%;
+    justify-content: center;
+    align-items: center;
   }
 }
 @media screen and (min-width: 801px) {
   .container-line {
     display: flex;
     width: 100%;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -338,4 +342,6 @@ a.nav-headers.active {
   margin-left: 10px;
   margin-top: 20px;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
