@@ -9,9 +9,28 @@
 <p><a href="{% url 'form' %}">form</a></p>
 <p><a href="{% url 'create_data' %}">personal goals</a></p>
 <p><a href="{% url 'groups' %}">Groups</a></p>
+<p>
+  <a href="#" onclick="confirmDelete()">delete_account</a>
+</p>
 <form action="{% url 'logout' %}" method="post">
   {% csrf_token %}
   <button type="submit">Log Out</button>
 </form>
+
+<script>
+  function confirmDelete() {
+    // Display a confirmation dialog
+    var isConfirmed = confirm("Are you sure you want to delete your account?");
+    
+    // If user confirms, proceed with deletion
+    if (isConfirmed) {
+        // Redirect to the delete account URL
+        window.location.href = "{% url 'delete_account' %}";
+    } else {
+        // Do nothing if user cancels
+        return false;
+    }
+}
+</script>
 
 {% endblock %}
