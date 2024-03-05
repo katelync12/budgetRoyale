@@ -22,6 +22,13 @@ from datetime import timedelta
 #     logout(request)
 #     return redirect('registration/login.html')
 @login_required
+def delete_account(request):
+    #username = request.user.username
+    user = request.user
+    user.delete()
+    return redirect('home')
+#
+@login_required
 def send_form(request):
     if request.method == "POST":
         email = request.POST.get("email")
