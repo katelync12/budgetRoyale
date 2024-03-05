@@ -27,7 +27,7 @@ def delete_account(request):
     user = request.user
     user.delete()
     return redirect('home')
-
+#
 @login_required
 def send_form(request):
     if request.method == "POST":
