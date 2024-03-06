@@ -316,10 +316,10 @@ a.nav-headers.active {
 
 @media screen and (max-width: 800px) {
   .container-line {
-    display: block;
-    width: 100%;
     justify-content: center;
     align-items: center;
+    display: column;
+    width: 100%;
   }
 }
 @media screen and (min-width: 801px) {
@@ -340,8 +340,44 @@ a.nav-headers.active {
 
 .date-container {
   margin-left: 10px;
-  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media screen and (max-width: 450px) {
+  .date-container {
+    flex-direction: column;
+  }
+
+  .date-container > div {
+    margin: 5px 0;
+  }
+}
+
+@media screen and (min-width: 451px) {
+  .date-label {
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .date-label {
+    margin-bottom: 0;
+  }
+  .date-input {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.date-input-container {
+  margin-right: 10px;
+}
+
+@media screen and (max-width: 450px) {
+  .date-input-container {
+      margin-top: -12px !important;
+  }
 }
