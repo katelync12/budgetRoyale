@@ -19,23 +19,24 @@
 
 <body>
   <h1 style="margin-left: 10px;">Dashboard</h1>
-  <div class="date-container">
-    <div style="margin-right: 10px; margin-top: 10px;">
+  <div class="date-container" style="margin-top: 20px">
+    <div class="date-label">
         <p>From</p>
     </div>
-    <div style="margin-right: 10px;">
+    <div class="date-input-container">
         <input type="date" id="start_date" name="start_date" class="date-input" required>
     </div>
-    <div style="margin-right: 10px; margin-top: 10px;">
+    <div class="date-label">
         <p>to</p>
     </div>
-    <div style="margin-right: 10px;">
+    <div class="date-input-container">
         <input type="date" id="end_date" name="end_date" class="date-input" required>
     </div>
     <div>
         <button onclick="submitDates()">Submit</button>
     </div>
   </div>
+  
   <div class="container-line">
     <div class="pie_chart">
       <h2 style="text-align: center">Expenses Breakdown</h2>
