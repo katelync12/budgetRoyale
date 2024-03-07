@@ -9,12 +9,32 @@
 <p><a href="{% url 'form' %}">form</a></p>
 <p><a href="{% url 'create_data' %}">personal goals</a></p>
 <p><a href="{% url 'groups' %}">Groups</a></p>
+<p style="font-size:medium; font-family: Verdana, Geneva, Tahoma, sans-serif; color: #5B5FC5;">Delete your account</p>
 <p>
-  <a href="#" onclick="confirmDelete()">delete_account</a>
+  <form id="deleteForm" method="post" action="{% url 'delete_account' %}">
+    {% csrf_token %}
+    
+    <input style="width:max-content;" type="text" id="username" name="username" placeholder="Enter your username">
+    <div>
+    <button type="submit" onclick="confirmDelete()" style="background-color: #5B5FC5; /* Blue button color */
+    color: #ffffff; /* White button text color */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    cursor: pointer;">Delete Account</button>
+  </div>
+  </form>
 </p>
 <form action="{% url 'logout' %}" method="post">
   {% csrf_token %}
-  <button type="submit">Log Out</button>
+  <button type="submit" style="background-color: #ffffff; /* Blue button color */
+  color: #5B5FC5; /* White button text color */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  cursor: pointer;">Log Out</button>
 </form>
 
 <script>
