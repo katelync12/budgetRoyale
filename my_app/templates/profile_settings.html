@@ -10,7 +10,7 @@
 <p><a href="{% url 'create_data' %}">personal goals</a></p>
 <p><a href="{% url 'groups' %}">Groups</a></p>
 <p>
-  <a href="#" onclick="confirmDelete()">delete_account</a>
+  <a href="{% url 'delete_account_form' %}">delete_account</a>
 </p>
 <form action="{% url 'logout' %}" method="post">
   {% csrf_token %}
