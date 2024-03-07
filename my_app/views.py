@@ -31,6 +31,9 @@ def delete_account(request):
     if request.method == 'POST':
         # Retrieve the username entered by the user
         entered_username = request.POST.get('username', None)
+        print('aaaaaaaaaaaa')
+        print(entered_username)
+        print(request.user.username)
 
         # Check if the entered username matches the username of the logged-in user
         if entered_username == request.user.username:
@@ -40,7 +43,9 @@ def delete_account(request):
         else:
             # Username does not match, handle accordingly
             error_message = "The entered username does not match your username."
-            return render(request, 'delete_account.html', {'error_message': error_message})
+            return render(request, 'profile_settings.html', {'error_message': error_message})
+    print('aaaaaaaaaa')
+    return redirect('home')
     
 #
 @login_required
