@@ -27,12 +27,17 @@ from django.http import HttpResponseRedirect
 def delete_account(request):
     #username = request.user.username
     confirm_name = request.GET.get('name', '')
+    
     user = request.user
+    if confirm_name != request.user.username:
+        messages.error(request, "The name you entered does not match your username. Please try again.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     if (Group.objects.filter(admin_user=user).exists()):
         messages.error(request, confirm_name + "Please first transfer ownership of your group or delete the group before deleting your account.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     user.delete()
     return redirect('home')
+    
 #
 @login_required
 def send_form(request):
