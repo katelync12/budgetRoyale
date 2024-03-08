@@ -9,6 +9,7 @@
 <p><a href="{% url 'form' %}">form</a></p>
 <p><a href="{% url 'create_data' %}">personal goals</a></p>
 <p><a href="{% url 'groups' %}">Groups</a></p>
+
 <p>
   <a href="#" onclick="confirmDelete()">delete_account</a>
 </p>
@@ -16,21 +17,31 @@
   {% csrf_token %}
   <button type="submit">Log Out</button>
 </form>
+{% if messages %}
+  <script>
+    // Wait for the DOM to be fully loaded before displaying alerts
+    document.addEventListener("DOMContentLoaded", function() {
+      // Display messages as alerts
+      {% for message in messages %}
+        alert("{{ message }}");
+      {% endfor %}
+    });
+  </script>
+{% endif %}
 
 <script>
   function confirmDelete() {
     // Display a confirmation dialog
-    var isConfirmed = confirm("Are you sure you want to delete your account?");
+    var name = prompt("Enter your username again to confirm you would like to delete your account.", "eee");
     
     // If user confirms, proceed with deletion
-    if (isConfirmed) {
+    if (name) {
         // Redirect to the delete account URL
-        window.location.href = "{% url 'delete_account' %}";
+        window.location.href = "{% url 'delete_account' %}?name=" + encodeURIComponent(name);
     } else {
         // Do nothing if user cancels
         return false;
     }
 }
 </script>
-
 {% endblock %}
