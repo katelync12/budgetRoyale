@@ -503,8 +503,14 @@ def generate_income_pie_chart(request):
     print(chart_data)
     return JsonResponse(chart_data)
 
+@login_required
 def leave_group(request):
-    
-    
-
+    # need to remove the entry in userjoingroup table    
+    user = request.user
+    if (Group.objects.filter(admin_user=user).exists()):
+        messages.error(request, user.username + "Please first transfer ownership of your group or delete the group before deleting your account.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    group = UserJoinGroup.objects.filter(user=user)
+    if group.exists():
+        group.delete()
     return redirect('groups')
