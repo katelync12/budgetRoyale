@@ -10,6 +10,8 @@
 <p><a href="{% url 'create_data' %}">personal goals</a></p>
 <p><a href="{% url 'groups' %}">Groups</a></p>
 
-<a href="{% url 'leave_group' %}">Leave Group</a>
+{% if not is_admin %}
+  <a href="{% url 'leave_group' %}">Leave Group</a>
+{% endif %}
 
 {% endblock %}
