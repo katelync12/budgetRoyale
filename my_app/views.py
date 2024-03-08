@@ -502,3 +502,9 @@ def generate_income_pie_chart(request):
     }
     print(chart_data)
     return JsonResponse(chart_data)
+
+def leave_group(request):
+    
+    
+
+    return redirect('groups')

@@ -52,8 +52,12 @@ urlpatterns = [
     path("edit_personal_goal/", TemplateView.as_view(template_name="edit_personal_goal.html"), name="edit_personal_goal_view"),
     path("edit_personal_goal/<int:goal_id>/", views.edit_personal_goal_action, name="edit_personal_goal_action"),
 
-    path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
+
+
+    path("groups/leave/", views.leave_group, name="leave_group"),
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),
+    path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
+    
     path("edit_transaction/", TemplateView.as_view(template_name="edit_transaction.html"), name="edit_transactions_view"),
     path("edit_transaction/<int:transaction_id>/", views.edit_transaction_action, name="edit_transaction_action"),
     path("settings/", TemplateView.as_view(template_name="profile_settings.html"), name="profile_settings"),
