@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 import subprocess
 import time
 import sys
+import uuid
 def install_bs4():
     subprocess.check_call([sys.executable, "-m", "pip", "install", "bs4"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
@@ -17,7 +18,7 @@ try:
 except:
     install_bs4()
     from bs4 import BeautifulSoup
-buffer_constant = .1
+buffer_constant = 1
 def login(username, password):
     url = "http://127.0.0.1:8000/login"
     driver.get(url)
@@ -71,10 +72,22 @@ def login_failed(username, password):
             return ("Failed")
     except:
         return "Failed"
-    
-def create_transaction():
+
+def login_logout(username, password):
     try:
-        login("sam", "testpassword")
+        url = "http://127.0.0.1:8000/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//a[contains(text(), "Profile")]')
+        button.click()
+        button = driver.find_element("xpath", '//button[contains(text(), "Log Out")]')
+        button.click()
+    except:
+        return "Failed"
+    
+def create_transaction(username, password):
+    try:
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
@@ -103,10 +116,28 @@ def create_transaction():
         return "Passed"
     except:
         return "Failed"
-    
-def cancel_transaction():
+def create_account(username, password):
     try:
-        login("sam", "testpassword")
+        url = "http://127.0.0.1:8000/accounts/signup/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        username_input = driver.find_element("name", "username")
+        username_input.send_keys(username)
+        email_input = driver.find_element("name", "email")
+        email_input.send_keys("teambudgetroyale@gmail.com")
+        password_input = driver.find_element("name", "password1")
+        password_input.send_keys(password)
+        password_input = driver.find_element("name", "password2")
+        password_input.send_keys(password)
+        button = driver.find_element("xpath", "//button[text()='Sign Up']")
+        button.click()
+        time.sleep(buffer_constant)
+        return "Passed"
+    except:
+        return "Failed"
+def cancel_transaction(username, password):
+    try:
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
@@ -128,9 +159,9 @@ def cancel_transaction():
     except:
         return "Failed"
     
-def edit_transaction():
+def edit_transaction(username, password):
     try:
-        login("sam", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
@@ -152,9 +183,9 @@ def edit_transaction():
     except:
         "Failed"
     
-def cancel_delete_transaction():
+def cancel_delete_transaction(username, password):
     try:
-        login("sam", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
@@ -173,9 +204,9 @@ def cancel_delete_transaction():
     except:
         return "Failed"
     
-def delete_transaction():
+def delete_transaction(username, password):
     try:
-        login("sam", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
@@ -197,9 +228,9 @@ def delete_transaction():
     except:
         return "Failed"
     
-def create_personal_goal():
+def create_personal_goal(username, password):
     try:
-        login("sam", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
@@ -225,9 +256,9 @@ def create_personal_goal():
     except:
         return "Failed"
     
-def edit_personal_goal():
+def edit_personal_goal(username, password):
     try:
-        login("sam", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
@@ -249,9 +280,9 @@ def edit_personal_goal():
     except:
         return "Failed"
 
-def delete_personal_goal():
+def delete_personal_goal(username, password):
     try:
-        login("sam", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
@@ -273,9 +304,9 @@ def delete_personal_goal():
     except:
         return "Failed"
     
-def create_personal_goal_negative_amount():
+def create_personal_goal_negative_amount(username, password):
     try:
-        login("sam", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
@@ -300,9 +331,9 @@ def create_personal_goal_negative_amount():
     except:
         return "Failed"
     
-def create_personal_goal_dates_error():
+def create_personal_goal_dates_error(username, password):
     try:
-        login("sam", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
@@ -327,10 +358,10 @@ def create_personal_goal_dates_error():
             return ("Failed")
     except:
         return "Failed"
-def savings_personal_goal_value_groceries():
+def savings_personal_goal_value_groceries(username, password):
     try:
         #create transaction
-        login("test-sum-transaction", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
@@ -433,10 +464,10 @@ def savings_personal_goal_value_groceries():
     except:
         return "Failed"
     
-def savings_personal_goal_value_transportation():
+def savings_personal_goal_value_transportation(username, password):
     try:
         #create transaction
-        login("test-sum-transaction", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
@@ -541,10 +572,10 @@ def savings_personal_goal_value_transportation():
     except:
         return "Failed"
     
-def spendings_personal_goal_value_groceries():
+def spendings_personal_goal_value_groceries(username, password):
     try:
         #create transaction
-        login("test-sum-transaction", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
@@ -646,10 +677,10 @@ def spendings_personal_goal_value_groceries():
     except:
         return "Failed"
     
-def spendings_multiple_and_edit():
+def spendings_multiple_and_edit(username, password):
     try:
         #create transaction
-        login("test-sum-transaction", "testpassword")
+        login(username, password)
         button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
         button.click()
         button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
@@ -808,6 +839,47 @@ def spendings_multiple_and_edit():
         return "Passed"
     except:
         return "Failed"
+def delete_account_fail(username, password):
+    try:
+        login(username, password)
+        url = "http://127.0.0.1:8000/settings"
+        driver.get(url)
+        button = driver.find_element("xpath", "//button[text()='Delete Account']")
+        button.click()
+        time.sleep(1)
+        prompt = driver.switch_to.alert
+        prompt.send_keys("HelloHello")
+        prompt.accept()
+        time.sleep(1)
+        try:
+            alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert.accept()
+            return "Passed"
+        except:
+            return "Failed"
+    except:
+        return "Failed"
+    
+def delete_account_success(username, password):
+    try:
+        login(username, password)
+        url = "http://127.0.0.1:8000/settings"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//button[text()='Delete Account']")
+        button.click()
+        time.sleep(1)
+        prompt = driver.switch_to.alert
+        prompt.send_keys(username)
+        prompt.accept()
+        time.sleep(1)
+        try:
+            button = driver.find_element("xpath", "//button[text()='Delete Account']")
+            return "Failed"
+        except:
+            return "Passed"
+    except:
+        return "Failed"
 
 
 browser_options = ChromeOptions()
@@ -820,40 +892,54 @@ driver = Chrome(options=browser_options)
 
 # ADD TEST CASES HERE
 # At the start of each function, call the login function at the top of the page
+
+#TODO: generate random username, password = "testpassword"
+username = str(uuid.uuid4())[:20]
+password="testpassword"
+#TODO: create acc with username and password
 temp_result = login_failed("sam", "test")
 print(f"{'Login failed':<45} {temp_result}")
 temp_result = login_success("sam", "testpassword")
 print(f"{'Login success':<45} {temp_result}")
 temp_result =login_failed("sam", "test")
 print(f"{'Login failed':<45} {temp_result}")
-temp_result = create_transaction()
+temp_result = create_account(username, password)
+print(f"{'Create account':<45} {temp_result}")
+
+'''temp_result = create_transaction(username, password)
 print(f"{'Create transaction':<45} {temp_result}")
-temp_result = cancel_transaction()
+temp_result = cancel_transaction(username, password)
 print(f"{'Cancel transaction':<45} {temp_result}")
-temp_result = edit_transaction()
+temp_result = edit_transaction(username, password)
 print(f"{'Edit transaction':<45} {temp_result}")
-temp_result = cancel_delete_transaction()
+temp_result = cancel_delete_transaction(username, password)
 print(f"{'Cancel delete transaction':<45} {temp_result}")
-temp_result = delete_transaction()
+temp_result = delete_transaction(username, password)
 print(f"{'Delete transaction':<45} {temp_result}")
-temp_result = create_personal_goal()
+temp_result = create_personal_goal(username, password)
 print(f"{'Create personal goal':<45} {temp_result}")
-temp_result = edit_personal_goal()
+temp_result = edit_personal_goal(username, password)
 print(f"{'Edit personal goal':<45} {temp_result}")
-temp_result = delete_personal_goal()
+temp_result = delete_personal_goal(username, password)
 print(f"{'Delete personal goal':<45} {temp_result}")
-temp_result = create_personal_goal_negative_amount()
+temp_result = create_personal_goal_negative_amount(username, password)
 print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
-temp_result = create_personal_goal_dates_error()
+temp_result = create_personal_goal_dates_error(username, password)
 print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
-temp_result = savings_personal_goal_value_groceries()
+#TODO: create 6 personal goals of used for integration
+temp_result = savings_personal_goal_value_groceries(username, password)
 print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
-temp_result = savings_personal_goal_value_transportation()
+temp_result = savings_personal_goal_value_transportation(username, password)
 print(f"{'Savings personal goal: Transportation':<45} {temp_result}")
-temp_result = spendings_personal_goal_value_groceries()
+temp_result = spendings_personal_goal_value_groceries(username, password)
 print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
-temp_result = spendings_multiple_and_edit()
-print(f"{'Spendings multiple and edit':<45} {temp_result}")
+temp_result = spendings_multiple_and_edit(username, password)
+print(f"{'Spendings multiple and edit':<45} {temp_result}")'''
+temp_result = delete_account_fail(username, password)
+print(f"{'Delete account failed':<45} {temp_result}")
+temp_result = delete_account_success(username, password)
+print(f"{'Delete account success':<45} {temp_result}")
+#TODO: delete account
 
 
 
