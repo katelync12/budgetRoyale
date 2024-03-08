@@ -17,34 +17,25 @@ from django.core.mail import send_mail
 from django.conf import settings
 from datetime import date
 from datetime import timedelta, datetime
+from django.http import HttpResponseRedirect
 
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
+
 @login_required
 def delete_account(request):
-    # username = request.user.username
-    # user = request.user
-    # user.delete()
-    # return redirect('home')
-
-    if request.method == 'POST':
-        # Retrieve the username entered by the user
-        entered_username = request.POST.get('username', None)
-        print('aaaaaaaaaaaa')
-        print(entered_username)
-        print(request.user.username)
-
-        # Check if the entered username matches the username of the logged-in user
-        if entered_username == request.user.username:
-            # Delete the account
-            request.user.delete()
-            return redirect('home')  # Redirect to home page or any other page after deletion
-        else:
-            # Username does not match, handle accordingly
-            error_message = "The entered username does not match your username."
-            return render(request, 'profile_settings.html', {'error_message': error_message})
-    print('aaaaaaaaaa')
+    #username = request.user.username
+    confirm_name = request.GET.get('name', '')
+    
+    user = request.user
+    if confirm_name != request.user.username:
+        messages.error(request, "The name you entered does not match your username. Please try again.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    if (Group.objects.filter(admin_user=user).exists()):
+        messages.error(request, confirm_name + "Please first transfer ownership of your group or delete the group before deleting your account.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    user.delete()
     return redirect('home')
     
 #
@@ -325,9 +316,10 @@ def create_group(request):
 
     if UserJoinGroup.objects.filter(user=user).exists():
         # any popup?
+        print("eete")
         return render(request, 'group_settings.html')
     
-    group = Group(name=group_name)
+    group = Group(name=group_name, admin_user=user)
     group.save()
     # Check if there's an existing relationship between user and category
     print(group.name)
