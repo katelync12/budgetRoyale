@@ -316,7 +316,7 @@ a.nav-headers.active {
     width: 100%;
   }
   .pie_chart {
-    height: 420px;
+    height: 550px;
     width: 95%;
     padding: 10px;
     margin-bottom: 30px;
@@ -356,6 +356,7 @@ a.nav-headers.active {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 10px;
 }
 
 @media screen and (max-width: 450px) {
@@ -397,4 +398,24 @@ a.nav-headers.active {
 
 .no-transactions {
   font-size: 18px;
+}
+
+.button-container-home {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 5%;
+  /*width: 90%;*/
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+
+.button-container-home button {
+  padding: 10px 20px;
+  background-color: white;
+  border: 2px solid #5B5FC5;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
 }
