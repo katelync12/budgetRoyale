@@ -308,12 +308,6 @@ a.nav-headers.active {
       cursor: pointer;
 }
 
-.pie_chart {
-  height: 400px;
-  padding: 10px;
-  margin-bottom: 30px;
-}
-
 @media screen and (max-width: 800px) {
   .container-line {
     justify-content: center;
@@ -321,13 +315,32 @@ a.nav-headers.active {
     display: column;
     width: 100%;
   }
+  .pie_chart {
+    height: 420px;
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 30px;
+    margin-right: 10px;
+    margin-left: 10px;
+    border: 2px solid #a1a5c1;
+  }
 }
 @media screen and (min-width: 801px) {
   .container-line {
     display: flex;
-    width: 100%;
     justify-content: center;
     align-items: center;
+    width: 100%;
+  }
+  .pie_chart {
+    height: 470px;
+    width: 400px;
+    padding: 10px;
+    margin-bottom: 30px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-left: 10px;
+    border: 2px solid #a1a5c1;
   }
 }
 
@@ -380,4 +393,8 @@ a.nav-headers.active {
   .date-input-container {
       margin-top: -12px !important;
   }
+}
+
+.no-transactions {
+  font-size: 18px;
 }
