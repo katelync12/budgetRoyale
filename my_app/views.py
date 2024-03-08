@@ -295,9 +295,16 @@ def check_user_group(request, page):
     if request.user.is_authenticated:
         username = request.user.username
         user = User.objects.get(username=username)
+        is_admin = False
+        if (Group.objects.filter(admin_user=user).exists()):
+            is_admin = True
         # Check if there's an existing relationship between user and category
         if UserJoinGroup.objects.filter(user=user).exists():
-            return render(request, page + '.html')
+            context = {
+            'is_admin': is_admin
+            }
+        # Render the template with the transactions data
+            return render(request, page + '.html', context)
         else:
             return redirect('groups')
     else:
@@ -309,7 +316,12 @@ def check_user_group(request, page):
 @login_required  # Requires the user to be logged in to access this view
 def create_group(request):
     group_name = request.POST.get("name")
-    print(group_name)
+    group_password = request.POST.get("password1")
+    group_password2 = request.POST.get("password2")
+    print(group_password)
+    print(group_password2)
+    if (group_password != group_password2):
+        return render(request, 'groups.html')
     username = request.user.username
     user = User.objects.get(username=username)
     group = None
@@ -319,16 +331,16 @@ def create_group(request):
         print("eete")
         return render(request, 'group_settings.html')
     
-    group = Group(name=group_name, admin_user=user)
+    group = Group(name=group_name, admin_user=user, password=group_password)
     group.save()
-    # Check if there's an existing relationship between user and category
+    # Check if there's an existing relationship between user and group
     print(group.name)
     if group:
         try:
             print("try")
             UserJoinGroup.objects.get(user=user, group=group)
         except UserJoinGroup.DoesNotExist:
-            # Create a new relationship between user and category
+            # Create a new relationship between user and group
             user_group = UserJoinGroup(user=user, group=group)
             user_group.save()
             print("exception")
