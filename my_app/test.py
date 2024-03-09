@@ -18,7 +18,7 @@ try:
 except:
     install_bs4()
     from bs4 import BeautifulSoup
-buffer_constant = .2
+buffer_constant = .1
 def login(username, password):
     url = "http://127.0.0.1:8000/login"
     driver.get(url)
@@ -1020,7 +1020,6 @@ print(f"{'Login success':<45} {temp_result}")
 login_logout("sam", "testpassword")
 temp_result = create_account(username, password)
 print(f"{'Create account':<45} {temp_result}")
-
 temp_result = create_transaction(username, password)
 print(f"{'Create transaction':<45} {temp_result}")
 temp_result = cancel_transaction(username, password)
