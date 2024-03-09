@@ -526,3 +526,54 @@ def leave_group(request):
     if group.exists():
         group.delete()
     return redirect('groups')
+
+@login_required
+def create_group_goal_page(request):
+    current_user = request.user
+
+    return render(request, "create_personal_goals.html")
+
+
+@login_required
+def create_group_goal(request):
+    print("create_group_goal")
+    if request.method == "POST":
+        print("create_group_goal POST")
+        amount = float(request.POST.get("amount"))
+        
+        is_spending = request.POST.get("goal_type") == "on"
+        goal_name = request.POST.get("name")
+        goal_start_date = request.POST.get("start_date")
+        goal_end_date = request.POST.get("end_date")
+        current_user = request.user
+        user_id = request.user_id
+        # Access the user who sent the request
+        group = UserJoinGroup.objects.filter(user = user_id)
+        groupID = ""
+        for gr in group:
+            groupID = gr.group.id
+
+        
+
+        username = request.user.username
+        user = User.objects.get(username=username)
+        
+        
+        # If it's a spending, make the amount negative
+
+        # Print out the amount, category, spending/savings status, and the user
+        print("Amount:", amount)
+        print("Category:", category_name)
+        print("Spending:", is_spending)
+        print("User:", username)
+        personal_goal = PersonalGoal(
+            group=groupID,
+            amount=amount,
+            goal_name=goal_name,  # Provide a name for the transaction as needed
+            sum_transaction = 0,
+            is_spending = is_spending,
+            start_date = goal_start_date,
+            end_date = goal_end_date
+        )
+        personal_goal.save()
+    return redirect('view_personal_goals')
