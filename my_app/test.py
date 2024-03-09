@@ -18,7 +18,7 @@ try:
 except:
     install_bs4()
     from bs4 import BeautifulSoup
-buffer_constant = 1
+buffer_constant = .2
 def login(username, password):
     url = "http://127.0.0.1:8000/login"
     driver.get(url)
@@ -901,12 +901,10 @@ temp_result = login_failed("sam", "test")
 print(f"{'Login failed':<45} {temp_result}")
 temp_result = login_success("sam", "testpassword")
 print(f"{'Login success':<45} {temp_result}")
-temp_result =login_failed("sam", "test")
-print(f"{'Login failed':<45} {temp_result}")
 temp_result = create_account(username, password)
 print(f"{'Create account':<45} {temp_result}")
 
-'''temp_result = create_transaction(username, password)
+temp_result = create_transaction(username, password)
 print(f"{'Create transaction':<45} {temp_result}")
 temp_result = cancel_transaction(username, password)
 print(f"{'Cancel transaction':<45} {temp_result}")
@@ -934,7 +932,7 @@ print(f"{'Savings personal goal: Transportation':<45} {temp_result}")
 temp_result = spendings_personal_goal_value_groceries(username, password)
 print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
 temp_result = spendings_multiple_and_edit(username, password)
-print(f"{'Spendings multiple and edit':<45} {temp_result}")'''
+print(f"{'Spendings multiple and edit':<45} {temp_result}")
 temp_result = delete_account_fail(username, password)
 print(f"{'Delete account failed':<45} {temp_result}")
 temp_result = delete_account_success(username, password)
