@@ -23,13 +23,6 @@ class UserJoinGroup(models.Model):
 class Category(models.Model):
     category_id = models.CharField(max_length=255, primary_key=True)
 
-class Transactions(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    week = models.DateField()
-    amount = models.FloatField()
-    name = models.CharField(max_length=255)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    is_group = models.BooleanField(default=True)
 
 class UserJoinCategory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -54,3 +47,12 @@ class GroupGoal(models.Model):
     end_date = models.DateField()
     goal_name = models.CharField(max_length=255)
     is_primary = models.BooleanField(default=False)
+    is_overall = models.BooleanField(default=False)
+
+class Transactions(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    week = models.DateField()
+    amount = models.FloatField()
+    name = models.CharField(max_length=255)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    group_goal = models.ForeignKey(GroupGoal, on_delete=models.SET_NULL, null=True, blank=True)
