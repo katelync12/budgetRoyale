@@ -22,6 +22,29 @@ from django.http import HttpResponseRedirect
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
+@login_required
+def group_settings(request):
+    # Get the current user
+    user = request.user
+    
+    # Query the UserJoinGroup model to retrieve the groups the user is a part of
+    user_groups = UserJoinGroup.objects.filter(user=user)
+    
+    # Create a list to store the user's groups along with admin status
+    user_groups_info = []
+    
+    # Iterate through the user's groups and determine if they are an admin
+    for user_group in user_groups:
+        is_admin = user_group.group.admin_user == user
+        user_groups_info.append({'group': user_group.group, 'is_admin': is_admin})
+    
+    # Pass the user_groups_info context variable to the template
+    context = {
+        'user_groups_info': user_groups_info
+    }
+    print(context)
+    # Render the template with the context
+    return render(request, 'group_settings.html', context)
 
 @login_required
 def delete_account(request):
@@ -325,10 +348,10 @@ def create_group(request):
     user = User.objects.get(username=username)
     group = None
 
-    if UserJoinGroup.objects.filter(user=user).exists():
+    '''if UserJoinGroup.objects.filter(user=user).exists():
         # any popup?
         print("eete")
-        return render(request, 'group_settings.html')
+        return render(request, 'group_settings.html')'''
     
     group = Group(name=group_name, admin_user=user, password=group_password)
     group.save()

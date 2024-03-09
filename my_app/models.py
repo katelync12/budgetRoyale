@@ -12,9 +12,6 @@ class Group(models.Model):
     password = models.CharField(max_length=255)
     admin_user = models.ForeignKey(User, on_delete=models.CASCADE)
     
-    #groupID = models.AutoField(primary_key=True)
-    #group_goal = models.ForeignKey(GroupGoal, on_delete=models.SET_NULL, null=True, blank=True)
-    
 
 class UserJoinGroup(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
