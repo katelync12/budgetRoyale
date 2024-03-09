@@ -54,12 +54,19 @@ def send_form(request):
             fail_silently=False
         )
     return redirect('form_confirm')
+
 @login_required
 def create_transaction_page(request):
     current_user = request.user
+    user_id = request.user.id
     categories = UserJoinCategory.objects.filter(user=current_user)
+    group = UserJoinGroup.objects.filter(user=user_id)
+    groupID = ""
+    for gr in group:
+        groupID = gr.group.id
+    group_goals = GroupGoal.objects.filter(group_id=groupID)
 
-    return render(request, "create_transaction.html", {'categories': categories})
+    return render(request, "create_transaction.html", {'categories': categories, 'group_goals': group_goals})
 
 @login_required
 def create_personal_goal_page(request):
