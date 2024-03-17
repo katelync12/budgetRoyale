@@ -7,7 +7,13 @@
 </head>
 
 <body>
-  <h1 style="margin-left: 10px;"> {{user.username|title}}'s Dashboard</h1>
+  <h1 style="margin-left: 10px; text-align: center"> {{user.username|title}}'s Dashboard</h1>
+
+  <div class="button-container">
+    <button onclick="window.location.href='{% url 'view_transactions' %}'">View Transactions</button>
+    <button onclick="window.location.href='{% url 'view_personal_goals' %}'">View Personal Goals</button>
+  </div>
+
   <div class="date-container" style="margin-top: 20px">
     <div class="date-label">
         <p>From</p>
