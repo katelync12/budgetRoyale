@@ -255,7 +255,7 @@ def add(request):
     return JsonResponse({'result': result})
 
 @login_required
-def view_transactions(request):
+def view_transactions(request, view_all = True):
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
         current_user = request.user
@@ -263,23 +263,39 @@ def view_transactions(request):
         # Gets all transactions
         sorted = []
         username = request.user.username
-        week = False
-        week = request.GET.get('week') == 'True'
-        if (week):
-            today = date.today()
-            week_ago = today - timedelta(days=7)
-            transactions = Transactions.objects.filter(week__gte=week_ago, week__lte=today)
-            print("hit")
-        else:
+        start_date_str = request.GET.get('start_date')
+        end_date_str = request.GET.get('end_date')
+
+        view_all = False
+        view_all = request.GET.get('view_all') == 'True'
+        
+        if not view_all:
             transactions = Transactions.objects.all()
+        else:
+            if start_date_str and end_date_str:
+                start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+                end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+                transactions = Transactions.objects.filter(week__gte=start_date, week__lte=end_date)
+            elif start_date_str:
+                start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+                transactions = Transactions.objects.filter(week__gte=start_date)
+            elif end_date_str:
+                end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+                transactions = Transactions.objects.filter(week__lte=end_date)
+            else:
+                transactions = Transactions.objects.all()
+
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
             if (transaction.user.username == username):
                 sorted.append(transaction)
 
+        categories = UserJoinCategory.objects.filter(user=current_user)
+
         context = {
             'transactions': sorted,
             'current_user': current_user,
+            'categories': categories,
         }
         # Render the template with the transactions data
         return render(request, 'view_transactions.html', context)
