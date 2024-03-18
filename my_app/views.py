@@ -88,8 +88,12 @@ def create_transaction_page(request):
     for gr in group:
         groupID = gr.group.id
     group_goals = GroupGoal.objects.filter(group_id=groupID)
+    group_goals_sorted = []
+    for goal in group_goals:
+        if not goal.is_overall:
+            group_goals_sorted.append(goal)
 
-    return render(request, "create_transaction.html", {'categories': categories, 'group_goals': group_goals})
+    return render(request, "create_transaction.html", {'categories': categories, 'group_goals': group_goals_sorted})
 
 @login_required
 def create_personal_goal_page(request):
@@ -282,6 +286,11 @@ def view_transactions(request, view_all = True):
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
         current_user = request.user
+
+        selected_categories = request.GET.getlist('selected_categories')
+        print("---------")
+        print(selected_categories)
+        print("---------")
         
         # Gets all transactions
         sorted = []
@@ -619,15 +628,8 @@ def create_group_goal(request):
         user_groups = UserJoinGroup.objects.filter(user = user_id)
         groupID = ""
         group = user_groups.first().group
-        #for gr in group:
-         #   groupID = gr.group.id
-
-        
-
         username = request.user.username
         user = User.objects.get(username=username)
-        
-        
         # If it's a spending, make the amount negative
 
         # Print out the amount, category, spending/savings status, and the user
