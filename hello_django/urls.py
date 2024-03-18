@@ -56,8 +56,9 @@ urlpatterns = [
 
     path("groups/leave/", views.leave_group, name="leave_group"),
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),
+    path("e", views.group_settings, name="group_settings"),
     path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
-    
+
     path("edit_transaction/", TemplateView.as_view(template_name="edit_transaction.html"), name="edit_transactions_view"),
     path("edit_transaction/<int:transaction_id>/", views.edit_transaction_action, name="edit_transaction_action"),
     path("settings/", TemplateView.as_view(template_name="profile_settings.html"), name="profile_settings"),
@@ -69,4 +70,5 @@ urlpatterns = [
     path('verify_unique_category/', views.verify_unique_category, name='verify_unique_category'),
     path('generate_expenses_pie_chart/', views.generate_expenses_pie_chart, name='generate_expenses_pie_chart'),
     path('generate_income_pie_chart/', views.generate_income_pie_chart, name='generate_income_pie_chart'),
+    path('create_group_goal/', TemplateView.as_view(template_name="create_group_goal.html"), name="create_group_goal")
 ]

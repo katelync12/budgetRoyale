@@ -2,14 +2,26 @@
 
 {% block content %}
 
-<p class="header">group settings</p>
-<p><a href="{% url 'create_data' %}">password change</a></p>
-<p><a href="{% url 'view_transactions' %}">transactions</a></p>
-<p><a href="{% url 'create_data' %}">create_data</a></p>
-<p><a href="{% url 'form' %}">form</a></p>
-<p><a href="{% url 'create_data' %}">personal goals</a></p>
+<p class="header">Group Settings</p>
+<p><a href="{% url 'create_data' %}">Password Change</a></p>
+<p><a href="{% url 'view_transactions' %}">Transactions</a></p>
+<p><a href="{% url 'create_data' %}">Create Data</a></p>
+<p><a href="{% url 'form' %}">Form</a></p>
+<p><a href="{% url 'create_group_goal' %}">Group Goals</a></p>
 <p><a href="{% url 'groups' %}">Groups</a></p>
 
-<a href="{% url 'leave_group' %}">Leave Group</a>
+{% if user_groups_info %}
+  <h2>Your Groups:</h2>
+  {% for user_group_info in user_groups_info %}
+    <div>
+      <p>{{ user_group_info.group.name }}</p>
+      {% if not user_group_info.is_admin %}
+        <p>Leave Group</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+{% else %}
+  <p>You are not part of any groups.</p>
+{% endif %}
 
 {% endblock %}

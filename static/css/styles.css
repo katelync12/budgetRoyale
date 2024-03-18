@@ -316,7 +316,7 @@ a.nav-headers.active {
     width: 100%;
   }
   .pie_chart {
-    height: 420px;
+    height: 550px;
     width: 95%;
     padding: 10px;
     margin-bottom: 30px;
@@ -356,6 +356,7 @@ a.nav-headers.active {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 10px;
 }
 
 @media screen and (max-width: 450px) {
@@ -398,3 +399,87 @@ a.nav-headers.active {
 .no-transactions {
   font-size: 18px;
 }
+
+.button-container-home {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 5%;
+  /*width: 90%;*/
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+
+.button-container-home button {
+  padding: 10px 20px;
+  background-color: white;
+  border: 2px solid #5B5FC5;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+/* For category dropdown */
+.dropdown2[data-control="checkbox-dropdown"] {
+  position: relative;
+  font-size: 14px;
+  color: #333;
+}
+
+.dropdown2[data-control="checkbox-dropdown"] .dropdown-list {
+  padding: 12px;
+  background: #fff;
+  position: absolute;
+  top: 30px;
+  left: 2px;
+  right: 2px;
+  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .15);
+  transform-origin: 50% 0;
+  transform: scale(1, 0);
+  transition: transform .15s ease-in-out .15s;
+  max-height: 66vh;
+  overflow-y: scroll;
+}
+
+.dropdown2[data-control="checkbox-dropdown"] .dropdown-option {
+  display: block;
+  padding: 8px 12px;
+  opacity: 0;
+  transition: opacity .15s ease-in-out;
+}
+
+.dropdown2[data-control="checkbox-dropdown"] .dropdown-label {
+  display: block;
+  height: 30px;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dropdown2[data-control="checkbox-dropdown"].on .dropdown-list {
+  transform: scale(1, 1);
+  transition-delay: 0s;
+}
+
+.dropdown2[data-control="checkbox-dropdown"].on .dropdown-list .dropdown-option {
+  opacity: 1;
+  transition-delay: .2s;
+}
+
+.dropdown2[data-control="checkbox-dropdown"].on .dropdown-label:before {
+  content: '▲';
+}
+
+.dropdown2[data-control="checkbox-dropdown"] [type="checkbox"] {
+  position: relative;
+  top: -1px;
+  margin-right: 4px;
+}
+
+.dropdown2 {
+  margin: 0 5%;
+}
+/* Ending for category dropdown */

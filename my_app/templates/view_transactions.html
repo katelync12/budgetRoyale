@@ -7,6 +7,44 @@
     <button onclick="window.location.href='{% url 'create_transactions' %}'">Create</button>
 </div>
 
+<div class="dropdown2" data-control="checkbox-dropdown">
+    <label class="dropdown-label">Filter by Category</label>
+    
+    <div class="dropdown-list">
+      <a href="#" data-toggle="check-all" class="dropdown-option">
+        Check All  
+      </a>
+      
+      {% for category in categories %}
+        <label class="dropdown-option">
+            <input type="checkbox" name="dropdown-group" value="{{ category.category_id }}" />
+            {{ category.category_id }}
+        </label>
+      {% endfor %}
+           
+    </div>
+  </div>
+
+
+<div class="date-container" style="margin-top: 20px">
+    <div class="date-label">
+        <p>From</p>
+    </div>
+    <div class="date-input-container">
+        <input type="date" id="start_date" name="start_date" class="date-input" required>
+    </div>
+    <div class="date-label">
+        <p>to</p>
+    </div>
+    <div class="date-input-container">
+        <input type="date" id="end_date" name="end_date" class="date-input" required>
+    </div>
+    <div>
+        <button onclick="filterTransactions()">Submit</button>
+    </div>
+</div>
+
+
 <div class="table-container">
     <table class="styled-table">
         <tr>
@@ -32,7 +70,7 @@
     </table>
 </div>
 <div class="button-single" id="transactions-for-week-button">
-    <button onclick="window.location.href='{% url 'view_transactions' %}?week=True'; toggleButtons();">Transactions for the Week</button>
+    <button onclick="filterTransactions()">View all Transactions</button>
 </div>
 
 <br></br>
@@ -74,7 +112,109 @@
 <script>
     function editTransaction(transactionId) {
         window.location.href = `/edit_transaction/${transactionId}/`;
-    }    
+    }
+    
+    function filterTransactions() {
+        const startDate = document.getElementById('start_date').value;
+        const endDate = document.getElementById('end_date').value;
+
+        const url = `{% url 'view_transactions' %}?start_date=${startDate}&end_date=${endDate}&view_all=True`;
+
+        window.location.href = url;
+    }
+
+    (function($) {
+        var CheckboxDropdown = function(el) {
+          var _this = this;
+          this.isOpen = false;
+          this.areAllChecked = false;
+          this.$el = $(el);
+          this.$label = this.$el.find('.dropdown-label');
+          this.$checkAll = this.$el.find('[data-toggle="check-all"]').first();
+          this.$inputs = this.$el.find('[type="checkbox"]');
+          
+          this.onCheckBox();
+          
+          this.$label.on('click', function(e) {
+            e.preventDefault();
+            _this.toggleOpen();
+          });
+          
+          this.$checkAll.on('click', function(e) {
+            e.preventDefault();
+            _this.onCheckAll();
+          });
+          
+          this.$inputs.on('change', function(e) {
+            _this.onCheckBox();
+          });
+        };
+        
+        CheckboxDropdown.prototype.onCheckBox = function() {
+          this.updateStatus();
+        };
+        
+        CheckboxDropdown.prototype.updateStatus = function() {
+          var checked = this.$el.find(':checked');
+          
+          this.areAllChecked = false;
+          this.$checkAll.html('Check All');
+          
+          if(checked.length <= 0) {
+            this.$label.html('Filter by Category');
+          }
+          else if(checked.length === 1) {
+            this.$label.html(checked.parent('label').text());
+          }
+          else if(checked.length === this.$inputs.length) {
+            this.$label.html('All Selected');
+            this.areAllChecked = true;
+            this.$checkAll.html('Uncheck All');
+          }
+          else {
+            this.$label.html(checked.length + ' Selected');
+          }
+        };
+        
+        CheckboxDropdown.prototype.onCheckAll = function(checkAll) {
+          if(!this.areAllChecked || checkAll) {
+            this.areAllChecked = true;
+            this.$checkAll.html('Uncheck All');
+            this.$inputs.prop('checked', true);
+          }
+          else {
+            this.areAllChecked = false;
+            this.$checkAll.html('Check All');
+            this.$inputs.prop('checked', false);
+          }
+          
+          this.updateStatus();
+        };
+        
+        CheckboxDropdown.prototype.toggleOpen = function(forceOpen) {
+          var _this = this;
+          
+          if(!this.isOpen || forceOpen) {
+             this.isOpen = true;
+             this.$el.addClass('on');
+            $(document).on('click', function(e) {
+              if(!$(e.target).closest('[data-control]').length) {
+               _this.toggleOpen();
+              }
+            });
+          }
+          else {
+            this.isOpen = false;
+            this.$el.removeClass('on');
+            $(document).off('click');
+          }
+        };
+        
+        var checkboxesDropdowns = document.querySelectorAll('[data-control="checkbox-dropdown"]');
+        for(var i = 0, length = checkboxesDropdowns.length; i < length; i++) {
+          new CheckboxDropdown(checkboxesDropdowns[i]);
+        }
+      })(jQuery);
 </script>
 
 {% endblock %}

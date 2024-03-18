@@ -22,6 +22,29 @@ from django.http import HttpResponseRedirect
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
+@login_required
+def group_settings(request):
+    # Get the current user
+    user = request.user
+    
+    # Query the UserJoinGroup model to retrieve the groups the user is a part of
+    user_groups = UserJoinGroup.objects.filter(user=user)
+    
+    # Create a list to store the user's groups along with admin status
+    user_groups_info = []
+    
+    # Iterate through the user's groups and determine if they are an admin
+    for user_group in user_groups:
+        is_admin = user_group.group.admin_user == user
+        user_groups_info.append({'group': user_group.group, 'is_admin': is_admin})
+    
+    # Pass the user_groups_info context variable to the template
+    context = {
+        'user_groups_info': user_groups_info
+    }
+    print(context)
+    # Render the template with the context
+    return render(request, 'group_settings.html', context)
 
 @login_required
 def delete_account(request):
@@ -220,10 +243,9 @@ def add_category(request):
 
 def add(request):
     # Check if Student table exists
-    if not Group._meta.db_table in connection.introspection.table_names():
+    if not GroupGoal._meta.db_table in connection.introspection.table_names():
         # Create the Student table if it doesn't exist
         with connection.schema_editor() as schema_editor:
-            schema_editor.create_model(Group)
             schema_editor.create_model(GroupGoal)
             schema_editor.create_model(Transactions)
 
@@ -240,7 +262,7 @@ def add(request):
     return JsonResponse({'result': result})
 
 @login_required
-def view_transactions(request):
+def view_transactions(request, view_all = True):
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
         current_user = request.user
@@ -248,23 +270,39 @@ def view_transactions(request):
         # Gets all transactions
         sorted = []
         username = request.user.username
-        week = False
-        week = request.GET.get('week') == 'True'
-        if (week):
-            today = date.today()
-            week_ago = today - timedelta(days=7)
-            transactions = Transactions.objects.filter(week__gte=week_ago, week__lte=today)
-            print("hit")
-        else:
+        start_date_str = request.GET.get('start_date')
+        end_date_str = request.GET.get('end_date')
+
+        view_all = False
+        view_all = request.GET.get('view_all') == 'True'
+        
+        if not view_all:
             transactions = Transactions.objects.all()
+        else:
+            if start_date_str and end_date_str:
+                start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+                end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+                transactions = Transactions.objects.filter(week__gte=start_date, week__lte=end_date)
+            elif start_date_str:
+                start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+                transactions = Transactions.objects.filter(week__gte=start_date)
+            elif end_date_str:
+                end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+                transactions = Transactions.objects.filter(week__lte=end_date)
+            else:
+                transactions = Transactions.objects.all()
+
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
             if (transaction.user.username == username):
                 sorted.append(transaction)
 
+        categories = UserJoinCategory.objects.filter(user=current_user)
+
         context = {
             'transactions': sorted,
             'current_user': current_user,
+            'categories': categories,
         }
         # Render the template with the transactions data
         return render(request, 'view_transactions.html', context)
@@ -302,9 +340,16 @@ def check_user_group(request, page):
     if request.user.is_authenticated:
         username = request.user.username
         user = User.objects.get(username=username)
+        is_admin = False
+        if (Group.objects.filter(admin_user=user).exists()):
+            is_admin = True
         # Check if there's an existing relationship between user and category
         if UserJoinGroup.objects.filter(user=user).exists():
-            return render(request, page + '.html')
+            context = {
+            'is_admin': is_admin
+            }
+        # Render the template with the transactions data
+            return render(request, page + '.html', context)
         else:
             return redirect('groups')
     else:
@@ -316,26 +361,31 @@ def check_user_group(request, page):
 @login_required  # Requires the user to be logged in to access this view
 def create_group(request):
     group_name = request.POST.get("name")
-    print(group_name)
+    group_password = request.POST.get("password1")
+    group_password2 = request.POST.get("password2")
+    print(group_password)
+    print(group_password2)
+    if (group_password != group_password2):
+        return render(request, 'groups.html')
     username = request.user.username
     user = User.objects.get(username=username)
     group = None
 
-    if UserJoinGroup.objects.filter(user=user).exists():
+    '''if UserJoinGroup.objects.filter(user=user).exists():
         # any popup?
         print("eete")
-        return render(request, 'group_settings.html')
+        return render(request, 'group_settings.html')'''
     
-    group = Group(name=group_name, admin_user=user)
+    group = Group(name=group_name, admin_user=user, password=group_password)
     group.save()
-    # Check if there's an existing relationship between user and category
+    # Check if there's an existing relationship between user and group
     print(group.name)
     if group:
         try:
             print("try")
             UserJoinGroup.objects.get(user=user, group=group)
         except UserJoinGroup.DoesNotExist:
-            # Create a new relationship between user and category
+            # Create a new relationship between user and group
             user_group = UserJoinGroup(user=user, group=group)
             user_group.save()
             print("exception")
@@ -521,3 +571,54 @@ def leave_group(request):
     if group.exists():
         group.delete()
     return redirect('groups')
+
+@login_required
+def create_group_goal_page(request):
+    current_user = request.user
+
+    return render(request, "create_personal_goals.html")
+
+
+@login_required
+def create_group_goal(request):
+    print("create_group_goal")
+    if request.method == "POST":
+        print("create_group_goal POST")
+        amount = float(request.POST.get("amount"))
+        
+        is_spending = request.POST.get("goal_type") == "on"
+        goal_name = request.POST.get("name")
+        goal_start_date = request.POST.get("start_date")
+        goal_end_date = request.POST.get("end_date")
+        current_user = request.user
+        user_id = request.user_id
+        # Access the user who sent the request
+        group = UserJoinGroup.objects.filter(user = user_id)
+        groupID = ""
+        for gr in group:
+            groupID = gr.group.id
+
+        
+
+        username = request.user.username
+        user = User.objects.get(username=username)
+        
+        
+        # If it's a spending, make the amount negative
+
+        # Print out the amount, category, spending/savings status, and the user
+        print("Amount:", amount)
+        print("Category:", category_name)
+        print("Spending:", is_spending)
+        print("User:", username)
+        personal_goal = PersonalGoal(
+            group=groupID,
+            amount=amount,
+            goal_name=goal_name,  # Provide a name for the transaction as needed
+            sum_transaction = 0,
+            is_spending = is_spending,
+            start_date = goal_start_date,
+            end_date = goal_end_date
+        )
+        personal_goal.save()
+    return redirect('view_personal_goals')

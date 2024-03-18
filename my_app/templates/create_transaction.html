@@ -38,6 +38,8 @@
     
     <div>
         <select id="type" name="type" style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
+        {% block additional_options %}
+        {% endblock %}
         <optgroup label="Category Options">
         {% for category in categories %}
             <option value="{{ category.category_id }}">{{ category.category_id }}</option>
