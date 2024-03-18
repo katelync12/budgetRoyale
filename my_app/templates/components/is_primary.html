@@ -1,0 +1,23 @@
+{% block primary %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/switch.css' %}">
+<style>
+    .radio label {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        display: inline-block; /* Ensures each label is on its line */
+        margin-right: 10%; /* Adjust the margin between labels */
+    }
+</style>
+<label class="radio">
+    <span class="savings-label">
+        <label>
+            <input type="checkbox" name="{{ name }}" value="on" id="prim">
+            Primary
+        </label>
+     
+    </span>
+
+
+</label>
+
+{% endblock %}

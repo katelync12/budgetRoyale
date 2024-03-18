@@ -69,5 +69,7 @@ urlpatterns = [
     path('verify_unique_category/', views.verify_unique_category, name='verify_unique_category'),
     path('generate_expenses_pie_chart/', views.generate_expenses_pie_chart, name='generate_expenses_pie_chart'),
     path('generate_income_pie_chart/', views.generate_income_pie_chart, name='generate_income_pie_chart'),
-    path('create_group_goal/', TemplateView.as_view(template_name="create_group_goal.html"), name="create_group_goal")
+    path('/groups/group_goals/create/', views.create_group_goal_page, name="create_group_goal"),
+    path('create_group_goal/', views.create_group_goal, name='create_group_goal_action'),
+
 ]

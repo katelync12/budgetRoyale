@@ -17,7 +17,7 @@
 
 <h2 style="font-family: Verdana, Geneva, Tahoma, sans-serif; color: #5B5FC5; margin-bottom: 10%;">{% block mainTitle %}Create Group Goal!{% endblock %}</h2>
 
-<form method="POST" action="{% block action %}{% url 'create_transaction_action' %}{% endblock %}">
+<form method="POST" action="{% block action %}{% url 'create_group_goal_action' %}{% endblock %}">
     {% csrf_token %}
     <div>
         <input type="text" placeholder = {% block namePlaceholder %}'Goal Name'{% endblock %} id="name" name="name" required style="width: 80%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
@@ -35,13 +35,19 @@
         >
     </div>
   
-    {% block dates %}
     {% include 'components/start_end_date.html' %}
 
-    {% endblock %}
-
     <div>
-    {% block toggle %}{% include 'components/toggle_component.html' with name='transaction_type' %}{% endblock %}
+        <p style="font-family: Verdana, Geneva, Tahoma, sans-serif;">What type of goal is this?</p>
+        {% block toggle %}{% include 'components/toggle_component.html' with name='transaction_type' %}{% endblock %}
+    </div>
+    <div style="margin-top: 5%;">
+        <p style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Is this a primary goal? (Leaderboard goal)</p>
+        {% block toggle2 %}{% include 'components/is_primary.html' with name='is_primary' %}{% endblock %}
+    </div>
+    <div>
+        <p style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Is this an overall goal?</p>
+        {% block toggle3 %}{% include 'components/is_overall.html' with name='is_overall' %}{% endblock %}
     </div>
     <button type="button" {% block back %}onclick="window.location.href='{% url 'view_transactions' %}'"{% endblock %}  
         style="background-color: #5B5FC5;

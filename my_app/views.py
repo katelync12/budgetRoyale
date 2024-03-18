@@ -533,6 +533,11 @@ def create_group_goal_page(request):
 
     return render(request, "create_personal_goals.html")
 
+@login_required
+def create_group_goal_page(request):
+    current_user = request.user
+    
+    return render(request, "create_group_goal.html")
 
 @login_required
 def create_group_goal(request):
@@ -542,16 +547,19 @@ def create_group_goal(request):
         amount = float(request.POST.get("amount"))
         
         is_spending = request.POST.get("goal_type") == "on"
+        is_primary = request.POST.get("is_primary") == "on"
+        is_overall = request.POST.get("is_overall") == "on"
         goal_name = request.POST.get("name")
         goal_start_date = request.POST.get("start_date")
         goal_end_date = request.POST.get("end_date")
         current_user = request.user
-        user_id = request.user_id
+        user_id = request.user
         # Access the user who sent the request
-        group = UserJoinGroup.objects.filter(user = user_id)
+        user_groups = UserJoinGroup.objects.filter(user = user_id)
         groupID = ""
-        for gr in group:
-            groupID = gr.group.id
+        group = user_groups.first().group
+        #for gr in group:
+         #   groupID = gr.group.id
 
         
 
@@ -563,17 +571,18 @@ def create_group_goal(request):
 
         # Print out the amount, category, spending/savings status, and the user
         print("Amount:", amount)
-        print("Category:", category_name)
         print("Spending:", is_spending)
         print("User:", username)
-        personal_goal = PersonalGoal(
-            group=groupID,
+        group_goal = GroupGoal(
+            group=group,
             amount=amount,
             goal_name=goal_name,  # Provide a name for the transaction as needed
             sum_transaction = 0,
             is_spending = is_spending,
             start_date = goal_start_date,
-            end_date = goal_end_date
+            end_date = goal_end_date,
+            is_overall = is_overall,
+            is_primary = is_primary
         )
-        personal_goal.save()
-    return redirect('view_personal_goals')
+        group_goal.save()
+    return redirect('group_settings')
