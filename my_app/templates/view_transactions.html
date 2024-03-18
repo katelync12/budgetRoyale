@@ -7,6 +7,25 @@
     <button onclick="window.location.href='{% url 'create_transactions' %}'">Create</button>
 </div>
 
+<div class="date-container" style="margin-top: 20px">
+    <div class="date-label">
+        <p>From</p>
+    </div>
+    <div class="date-input-container">
+        <input type="date" id="start_date" name="start_date" class="date-input" required>
+    </div>
+    <div class="date-label">
+        <p>to</p>
+    </div>
+    <div class="date-input-container">
+        <input type="date" id="end_date" name="end_date" class="date-input" required>
+    </div>
+    <div>
+        <button onclick="filterTransactions()">Submit</button>
+    </div>
+</div>
+
+
 <div class="table-container">
     <table class="styled-table">
         <tr>
@@ -32,7 +51,7 @@
     </table>
 </div>
 <div class="button-single" id="transactions-for-week-button">
-    <button onclick="window.location.href='{% url 'view_transactions' %}?week=True'; toggleButtons();">Transactions for the Week</button>
+    <button onclick="filterTransactions()">View all Transactions</button>
 </div>
 
 <br></br>
@@ -74,7 +93,16 @@
 <script>
     function editTransaction(transactionId) {
         window.location.href = `/edit_transaction/${transactionId}/`;
-    }    
+    }
+    
+    function filterTransactions() {
+        const startDate = document.getElementById('start_date').value;
+        const endDate = document.getElementById('end_date').value;
+
+        const url = `{% url 'view_transactions' %}?start_date=${startDate}&end_date=${endDate}&view_all=True`;
+
+        window.location.href = url;
+    }
 </script>
 
 {% endblock %}
