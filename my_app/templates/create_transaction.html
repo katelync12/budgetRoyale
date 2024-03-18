@@ -45,6 +45,13 @@
             <option value="{{ category.category_id }}">{{ category.category_id }}</option>
         {% endfor %}
         </select>
+        <select id="type" name="type" style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
+            <option value="No Group Goal">Not Towards a Specific Group Goal</option>
+            <optgroup label="Group Goal">
+            {% for goal in group_goals %}
+                <option value="{{ goal.goal_name }}">{{ goal.goal_name }}</option>
+            {% endfor %}
+        </select>
         {% block add_category_modal %}
         {% include "components/add_category_modal.html" %}
         {% endblock %}
