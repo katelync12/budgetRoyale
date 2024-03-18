@@ -159,6 +159,21 @@ def create_transaction(request):
         is_spending = request.POST.get("transaction_type") == "on"
         transaction_name = request.POST.get("name")
         transaction_date = request.POST.get("date")
+
+        user_id = request.user.id
+        group = UserJoinGroup.objects.filter(user=user_id)
+        groupID = ""
+        for gr in group:
+            groupID = gr.group.id
+        group_goals = GroupGoal.objects.filter(group_id=groupID)
+        group_goal = request.POST.get("group_goal")
+        group_goal_id = 0
+        if (group_goal == "No Group Goal"):
+            group_goal_id = None
+        else:
+            for goal in group_goals:
+                if (goal.goal_name == group_goal):
+                    group_goal_id = goal.id
         
         # Access the user who sent the request
         username = request.user.username
@@ -194,7 +209,8 @@ def create_transaction(request):
             week=transaction_date,  # Assuming you want to record the current date and time
             amount=amount,
             name=transaction_name,  # Provide a name for the transaction as needed
-            category=category  # Assuming category is a valid value
+            category=category,  # Assuming category is a valid value
+            group_goal_id=group_goal_id,
         )
         transaction.save()
     return redirect('view_transactions')
