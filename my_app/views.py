@@ -588,18 +588,21 @@ def leave_group(request):
         group.delete()
     return redirect('groups')
 
-@login_required
-def create_group_goal_page(request):
-    current_user = request.user
-
-    return render(request, "create_personal_goals.html")
 
 @login_required
 def create_group_goal_page(request):
     current_user = request.user
+    group = Group.objects.filter(admin_user = current_user)
+    if not group:
+        messages.error(request, "Only admins are authorized to access this page.")
+        return render(request, "group_goals.html", {'error_message': "You are not authorized to access this page."})
     
+       
+
     return render(request, "create_group_goal.html")
 
+    
+    
 @login_required
 def create_group_goal(request):
     print("create_group_goal")

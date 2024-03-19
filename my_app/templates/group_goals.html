@@ -9,4 +9,10 @@
   <button type="submit">Log Out</button>
 </form>
 
+{% if error_message %}
+<script>
+  alert('{{ error_message }}');
+</script>
+{% endif %}
+
 {% endblock %}
