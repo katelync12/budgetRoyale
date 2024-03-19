@@ -391,7 +391,7 @@ def create_group(request):
     print(group_password)
     print(group_password2)
     if (group_password != group_password2):
-        return render(request, 'groups.html')
+        return render(request, 'join_groups.html')
     username = request.user.username
     user = User.objects.get(username=username)
     group = None
@@ -649,3 +649,38 @@ def create_group_goal(request):
         )
         group_goal.save()
     return redirect('group_settings')
+
+def join_groups(request):
+    # Ensure user is authenticated before accessing request.user
+    if request.user.is_authenticated:
+        current_user = request.user
+
+        # selected_categories = request.GET.getlist('selected_categories')
+        # print("---------")
+        # print(selected_categories)
+        # print("---------")
+        
+        # Gets all transactions
+        sorted = []
+        username = request.user.username
+
+        groups = Group.objects.all()
+        search = request.POST.get("search_input", "")
+        if search == "":
+            sorted = groups
+        else:
+            for group in groups:
+                # Only gets the transactions of the currently logged in user
+                if search in group.name:
+                    sorted.append(group)
+
+        context = {
+            'groups': sorted,
+            'current_user': current_user,
+        }
+        
+        # Render the template with the transactions data
+        return render(request, 'join_groups.html', context)
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')

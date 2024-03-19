@@ -47,5 +47,16 @@
     </div>
 </form>
 
+<form method="POST" action="{% url 'groups' %}">
+  {% csrf_token %}
+  <input type="text" id="search_input" name="search_input">
+  <button type="submit">Search</button>
+</form>
+
+{% for group in groups %}
+<div>
+  {{ group.name }}
+</div>
+{% endfor %}
 
 {% endblock %}
