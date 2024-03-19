@@ -454,9 +454,11 @@ a.nav-headers.active {
   height: 30px;
   background: #fff;
   border: 1px solid #ccc;
-  padding: 6px 12px;
+  padding: 10px 20px;
   line-height: 1;
   cursor: pointer;
+  border-radius: 5px;
+  padding-bottom: 25px;
 }
 
 .dropdown2[data-control="checkbox-dropdown"].on .dropdown-list {
@@ -470,7 +472,7 @@ a.nav-headers.active {
 }
 
 .dropdown2[data-control="checkbox-dropdown"].on .dropdown-label:before {
-  content: '▲';
+  content: '▲ ';
 }
 
 .dropdown2[data-control="checkbox-dropdown"] [type="checkbox"] {
