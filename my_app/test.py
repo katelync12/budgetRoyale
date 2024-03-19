@@ -1055,6 +1055,4 @@ print(f"{'Delete account failed':<45} {temp_result}")
 temp_result = delete_account_success(username, password)
 print(f"{'Delete account success':<45} {temp_result}")
 
-
-
 driver.quit()
