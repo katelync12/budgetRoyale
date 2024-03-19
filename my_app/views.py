@@ -597,18 +597,21 @@ def leave_group(request):
         group.delete()
     return redirect('groups')
 
-@login_required
-def create_group_goal_page(request):
-    current_user = request.user
-
-    return render(request, "create_personal_goals.html")
 
 @login_required
 def create_group_goal_page(request):
     current_user = request.user
+    group = Group.objects.filter(admin_user = current_user)
+    if not group:
+        messages.error(request, "Only admins are authorized to access this page.")
+        return render(request, "group_goals.html", {'error_message': "You are not authorized to access this page."})
     
+       
+
     return render(request, "create_group_goal.html")
 
+    
+    
 @login_required
 def create_group_goal(request):
     print("create_group_goal")
@@ -630,7 +633,15 @@ def create_group_goal(request):
         group = user_groups.first().group
         username = request.user.username
         user = User.objects.get(username=username)
-        # If it's a spending, make the amount negative
+        
+        groupPrim = UserJoinGroup.objects.filter(user=user_id).first().group
+        existing_primary_goal = GroupGoal.objects.filter(group=groupPrim, is_primary=True).exists()
+
+        if is_primary and existing_primary_goal:
+            # If the group already has a primary goal, redirect with an error message
+            messages.error(request, "You already have a primary goal!")
+            return render(request, "create_group_goal.html", {'error_message': "You already have a primary goal!"})
+
 
         # Print out the amount, category, spending/savings status, and the user
         print("Amount:", amount)
