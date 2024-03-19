@@ -85,13 +85,14 @@ def create_transaction_page(request):
     categories = UserJoinCategory.objects.filter(user=current_user)
     group = UserJoinGroup.objects.filter(user=user_id)
     groupID = ""
-    for gr in group:
-        groupID = gr.group.id
-    group_goals = GroupGoal.objects.filter(group_id=groupID)
     group_goals_sorted = []
-    for goal in group_goals:
-        if not goal.is_overall:
-            group_goals_sorted.append(goal)
+    if len(group) != 0:
+        for gr in group:
+            groupID = gr.group.id
+        group_goals = GroupGoal.objects.filter(group_id=groupID)
+        for goal in group_goals:
+            if not goal.is_overall:
+                group_goals_sorted.append(goal)
 
     return render(request, "create_transaction.html", {'categories': categories, 'group_goals': group_goals_sorted})
 
