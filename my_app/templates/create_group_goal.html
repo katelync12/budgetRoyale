@@ -71,5 +71,11 @@
 </form>
 </div>
 
+{% if error_message %}
+<script>
+  alert('{{ error_message }}');
+</script>
+{% endif %}
+
 {% endblock %}
 
