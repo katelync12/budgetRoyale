@@ -22,6 +22,26 @@ from django.http import HttpResponseRedirect
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
+
+@login_required
+def group_leaderboard(request):
+    user = request.user
+    print("group_leaderboard")
+    leaderboard = []
+    user_groups = UserJoinGroup.objects.filter(user=user).values_list('group', flat=True)
+    # Get all users in the same groups as the current user
+    leaderboard_users = UserJoinGroup.objects.filter(group__in=user_groups).select_related('user')
+    for user_group in leaderboard_users:
+        leaderboard.append({'name': user_group.user.username, 'score': 2})
+    leaderboard.append({'name': "balice", 'score': 2})
+    leaderboard.append({'name': "alice", 'score': 1})
+    leaderboard.append({'name': "calice", 'score': 3})
+    leaderboard.sort(key=lambda x: x['score'], reverse=True)
+    context = {
+        'leaderboard': leaderboard
+    }
+    return render(request, 'leaderboard.html', context)
+
 @login_required
 def group_settings(request):
     # Get the current user
