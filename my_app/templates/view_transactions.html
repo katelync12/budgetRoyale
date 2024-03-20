@@ -11,16 +11,20 @@
     <label class="dropdown-label">Filter by Category</label>
     
     <div class="dropdown-list">
+      <button type="button" onclick="submitForm()">Submit</button>
       <a href="#" data-toggle="check-all" class="dropdown-option">
         Check All  
       </a>
       
-      {% for category in categories %}
+      <form id="category-form" method="GET" action="{% url 'view_transactions' %}">
+        {% for category in categories %}
         <label class="dropdown-option">
-            <input type="checkbox" name="dropdown-group" value="{{ category.category_id }}" />
+          <input type="checkbox" name="selected_categories" value="{{ category.category_id }}"{% if category.category_id in selected_categories %}checked{% endif %}>
             {{ category.category_id }}
         </label>
-      {% endfor %}
+        {% endfor %}
+    </form>
+    
            
     </div>
   </div>
@@ -114,15 +118,45 @@
         window.location.href = `/edit_transaction/${transactionId}/`;
     }
     
+    // Functionality for sending dates from filter transactions
     function filterTransactions() {
         const startDate = document.getElementById('start_date').value;
         const endDate = document.getElementById('end_date').value;
+
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+        const currentDate = new Date();
+        const currentDateString = currentDate.toISOString().split('T')[0];
+        if (startDateObj > endDateObj) {
+          alert("Start date cannot be later than end date.");
+          return;
+        }
+        if (startDateObj > currentDate) {
+          alert("Start date is past the current date.");
+          return;
+        }
 
         const url = `{% url 'view_transactions' %}?start_date=${startDate}&end_date=${endDate}&view_all=True`;
 
         window.location.href = url;
     }
 
+    // functionality for when a category is selected/deselected
+    function submitForm() {
+      const checkboxes = document.querySelectorAll('#category-form input[type="checkbox"]');
+      let selected_categories = [];
+      checkboxes.forEach(checkbox => {
+          if (checkbox.checked) {
+              selected_categories.push(checkbox.value);
+          }
+      });
+      selected_categories = selected_categories.join(',');
+      const url = `{% url 'view_transactions' %}?selected_categories=${selected_categories}&view_all=True`;
+      window.location.href = url;
+  }
+  
+
+    // Functionality for filter by categories
     (function($) {
         var CheckboxDropdown = function(el) {
           var _this = this;
@@ -161,13 +195,13 @@
           this.$checkAll.html('Check All');
           
           if(checked.length <= 0) {
-            this.$label.html('Filter by Category');
+            this.$label.html('No Categories Selected');
           }
           else if(checked.length === 1) {
             this.$label.html(checked.parent('label').text());
           }
           else if(checked.length === this.$inputs.length) {
-            this.$label.html('All Selected');
+            this.$label.html('Filter by Category');
             this.areAllChecked = true;
             this.$checkAll.html('Uncheck All');
           }
@@ -212,8 +246,9 @@
         
         var checkboxesDropdowns = document.querySelectorAll('[data-control="checkbox-dropdown"]');
         for(var i = 0, length = checkboxesDropdowns.length; i < length; i++) {
-          new CheckboxDropdown(checkboxesDropdowns[i]);
-        }
+          var dropdown = new CheckboxDropdown(checkboxesDropdowns[i]);
+          dropdown.onCheckAll(true);
+        }   
       })(jQuery);
 </script>
 
