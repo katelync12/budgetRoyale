@@ -39,7 +39,7 @@
 
     <div>
         <p style="font-family: Verdana, Geneva, Tahoma, sans-serif;">What type of goal is this?</p>
-        {% block toggle %}{% include 'components/toggle_component.html' with name='transaction_type' %}{% endblock %}
+        {% block toggle %}{% include 'components/toggle_component.html' with name='goal_type' %}{% endblock %}
     </div>
     <div style="margin-top: 5%;">
         <p style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Is this a primary goal? (Leaderboard goal)</p>
@@ -70,6 +70,12 @@
         cursor: pointer;">Submit</button>
 </form>
 </div>
+
+{% if error_message %}
+<script>
+  alert('{{ error_message }}');
+</script>
+{% endif %}
 
 {% endblock %}
 

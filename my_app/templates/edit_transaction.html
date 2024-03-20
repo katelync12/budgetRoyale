@@ -43,6 +43,14 @@
                 {% endfor %}
             </optgroup>
         </select>
+        <select id="type" name="group_goal" style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
+            <option value="No Group Goal">Not Towards a Specific Group Goal</option>
+            <optgroup label="Group Goal">
+                {% for goal in group_goals %}
+                    <option value="{{ goal.goal_name }}" {% if transaction.group_goal.goal_name == goal.goal_name %} selected {% endif %}>{{ goal.goal_name }}</option>
+                {% endfor %}
+            </optgroup>
+        </select>
     </div>
 
     {% block dates %}
