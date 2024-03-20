@@ -85,13 +85,14 @@ def create_transaction_page(request):
     categories = UserJoinCategory.objects.filter(user=current_user)
     group = UserJoinGroup.objects.filter(user=user_id)
     groupID = ""
-    for gr in group:
-        groupID = gr.group.id
-    group_goals = GroupGoal.objects.filter(group_id=groupID)
     group_goals_sorted = []
-    for goal in group_goals:
-        if not goal.is_overall:
-            group_goals_sorted.append(goal)
+    if len(group) != 0:
+        for gr in group:
+            groupID = gr.group.id
+        group_goals = GroupGoal.objects.filter(group_id=groupID)
+        for goal in group_goals:
+            if not goal.is_overall:
+                group_goals_sorted.append(goal)
 
     return render(request, "create_transaction.html", {'categories': categories, 'group_goals': group_goals_sorted})
 
@@ -203,11 +204,6 @@ def create_transaction(request):
         if is_spending:
             amount *= -1
 
-        # Print out the amount, category, spending/savings status, and the user
-        print("Amount:", amount)
-        print("Category:", category_name)
-        print("Spending:", is_spending)
-        print("User:", username)
         transaction = Transactions(
             user=user,
             week=transaction_date,  # Assuming you want to record the current date and time
@@ -458,6 +454,21 @@ def edit_transaction_action(request, transaction_id):
         is_spending = request.POST.get("transaction_type") == "on"
         if is_spending:
             amount = str(float(amount) * -1)
+
+        user_id = request.user.id
+        group = UserJoinGroup.objects.filter(user=user_id)
+        groupID = ""
+        for gr in group:
+            groupID = gr.group.id
+        group_goals = GroupGoal.objects.filter(group_id=groupID)
+        group_goal = request.POST.get("group_goal")
+        group_goal_id = 0
+        if (group_goal == "No Group Goal"):
+            group_goal_id = None
+        else:
+            for goal in group_goals:
+                if (goal.goal_name == group_goal):
+                    group_goal_id = goal.id
         
         # Update the transaction object with the new data
         category = Category.objects.get(category_id=category_id)
@@ -465,16 +476,28 @@ def edit_transaction_action(request, transaction_id):
         transaction.amount = amount
         transaction.name = name
         transaction.category = category
+        transaction.group_goal_id = group_goal_id
         transaction.save()
         return redirect('view_transactions')
     
     # Retrieve all categories for populating the dropdown
-    categories = Category.objects.all()
+    user_id = request.user.id
+    current_user = request.user
+    categories = UserJoinCategory.objects.filter(user=current_user)
     is_negative = transaction.amount < 0
     if is_negative:
         transaction.amount = abs(transaction.amount)
+    group = UserJoinGroup.objects.filter(user=user_id)
+    groupID = ""
+    for gr in group:
+        groupID = gr.group.id
+    group_goals = GroupGoal.objects.filter(group_id=groupID)
+    group_goals_sorted = []
+    for goal in group_goals:
+        if not goal.is_overall:
+            group_goals_sorted.append(goal)
     
-    return render(request, 'edit_transaction.html', {'transaction': transaction, 'categories': categories, 'is_negative': is_negative})
+    return render(request, 'edit_transaction.html', {'transaction': transaction, 'categories': categories, 'is_negative': is_negative, 'group_goals': group_goals_sorted})
 
 def edit_personal_goal_action(request, goal_id):
     goal = get_object_or_404(PersonalGoal, pk=goal_id)
@@ -597,18 +620,21 @@ def leave_group(request):
         group.delete()
     return redirect('groups')
 
-@login_required
-def create_group_goal_page(request):
-    current_user = request.user
-
-    return render(request, "create_personal_goals.html")
 
 @login_required
 def create_group_goal_page(request):
     current_user = request.user
+    group = Group.objects.filter(admin_user = current_user)
+    if not group:
+        messages.error(request, "Only admins are authorized to access this page.")
+        return render(request, "group_goals.html", {'error_message': "You are not authorized to access this page."})
     
+       
+
     return render(request, "create_group_goal.html")
 
+    
+    
 @login_required
 def create_group_goal(request):
     print("create_group_goal")
@@ -630,7 +656,15 @@ def create_group_goal(request):
         group = user_groups.first().group
         username = request.user.username
         user = User.objects.get(username=username)
-        # If it's a spending, make the amount negative
+        
+        groupPrim = UserJoinGroup.objects.filter(user=user_id).first().group
+        existing_primary_goal = GroupGoal.objects.filter(group=groupPrim, is_primary=True).exists()
+
+        if is_primary and existing_primary_goal:
+            # If the group already has a primary goal, redirect with an error message
+            messages.error(request, "You already have a primary goal!")
+            return render(request, "create_group_goal.html", {'error_message': "You already have a primary goal!"})
+
 
         # Print out the amount, category, spending/savings status, and the user
         print("Amount:", amount)

@@ -133,7 +133,24 @@
         function submitDates() {
             var startDate = document.getElementById('start_date').value;
             var endDate = document.getElementById('end_date').value;
-    
+            console.log("hello")
+
+            var currentDate = new Date();
+            console.log(currentDate)
+            var currentDateString = currentDate.toISOString().split('T')[0];
+            var startDateObj = new Date(startDate);
+            var endDateObj = new Date(endDate);
+
+            if (startDateObj > endDateObj) {
+                alert("Start date cannot be later than end date.");
+                return;
+            }
+
+            if (startDateObj > currentDate) {
+                alert("Start date is past the current date.");
+                return;
+            }
+
             fetch(`/generate_expenses_pie_chart/?start_date=${startDate}&end_date=${endDate}`)
             .then(response => response.json())
             .then(data => {

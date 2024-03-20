@@ -996,7 +996,48 @@ def delete_account_success(username, password):
             return "Passed"
     except:
         return "Failed"
-
+    
+def start_after_end_date(username, password):
+    try:
+        login(username, password)
+        date = driver.find_element(By.ID, "start_date")
+        date.send_keys("06/12/2004")
+        date = driver.find_element(By.ID, "end_date")
+        date.send_keys("06/10/2004")
+        button = driver.find_element("xpath", "//button[@onclick='submitDates()']")
+        button.click()
+        try:
+            alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert.accept()
+            return "Passed"
+        except:
+            return "Failed"
+    except:
+        return "Failed"
+    
+def start_after_current_date(username, password):
+    try:
+        login(username, password)
+        date = driver.find_element(By.ID, "start_date")
+        date.send_keys("06/12/3000")
+        button = driver.find_element("xpath", "//button[@onclick='submitDates()']")
+        button.click()
+        try:
+            alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert.accept()
+            return "Passed"
+        except:
+            return "Failed"
+    except:
+        return "Failed"
+    
+def sort_by_date(username, password):
+    login(username, password)
+    button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+    button.click()
+    button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+    button.click()
+    time.sleep(buffer_constant)
 
 browser_options = ChromeOptions()
 browser_options.headless = False
@@ -1040,7 +1081,6 @@ temp_result = create_personal_goal_negative_amount(username, password)
 print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
 temp_result = create_personal_goal_dates_error(username, password)
 print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
-#TODO: create 6 personal goals of used for integration
 create_personal_goal_custom(username, password)
 temp_result = savings_personal_goal_value_groceries(username, password)
 print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
@@ -1054,7 +1094,11 @@ temp_result = delete_account_fail(username, password)
 print(f"{'Delete account failed':<45} {temp_result}")
 temp_result = delete_account_success(username, password)
 print(f"{'Delete account success':<45} {temp_result}")
-
-
+temp_result = start_after_end_date("test-dates", "testpassword")
+print(f"{'Start after End Date Error':<45} {temp_result}")
+temp_result = start_after_current_date("test-dates", "testpassword")
+print(f"{'Start after Current Date Error':<45} {temp_result}")
+temp_result = sort_by_date("test-dates", "testpassword")
+print(f"{'Sort Transactions by Date':<45} {temp_result}")
 
 driver.quit()
