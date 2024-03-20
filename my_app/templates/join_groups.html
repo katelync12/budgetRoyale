@@ -55,7 +55,7 @@
 
 {% for group in groups %}
 <div>
-  {{ group.name }}
+  {{ group.name }} {{group.admin_user.username}}
 </div>
 {% endfor %}
 
