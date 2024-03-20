@@ -461,17 +461,20 @@ def edit_transaction_action(request, transaction_id):
         user_id = request.user.id
         group = UserJoinGroup.objects.filter(user=user_id)
         groupID = ""
-        for gr in group:
-            groupID = gr.group.id
-        group_goals = GroupGoal.objects.filter(group_id=groupID)
-        group_goal = request.POST.get("group_goal")
         group_goal_id = 0
-        if (group_goal == "No Group Goal"):
-            group_goal_id = None
+        if len(group) != 0:
+            for gr in group:
+                groupID = gr.group.id
+            group_goals = GroupGoal.objects.filter(group_id=groupID)
+            group_goal = request.POST.get("group_goal")
+            if (group_goal == "No Group Goal"):
+                group_goal_id = None
+            else:
+                for goal in group_goals:
+                    if (goal.goal_name == group_goal):
+                        group_goal_id = goal.id
         else:
-            for goal in group_goals:
-                if (goal.goal_name == group_goal):
-                    group_goal_id = goal.id
+            group_goal_id = None
         
         # Update the transaction object with the new data
         category = Category.objects.get(category_id=category_id)
@@ -491,14 +494,16 @@ def edit_transaction_action(request, transaction_id):
     if is_negative:
         transaction.amount = abs(transaction.amount)
     group = UserJoinGroup.objects.filter(user=user_id)
-    groupID = ""
-    for gr in group:
-        groupID = gr.group.id
-    group_goals = GroupGoal.objects.filter(group_id=groupID)
     group_goals_sorted = []
-    for goal in group_goals:
-        if not goal.is_overall:
-            group_goals_sorted.append(goal)
+    groupID = ""
+    if len(group) != 0:
+        for gr in group:
+            groupID = gr.group.id
+        group_goals = GroupGoal.objects.filter(group_id=groupID)
+        group_goals_sorted = []
+        for goal in group_goals:
+            if not goal.is_overall:
+                group_goals_sorted.append(goal)
     
     return render(request, 'edit_transaction.html', {'transaction': transaction, 'categories': categories, 'is_negative': is_negative, 'group_goals': group_goals_sorted})
 
