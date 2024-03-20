@@ -60,6 +60,8 @@ urlpatterns = [
     path("groups/leave/", views.leave_group, name="leave_group"),
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),
     path("e", views.group_settings, name="group_settings"),
+    path("b", views.group_leaderboard, name="group_leaderboard"),
+    path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
     # path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
     # path("groups/join", views.groups, name="groups"),
 

@@ -18,10 +18,58 @@ from django.conf import settings
 from datetime import date
 from datetime import timedelta, datetime
 from django.http import HttpResponseRedirect
+from django.db.models import Sum
 
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
+
+@login_required
+def group_leaderboard(request):
+    user = request.user
+    print("group_leaderboard")
+    leaderboard = []
+    
+    # Get all group IDs that the user is a part of
+    user_groups = UserJoinGroup.objects.filter(user=user).values_list('group', flat=True)
+    
+    # Get all users in the same groups as the current user
+    leaderboard_users = UserJoinGroup.objects.filter(group__in=user_groups).select_related('user')
+    
+    # Iterate through each user
+    for user_group in leaderboard_users:
+        # Initialize variables to store transaction amounts for savings and spendings
+        savings_sum = 0
+        spendings_sum = 0
+        
+        # Get transactions related to the user and group goals
+        transactions = Transactions.objects.filter(
+            user=user_group.user, 
+            group_goal__is_primary=True, 
+            group_goal__group__in=user_groups
+        )
+        
+        # Iterate through transactions and calculate sums based on savings or spendings
+        for transaction in transactions:
+            if transaction.group_goal.is_spending and transaction.amount < 0:
+                spendings_sum -= transaction.amount
+            elif not transaction.group_goal.is_spending and transaction.amount > 0:
+                savings_sum += transaction.amount
+        
+        # Total score is the sum of savings and spendings
+        total_score = savings_sum + spendings_sum
+        
+        # Append user's name and total score to the leaderboard
+        leaderboard.append({'name': user_group.user.username, 'score': total_score})
+    
+    # Sort the leaderboard by score in descending order
+    leaderboard.sort(key=lambda x: x['score'], reverse=True)
+    
+    context = {
+        'leaderboard': leaderboard
+    }
+    return render(request, 'leaderboard.html', context)
+
 @login_required
 def group_settings(request):
     # Get the current user
