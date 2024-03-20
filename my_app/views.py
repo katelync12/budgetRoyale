@@ -168,17 +168,20 @@ def create_transaction(request):
         user_id = request.user.id
         group = UserJoinGroup.objects.filter(user=user_id)
         groupID = ""
-        for gr in group:
-            groupID = gr.group.id
-        group_goals = GroupGoal.objects.filter(group_id=groupID)
-        group_goal = request.POST.get("group_goal")
         group_goal_id = 0
-        if (group_goal == "No Group Goal"):
-            group_goal_id = None
+        if (len(group) != 0):  
+            for gr in group:
+                groupID = gr.group.id
+            group_goals = GroupGoal.objects.filter(group_id=groupID)
+            group_goal = request.POST.get("group_goal")
+            if (group_goal == "No Group Goal"):
+                group_goal_id = None
+            else:
+                for goal in group_goals:
+                    if (goal.goal_name == group_goal):
+                        group_goal_id = goal.id
         else:
-            for goal in group_goals:
-                if (goal.goal_name == group_goal):
-                    group_goal_id = goal.id
+            group_goal_id = None
         
         # Access the user who sent the request
         username = request.user.username
@@ -562,6 +565,16 @@ def generate_expenses_pie_chart(request):
     # Prepare data for the pie chart
     labels = list(category_spending.keys())
     data = list(category_spending.values())
+    sum = 0
+    for datum in data:
+        sum += float(datum)
+    percentages = []
+    for datum in data:
+        percent = float(datum) / sum
+        percent *= 100
+        percentages.append(int(percent))
+    for i in range(len(labels)):
+        labels[i] = labels[i] + ": " + str(percentages[i]) + "%"
 
     chart_data = {
         'labels': labels,
@@ -600,6 +613,16 @@ def generate_income_pie_chart(request):
     # Prepare data for the pie chart
     labels = list(category_income.keys())
     data = list(category_income.values())
+    sum = 0
+    for datum in data:
+        sum += float(datum)
+    percentages = []
+    for datum in data:
+        percent = float(datum) / sum
+        percent *= 100
+        percentages.append(int(percent))
+    for i in range(len(labels)):
+        labels[i] = labels[i] + ": " + str(percentages[i]) + "%"
 
     chart_data = {
         'labels': labels,
