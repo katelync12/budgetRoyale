@@ -33,6 +33,8 @@ urlpatterns = [
     # path('edit_transaction/', views.edit_transaction, name='edit_transaction_action'),
     path('create_transaction/', views.create_transaction, name='create_transaction_action'),
     path('create_group/', views.create_group, name='create_group_action'),
+    # path('groups/', views.groups, name='search_group_action'),
+
     path('create_personal_goal/', views.create_personal_goals, name='create_personal_goal_action'),
     path('delete_transaction/<int:transaction_id>/', views.delete_transaction, name='delete_transaction'),
     path('delete_goal/<int:goal_id>/', views.delete_goal, name='delete_goal'),
@@ -52,12 +54,14 @@ urlpatterns = [
     path("edit_personal_goal/", TemplateView.as_view(template_name="edit_personal_goal.html"), name="edit_personal_goal_view"),
     path("edit_personal_goal/<int:goal_id>/", views.edit_personal_goal_action, name="edit_personal_goal_action"),
 
+    path("groups/", views.join_groups, name="groups"),
 
 
     path("groups/leave/", views.leave_group, name="leave_group"),
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),
     path("e", views.group_settings, name="group_settings"),
-    path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
+    # path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
+    # path("groups/join", views.groups, name="groups"),
 
     path("edit_transaction/", TemplateView.as_view(template_name="edit_transaction.html"), name="edit_transactions_view"),
     path("edit_transaction/<int:transaction_id>/", views.edit_transaction_action, name="edit_transaction_action"),
@@ -70,7 +74,7 @@ urlpatterns = [
     path('verify_unique_category/', views.verify_unique_category, name='verify_unique_category'),
     path('generate_expenses_pie_chart/', views.generate_expenses_pie_chart, name='generate_expenses_pie_chart'),
     path('generate_income_pie_chart/', views.generate_income_pie_chart, name='generate_income_pie_chart'),
-    path('/groups/group_goals/create/', views.create_group_goal_page, name="create_group_goal"),
+    path('groups/group_goals/create/', views.create_group_goal_page, name="create_group_goal"),
     path('create_group_goal/', views.create_group_goal, name='create_group_goal_action'),
 
 ]
