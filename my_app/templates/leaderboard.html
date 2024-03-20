@@ -1,24 +1,18 @@
 {% extends "base.html" %} 
 
 {% block content %}
-
-<p class="header">Leaderboard!</p>
-<p><a href="{% url 'create_data' %}">password change</a></p>
-<p><a href="{% url 'view_transactions' %}">transactions</a></p>
-<p><a href="{% url 'create_data' %}">create_data</a></p>
-<p><a href="{% url 'form' %}">form</a></p>
-<p><a href="{% url 'create_data' %}">personal goals</a></p>
-<p><a href="{% url 'groups' %}">Groups</a></p>
-<form action="{% url 'logout' %}" method="post">
-  {% csrf_token %}
-  <button type="submit">Log Out</button>
-</form>
+{% load static %}
 <div style="text-align: center;">
   <h1>Leaderboard</h1>
 </div>
 <div id="leaderboard" style="max-width: 500px; margin-left: 20px; margin-right: 20px; margin: 0 auto;">
     {% for player in leaderboard %}
         <div class="leaderboard-entry">
+            {% if forloop.first %} {# Check if it's the first player #}
+                <img src="{% static 'images/star.png' %}" alt="Star" class="icon"> {# Display a star image for the first player #}
+            {% elif forloop.last %} {# Check if it's the last player #}
+                <img src="{% static 'images/L.png' %}" alt="L" class="icon"> {# Display 'L' image for the last player #}
+            {% endif %}
             <span class="player-name" style="color: white;">{{ player.name }}</span>
             <span class="player-score" style="color: white;">{{ player.score }}</span>
         </div>
@@ -35,9 +29,14 @@
         border-radius: 5px;
         border: 2px solid white;
         background-color: #775BC5;
-  
+        height: 50px;
     }
-  
+    /* Style for the icon */
+    .icon {
+        width: auto; /* Set width of the icon */
+        height: 30px; /* Maintain aspect ratio */
+        margin-right: 10px; /* Add space between icon and player name */
+    }
 </style>
 
 {% endblock %}
