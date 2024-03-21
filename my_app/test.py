@@ -1032,12 +1032,25 @@ def start_after_current_date(username, password):
         return "Failed"
     
 def sort_by_date(username, password):
-    login(username, password)
-    button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-    button.click()
-    button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
-    button.click()
-    time.sleep(buffer_constant)
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        date = driver.find_element(By.ID, "end_date")
+        date.send_keys("03/10/2024")
+        button = driver.find_element("xpath", "//button[@onclick='filterTransactions()']")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+            return "Failed"
+        except:
+            return "Passed"
+    except:
+        return "Failed"
 
 browser_options = ChromeOptions()
 browser_options.headless = False
