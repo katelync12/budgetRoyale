@@ -54,16 +54,19 @@ urlpatterns = [
     path("edit_personal_goal/", TemplateView.as_view(template_name="edit_personal_goal.html"), name="edit_personal_goal_view"),
     path("edit_personal_goal/<int:goal_id>/", views.edit_personal_goal_action, name="edit_personal_goal_action"),
 
-    path("groups/", views.join_groups, name="groups"),
-
-
+    path("groups/leaderboard/", views.group_leaderboard, name="group_leaderboard"),
+    
+    # Matches groups/leave/
     path("groups/leave/", views.leave_group, name="leave_group"),
+    
+    # Matches groups/<str:page>/
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),
-    path("e", views.group_settings, name="group_settings"),
-    path("b", views.group_leaderboard, name="group_leaderboard"),
-    path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
-    # path("groups/", TemplateView.as_view(template_name="groups.html"), name="groups"),
-    # path("groups/join", views.groups, name="groups"),
+    
+    # Matches groups/
+    path("groups/", views.join_groups, name="groups"),
+    
+    # Matches groups/settings/
+    path("groups/settings/", views.group_settings, name="group_settings"),
 
     path("edit_transaction/", TemplateView.as_view(template_name="edit_transaction.html"), name="edit_transactions_view"),
     path("edit_transaction/<int:transaction_id>/", views.edit_transaction_action, name="edit_transaction_action"),

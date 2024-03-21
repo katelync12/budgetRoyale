@@ -2,19 +2,27 @@
 
 {% block content %}
 {% load static %}
-<div style="text-align: center;">
-  <h1>Leaderboard</h1>
+<div style="text-align: center; margin-bottom: 20px;">
+  <h1 style="margin-bottom: 30px;"> Leaderboard </h1>
+  <h4>Group Goal: {{ primary_group_goal }}</h4> {# Add this line to display the primary group goal #}
 </div>
-<div id="leaderboard" style="max-width: 500px; margin-left: 20px; margin-right: 20px; margin: 0 auto;">
+<div id="leaderboard" style="max-width: 500px; margin: 0 auto;">
     {% for player in leaderboard %}
         <div class="leaderboard-entry">
-            {% if forloop.first %} {# Check if it's the first player #}
-                <img src="{% static 'images/star.png' %}" alt="Star" class="icon"> {# Display a star image for the first player #}
-            {% elif forloop.last %} {# Check if it's the last player #}
-                <img src="{% static 'images/L.png' %}" alt="L" class="icon"> {# Display 'L' image for the last player #}
-            {% endif %}
-            <span class="player-name" style="color: white;">{{ player.name }}</span>
-            <span class="player-score" style="color: white;">{{ player.score }}</span>
+            <div class="left-content">
+                <span class="player-name" style="color: white;">{{ player.name }}</span>
+            </div>
+            <div class="right-content">
+                
+                <div class="icon-container" style="margin-right: 10px;">
+                    {% if forloop.first %}
+                        <img src="{% static 'images/star.png' %}" alt="Star" class="icon">
+                    {% elif forloop.last %}
+                        <img src="{% static 'images/L.png' %}" alt="L" class="icon">
+                    {% endif %}
+                </div>
+                <span class="player-score" style="color: white; margin-right: 10px;">{{ player.score }}</span>
+            </div>
         </div>
     {% endfor %}
 </div>
@@ -24,18 +32,33 @@
     .leaderboard-entry {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 20px; /* Add bottom margin between entries */
-        padding: 10px;
         border-radius: 5px;
         border: 2px solid white;
-        background-color: #775BC5;
+        background-color: rgba(91, 95, 197, .4);
         height: 50px;
+        padding: 10px;
+        margin-left:20px;
+        margin-right:20px;
+    }
+    /* Style for the left content */
+    .left-content {
+        flex-grow: 1;
+    }
+    /* Style for the right content */
+    .right-content {
+        display: flex;
+        align-items: center;
+    }
+    /* Style for the icon container */
+    .icon-container {
+        margin-left: 10px; /* Add left margin */
     }
     /* Style for the icon */
     .icon {
         width: auto; /* Set width of the icon */
         height: 30px; /* Maintain aspect ratio */
-        margin-right: 10px; /* Add space between icon and player name */
     }
 </style>
 
