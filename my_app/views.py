@@ -38,7 +38,7 @@ def group_leaderboard(request):
     leaderboard_users = UserJoinGroup.objects.filter(group__in=user_groups).select_related('user')
     
     # Get the name of the primary group goal
-    primary_group_goal = GroupGoal.objects.filter(group__in=user_groups, is_primary=True).first().goal_name
+    primary_group_goal = GroupGoal.objects.filter(group__in=user_groups, is_primary=True).first()
     
     # Iterate through each user
     for user_group in leaderboard_users:
@@ -50,7 +50,8 @@ def group_leaderboard(request):
         transactions = Transactions.objects.filter(
             user=user_group.user, 
             group_goal__is_primary=True, 
-            group_goal__group__in=user_groups
+            group_goal__group__in=user_groups,
+            week__range=[primary_group_goal.start_date, primary_group_goal.end_date]  # Filter by transaction week within range
         )
         
         # Iterate through transactions and calculate sums based on savings or spendings
@@ -71,7 +72,7 @@ def group_leaderboard(request):
     
     context = {
         'leaderboard': leaderboard,
-        'primary_group_goal': primary_group_goal  # Pass the primary group goal's name in the context
+        'primary_group_goal': primary_group_goal.goal_name  # Pass the primary group goal's name in the context
     }
     return render(request, 'leaderboard.html', context)
 
