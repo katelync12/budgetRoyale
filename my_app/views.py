@@ -77,18 +77,23 @@ def group_settings(request):
     
     # Query the UserJoinGroup model to retrieve the groups the user is a part of
     user_groups = UserJoinGroup.objects.filter(user=user)
-    
     # Create a list to store the user's groups along with admin status
     user_groups_info = []
     
     # Iterate through the user's groups and determine if they are an admin
+    members = []
     for user_group in user_groups:
         is_admin = user_group.group.admin_user == user
         user_groups_info.append({'group': user_group.group, 'is_admin': is_admin})
+        group_id = user_group.group_id
+        group_members = UserJoinGroup.objects.filter(group_id=group_id)
+        print(group_members)
+        members.extend(group_members)
     
     # Pass the user_groups_info context variable to the template
     context = {
-        'user_groups_info': user_groups_info
+        'user_groups_info': user_groups_info,
+        'members': members
     }
     print(context)
     # Render the template with the context
@@ -461,6 +466,8 @@ def create_group(request):
             user_group = UserJoinGroup(user=user, group=group)
             user_group.save()
             print("exception")
+    # this causes an error when you refresh after creating the group
+    # Changing to redirect instantly has error when you hit create
     return render(request, 'group_settings.html')
 
 def view_personal_goals(request):
@@ -791,6 +798,39 @@ def join_groups(request):
         
         # Render the template with the transactions data
         return render(request, 'join_groups.html', context)
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+
+def join_group_action(request, group_id):
+    if request.user.is_authenticated:
+
+        group = Group.objects.get(id=group_id)
+        context = {
+            'group': group
+        }
+        return render(request, 'join_specific_group.html', context)
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+    
+def join_specific_group_action(request, group_id):
+    if request.user.is_authenticated:
+        group_password = request.POST.get("password")
+
+        username = request.user.username
+        user = User.objects.get(username=username)
+        group = Group.objects.get(id=group_id)
+        group_password = request.POST.get("password")
+        if (group_password != group.password):
+            return redirect('join_group_action', group_id=group.id)
+
+        user_to_group = UserJoinGroup(user=user, group=group)
+        user_to_group.save()
+
+        # this causes an error when you refresh after creating the group
+        # Changing to redirect instantly has error when you hit create
+        return redirect('group_settings')
     else:
         # Redirect to login page if user is not authenticated
         return redirect('login')

@@ -54,9 +54,18 @@
 </form>
 
 {% for group in groups %}
-<div>
-  {{ group.name }} {{group.admin_user.username}}
-</div>
+  <div>
+    <tr>
+      <th class="category-cell" style="display: flex;">
+        <th>{{ group.name }}</th>
+        <th>{{ group.admin_user.username }}</th>
+        <th>
+          <a href="{% url 'join_group_action' group_id=group.id %}">Join</a>
+        </th>
+      </th>
+    </tr>
+  </div>
+
 {% endfor %}
 
 {% endblock %}
