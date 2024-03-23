@@ -80,17 +80,19 @@ def group_leaderboard(request):
 def group_settings(request):
     # Get the current user
     user = request.user
-    
+    print("HI")
     # Query the UserJoinGroup model to retrieve the groups the user is a part of
     user_groups = UserJoinGroup.objects.filter(user=user)
-    
+    if not user_groups:
+        return redirect('groups')
     # Create a list to store the user's groups along with admin status
     user_groups_info = []
-    
+    print("group_settings")
     # Iterate through the user's groups and determine if they are an admin
     for user_group in user_groups:
         is_admin = user_group.group.admin_user == user
         user_groups_info.append({'group': user_group.group, 'is_admin': is_admin})
+        print("group is " + user_group.group.name + " and is admin is " + str(is_admin))
     
     # Pass the user_groups_info context variable to the template
     context = {
