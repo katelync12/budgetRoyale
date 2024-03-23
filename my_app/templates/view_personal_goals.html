@@ -1,44 +1,32 @@
 {% extends "base.html" %} 
 {% block content %}
-<p>Personal Goals</p>
-<p><a href="{% url 'home' %}">home</a></p>
-<a href="{% url 'create_personal_goals' %}">Create</a>
+<h2 style="text-align: center; margin-bottom: 15px;">Personal Goals!</h2>
+<div class="button-container">
+    <button onclick="window.location.href='{% url 'home' %}'">Home</button>
+    <button onclick="window.location.href='{% url 'create_personal_goals' %}'">Create</button>
+</div>
 
 <div class="table-container">
-    <table class="styled-table">
-        <tr>
-            <th>name</th>
-            <th>amount</th>
-            <th>is spending</th>
-            <th>sum transaction</th>
-            <th>start date</th>
-            <th>end date</th>
-            <th>category</th>
-        </tr>
+    
         {% for goal in goals %}
-            <tr>
-                <th>{{ goal.goal_name }}</th>
-                <th>{{ goal.goal_amount|floatformat:2 }}</th> {# Ensure amount is displayed with 2 decimal points #}
-                <th>{{ goal.is_spending }}</th>
-                <th>{{ goal.sum_transaction|floatformat:2 }}</th> {# Ensure sum_transaction is displayed with 2 decimal points #}
-                <th>{{ goal.start_date }}</th>
-                <th>{{ goal.end_date }}</th>
-                <th style="display: flex; justify-content: space-between;">
-                    <span>
-                        {% if goal.category %}
-                        {{ goal.category.category_id }}
-                    {% else %}
-                        Any Category
-                    {% endif %}
-                    </span>
-                    <div>
+            
+        <div>
+            <h2 style="text-align: center; justify-content: center;">{{ goal.goal_name }}  </h2>
+            <br> <br> <br> <br>
+        </div>           
+        <div style="margin-top: 10px; width: 400px;">
+        
+            
+            <progress style="width: 90%;" value="33" max="100">
+          </div>
+
+                      <div>
                         <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editPersonalGoal({{ goal.id }})"></i>
                         <i class="fas fa-trash-alt delete-personal-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
-                    </div>
-                </th>
-            </tr>
+                    </div>                                                                      
+            
         {% endfor %}
-    </table>
+    
 </div>
 <ul>
 </ul>
@@ -83,4 +71,53 @@
     }    
 </script>
 
+<!--<script>
+    function updateProgress(progressBarElement, progressBarMessageElement, progress) {
+  progressBarElement.style.width = progress.percent + "%";
+  progressBarMessageElement.innerHTML = progress.current + ' of ' + progress.total + ' processed.';
+}
+
+var trigger = document.getElementById('progress-bar-trigger');
+trigger.addEventListener('click', function(e) {
+  var bar = document.getElementById("progress-bar");
+  var barMessage = document.getElementById("progress-bar-message");
+  for (var i = 0; i < 11; i++) {
+    setTimeout(updateProgress, 500 * i, bar, barMessage, {
+      percent: 10 * i,
+      current: 10 * i,
+      total: 100
+    })
+  }
+})
+</script>-->
+
+<script>
+    function updateProgressBar() {
+        // Assuming `sum_of_transaction` and `goal_amount` are available in your Django template context
+        var sumOfTransaction = {{ sum_of_transaction }};
+        var goalAmount = {{ goal_amount }};
+        
+        // Calculate completion percentage
+        var completionPercentage = (75 / 100) * 100;
+
+        // Update progress bar width
+        var progressBar = document.getElementById("progress-bar");
+        progressBar.style.width = completionPercentage + "%";
+
+        // Update progress message
+        var progressBarMessage = document.getElementById("progress-bar-message");
+        progressBarMessage.innerHTML = sumOfTransaction + ' of ' + goalAmount + ' processed.';
+    }
+
+    // Call updateProgressBar initially to set the progress bar based on initial values
+    updateProgressBar();
+
+    // Optionally, you can periodically update the progress bar in case of changes
+    // For example, you can call updateProgressBar every few seconds using setInterval
+
+    // Example:
+    // setInterval(updateProgressBar, 5000); // Call updateProgressBar every 5 seconds
+</script>
 {% endblock %}
+
+

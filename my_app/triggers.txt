@@ -111,3 +111,63 @@ CREATE TRIGGER update_personal_trigger
 AFTER UPDATE ON my_app_transactions
 FOR EACH ROW
 EXECUTE FUNCTION update_personal();
+
+CREATE OR REPLACE FUNCTION group_insert_trigger()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.group_goal_id IS NULL THEN
+        -- Overall Goal
+		
+		DECLARE user_group INTEGER;
+		SELECT group_id into user_group
+		FROM my_app_userjoingroup
+		WHERE user_id = NEW.user_id
+        LIMIT 1;
+			
+        IF NEW.amount > 0 THEN
+            -- Saving transaction
+            UPDATE my_app_groupgoal
+            SET sum_transaction = sum_transaction + NEW.amount
+			WHERE user_group = group_id
+            AND is_overall = TRUE
+            AND is_spending = FALSE
+            AND NEW.week BETWEEN start_date AND end_date;
+
+        ELSE 
+            -- Spending transaction
+            UPDATE my_app_groupgoal
+            SET sum_transaction = sum_transaction - NEW.amount
+			WHERE user_group = group_id
+            AND is_overall = TRUE
+            AND is_spending = TRUE
+            AND NEW.week BETWEEN start_date AND end_date;
+        END IF;
+    ELSE
+        -- Specific Goal
+        IF NEW.amount > 0 THEN
+            -- Saving transaction
+            UPDATE my_app_groupgoal
+            SET sum_transaction = sum_transaction + NEW.amount
+            WHERE group_id = NEW.group_goal_id
+			AND is_overall = FALSE
+            AND is_spending = FALSE
+			AND NEW.week BETWEEN start_date AND end_date;
+        ELSE
+            -- Spending transaction
+            UPDATE my_app_groupgoal
+            SET sum_transaction = sum_transaction - NEW.amount
+            WHERE group_id = NEW.group_goal_id
+			AND is_overall = FALSE
+            AND is_spending = TRUE
+			AND NEW.week BETWEEN start_date AND end_date;
+        END IF;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER group_insert_trigger
+AFTER INSERT ON my_app_transactions
+FOR EACH ROW
+EXECUTE FUNCTION group_insert_trigger();
