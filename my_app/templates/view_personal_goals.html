@@ -1,123 +1,121 @@
 {% extends "base.html" %} 
+
 {% block content %}
-<h2 style="text-align: center; margin-bottom: 15px;">Personal Goals!</h2>
-<div class="button-container">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .chart-container {
+      margin-bottom: 20px; /* Adjust the spacing between charts */
+    }
+  </style>
+</head>
+
+<body>
+  <h2 style="text-align: center; margin-bottom: 15px;">Personal Goals</h2>
+
+  <div class="button-container">
     <button onclick="window.location.href='{% url 'home' %}'">Home</button>
     <button onclick="window.location.href='{% url 'create_personal_goals' %}'">Create</button>
-</div>
+  </div>
 
-<div class="table-container">
-    
-        {% for goal in goals %}
-            
-        <div>
-            <h2 style="text-align: center; justify-content: center;">{{ goal.goal_name }}  </h2>
-            <br> <br> <br> <br>
-        </div>           
-        <div style="margin-top: 10px; width: 400px;">
-        
-            
-            <progress style="width: 90%;" value="33" max="100">
-          </div>
+  <div class="table-container">
+    {% for goal in goals %}
+    <div class="goal-container">
+      <h3>{{ goal.goal_name }}</h3>
+      <div class="goal-details">
+        <!-- Edit button -->
+        <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editPersonalGoal({{ goal.id }})"></i>
+        <!-- Delete button -->
+        <i class="fas fa-trash-alt delete-personal-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
+      </div>
+      <!-- Donut chart container -->
+      <div class="chart-container">
+        <canvas class="progress-chart" id="progress-chart-{{ goal.id }}"></canvas>
+      </div>
+    </div>
+    <br>
+    {% endfor %}
+  </div>
 
-                      <div>
-                        <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editPersonalGoal({{ goal.id }})"></i>
-                        <i class="fas fa-trash-alt delete-personal-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
-                    </div>                                                                      
-            
-        {% endfor %}
-    
-</div>
-<ul>
-</ul>
+  <script>
+    {% for goal in goals %}
+    const progressData{{ goal.id }} = {{ goal.sum_transaction }};
+    const goalAmount{{ goal.id }} = {{ goal.goal_amount }};
 
-<script>
-    document.querySelectorAll('.delete-personal-goal').forEach(item => {
-        item.addEventListener('click', event => {
-            const goalId = event.target.dataset.goalId;
-            const goalName = event.target.dataset.goalName;
-            
-            // Prompt user for confirmation
-            const isConfirmed = confirm(`Are you sure you want to delete ${goalName} goal?`);
-            if (!isConfirmed) {
-                return; // Abort deletion if user cancels
+    const ctx{{ goal.id }} = document.getElementById('progress-chart-{{ goal.id }}').getContext('2d');
+    const progressChart{{ goal.id }} = new Chart(ctx{{ goal.id }}, {
+        type: 'doughnut',
+        data: {
+            labels: ['Progress', 'Remaining'],
+            datasets: [{
+                label: 'Progress',
+                data: [progressData{{ goal.id }}, goalAmount{{ goal.id }} - progressData{{ goal.id }}],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(211, 211, 211, 0.6)'
+                ],
+                borderColor: [
+                  'rgba(0, 0, 0, 1)',
+                    'rgba(0, 0, 0, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                }
             }
-            
-            fetch(`/delete_goal/${goalId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    // Remove the transaction row from the table
-                    event.target.closest('tr').remove();
-                } else {
-                    console.error('Error deleting transaction:', data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error deleting transaction:', error);
-            });
-        });
+        }
     });
-</script>
+    {% endfor %}
+  </script>
 
-<script>
+  <script>
+    document.querySelectorAll('.delete-personal-goal').forEach(item => {
+      item.addEventListener('click', event => {
+        const goalId = event.target.dataset.goalId;
+        const goalName = event.target.dataset.goalName;
+
+        // Prompt user for confirmation
+        const isConfirmed = confirm(`Are you sure you want to delete ${goalName} goal?`);
+        if (!isConfirmed) {
+          return; // Abort deletion if user cancels
+        }
+
+        fetch(`/delete_goal/${goalId}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.message) {
+            // Remove the goal container from the page
+            event.target.closest('.goal-container').remove();
+          } else {
+            console.error('Error deleting goal:', data.error);
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting goal:', error);
+        });
+      });
+    });
+
     function editPersonalGoal(goalId) {
-        window.location.href = `/edit_personal_goal/${goalId}/`;
-    }    
-</script>
-
-<!--<script>
-    function updateProgress(progressBarElement, progressBarMessageElement, progress) {
-  progressBarElement.style.width = progress.percent + "%";
-  progressBarMessageElement.innerHTML = progress.current + ' of ' + progress.total + ' processed.';
-}
-
-var trigger = document.getElementById('progress-bar-trigger');
-trigger.addEventListener('click', function(e) {
-  var bar = document.getElementById("progress-bar");
-  var barMessage = document.getElementById("progress-bar-message");
-  for (var i = 0; i < 11; i++) {
-    setTimeout(updateProgress, 500 * i, bar, barMessage, {
-      percent: 10 * i,
-      current: 10 * i,
-      total: 100
-    })
-  }
-})
-</script>-->
-
-<script>
-    function updateProgressBar() {
-        // Assuming `sum_of_transaction` and `goal_amount` are available in your Django template context
-        var sumOfTransaction = {{ sum_of_transaction }};
-        var goalAmount = {{ goal_amount }};
-        
-        // Calculate completion percentage
-        var completionPercentage = (75 / 100) * 100;
-
-        // Update progress bar width
-        var progressBar = document.getElementById("progress-bar");
-        progressBar.style.width = completionPercentage + "%";
-
-        // Update progress message
-        var progressBarMessage = document.getElementById("progress-bar-message");
-        progressBarMessage.innerHTML = sumOfTransaction + ' of ' + goalAmount + ' processed.';
+      window.location.href = `/edit_personal_goal/${goalId}/`;
     }
+  </script>
 
-    // Call updateProgressBar initially to set the progress bar based on initial values
-    updateProgressBar();
+</body>
 
-    // Optionally, you can periodically update the progress bar in case of changes
-    // For example, you can call updateProgressBar every few seconds using setInterval
-
-    // Example:
-    // setInterval(updateProgressBar, 5000); // Call updateProgressBar every 5 seconds
-</script>
 {% endblock %}
+
+
 
 
