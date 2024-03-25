@@ -64,6 +64,8 @@ urlpatterns = [
     
     # Matches groups/leave/
     path("groups/leave/", views.leave_group, name="leave_group"),
+    path("groups/group_settings/", views.group_settings, name="group_settings"),
+    #path("e", views.group_settings, name="group_settings"),
     
     # Matches groups/<str:page>/
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),
@@ -72,7 +74,7 @@ urlpatterns = [
     path("groups/", views.join_groups, name="groups"),
     
     # Matches groups/settings/
-    path("groups/settings/", views.group_settings, name="group_settings"),
+    
 
     path("edit_transaction/", TemplateView.as_view(template_name="edit_transaction.html"), name="edit_transactions_view"),
     path("edit_transaction/<int:transaction_id>/", views.edit_transaction_action, name="edit_transaction_action"),

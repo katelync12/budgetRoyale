@@ -80,21 +80,20 @@ def group_leaderboard(request):
 def group_settings(request):
     # Get the current user
     user = request.user
-    
+    print("HI")
     # Query the UserJoinGroup model to retrieve the groups the user is a part of
     user_groups = UserJoinGroup.objects.filter(user=user)
+    if not user_groups:
+        return redirect('groups')
     # Create a list to store the user's groups along with admin status
     user_groups_info = []
-    
+    print("group_settings")
     # Iterate through the user's groups and determine if they are an admin
     members = []
     for user_group in user_groups:
         is_admin = user_group.group.admin_user == user
         user_groups_info.append({'group': user_group.group, 'is_admin': is_admin})
-        group_id = user_group.group_id
-        group_members = UserJoinGroup.objects.filter(group_id=group_id)
-        print(group_members)
-        members.extend(group_members)
+        print("group is " + user_group.group.name + " and is admin is " + str(is_admin))
     
     # Pass the user_groups_info context variable to the template
     context = {
@@ -344,11 +343,7 @@ def view_transactions(request, view_all = True):
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
         current_user = request.user
-
         selected_categories = request.GET.getlist('selected_categories')
-        print("---------")
-        print(selected_categories)
-        print("---------")
         
         # Gets all transactions
         sorted = []
@@ -362,6 +357,9 @@ def view_transactions(request, view_all = True):
         if not view_all:
             transactions = Transactions.objects.all()
         else:
+            categories_list = []
+            if len(selected_categories) == 1:
+                categories_list = selected_categories[0].split(",")
             if start_date_str and end_date_str:
                 start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
                 end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
@@ -378,7 +376,11 @@ def view_transactions(request, view_all = True):
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
             if (transaction.user.username == username):
-                sorted.append(transaction)
+                if (len(selected_categories) == 1):
+                    if (transaction.category.category_id in categories_list):
+                        sorted.append(transaction)
+                else:
+                    sorted.append(transaction)
 
         categories = UserJoinCategory.objects.filter(user=current_user)
 
