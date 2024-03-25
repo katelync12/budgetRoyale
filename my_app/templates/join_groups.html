@@ -53,19 +53,31 @@
   <button type="submit">Search</button>
 </form>
 
+<div class="join_group_container">
 {% for group in groups %}
-  <div>
-    <tr>
-      <th class="category-cell" style="display: flex;">
-        <th>{{ group.name }}</th>
-        <th>{{ group.admin_user.username }}</th>
-        <th>
-          <a href="{% url 'join_group_action' group_id=group.id %}">Join</a>
-        </th>
+{% comment %} <div>
+  <tr>
+    <th class="category-cell" style="display: flex;">
+      <th>{{ group.name }}</th>
+      <th>{{ group.admin_user.username }}</th>
+      <th>
+        <a href="{% url 'join_group_action' group_id=group.id %}">Join</a>
       </th>
-    </tr>
+    </th>
+  </tr>
+</div>
+<div> {% endcomment %}
+  <div class="join_group_box">
+    <div style="justify-content: center; text-align: center">
+      <p class="group_name_label">{{ group.name }}</p>
+      <p class="group_admin_label">{{ group.admin_user.username }}</p>
+      <a class="join_group_btn" href="{% url 'join_group_action' group_id=group.id %}">Join!</a>
+    </div>
   </div>
 
+
 {% endfor %}
+</div>
+
 
 {% endblock %}
