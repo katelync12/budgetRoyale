@@ -4,53 +4,16 @@
 {% load static %}
 
 
-<p class="header">GROUP!</p>
-
-
 
 <div class="button-container">
-    <button onclick="window.location.href='{% url 'groups' %}'">Join Group</button>
-    <button onclick="window.location.href='{% url 'groups' %}'">Create Group</button>
+    <button onclick="window.location.href='{% url 'home' %}'">Home</button>
+    <button onclick="window.location.href='{% url 'create_groups' %}'">Create Group</button>
 </div>
 
-<form method="POST" action="{% url 'create_group_action' %}">
-    {% csrf_token %}
-    <div style="margin: 0 auto;
-    max-width: fit-content;
-    height: fit-content;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0px 5px 10px #5B5FC5, 5px 0px 10px #5B5FC5;
-    margin-top: 50px;
-    text-align: center;
-    justify-content: space-around;
-    margin-bottom: 30px;">
-         <label for="name" style="font-size: medium; font-family: Verdana, Geneva, Tahoma, sans-serif;">Name your group!</label>
-        <input type="text" id="name" name="name" required><br><br>
-        <label for="password" style="font-size: medium; font-family: Verdana, Geneva, Tahoma, sans-serif;">Group password</label>
-
-        <div>
-          <input type="password" name="password1" placeholder="Password" required>
-        </div>
-        <div>
-          <input type="password" name="password2" placeholder="Confirm Password" required>
-        </div>
-
-        <button type="submit" style="background-color: #5B5FC5; /* Blue button color */
-      color: #ffffff; /* White button text color */
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-family: Verdana, Geneva, Tahoma, sans-serif;
-      cursor: pointer;"> Submit </button>
-    </div>
-</form>
-
-<form method="POST" action="{% url 'groups' %}">
+<form method="POST" action="{% url 'groups' %}" class="show-inline">
   {% csrf_token %}
-  <input type="text" id="search_input" name="search_input">
-  <button type="submit">Search</button>
+  <input id="search_input" name="search_input" class="join-group-search-bar" placeholder="Search for a group">
+  <button type="submit" class="search-btn">Search</button>
 </form>
 
 <div class="join_group_container">
@@ -58,8 +21,12 @@
   <div class="join_group_box">
     <div class="join_group_text">
       <p class="group_name_label">{{ group.name }}</p>
-      <p class="group_admin_label">{{ group.admin_user.username }}</p>
-      <a class="join_group_btn" href="{% url 'join_group_action' group_id=group.id %}">Join!</a>
+      <p class="group_admin_label">Admin: {{ group.admin_user.username }}</p>
+      {% comment %} <a class="join_group_btn" href="{% url 'join_group_action' group_id=group.id %}">Join!</a> {% endcomment %}
+      {% comment %} <button class="join_group_btn" onclick="window.location.href='{% url 'join_group_action' group_id=group.id %}'">Join Group</button> {% endcomment %}
+      <div class="button-container" style="justify-content: center;">
+        <button onclick="window.location.href='{% url 'join_group_action' group_id=group.id %}'">Join Group</button>
+    </div>
     </div>
   </div>
 
