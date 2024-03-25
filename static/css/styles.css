@@ -516,5 +516,11 @@ a.nav-headers.active {
   justify-content: center;
 }
 
+.join_group_text {
+  justify-content: center;
+  text-align: center;
+  word-wrap: break-word;
+  max-width: 100%;
+}
 
 /* end join group boxes */
