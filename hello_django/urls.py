@@ -54,6 +54,12 @@ urlpatterns = [
     path("edit_personal_goal/", TemplateView.as_view(template_name="edit_personal_goal.html"), name="edit_personal_goal_view"),
     path("edit_personal_goal/<int:goal_id>/", views.edit_personal_goal_action, name="edit_personal_goal_action"),
 
+    path('groups/join/<int:group_id>/', views.join_group_action, name='join_group_action'),
+    path('join_specific_group/<int:group_id>/', views.join_specific_group_action, name='join_specific_group_action'),
+
+    path('groups/join/<int:group_id>/', views.join_group_action, name='join_group_action'),
+    path('join_specific_group/<int:group_id>/', views.join_specific_group_action, name='join_specific_group_action'),
+
     path("groups/leaderboard/", views.group_leaderboard, name="group_leaderboard"),
     
     # Matches groups/leave/

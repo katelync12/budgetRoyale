@@ -10,18 +10,26 @@
 <p><a href="{% url 'create_group_goal' %}">Group Goals</a></p>
 <p><a href="{% url 'groups' %}">Groups</a></p>
 
-{% if user_groups_info %}
+{% comment %} {% if user_groups_info.is_admin %} {% endcomment %}
   <h2>Your Groups:</h2>
   {% for user_group_info in user_groups_info %}
     <div>
       <p>{{ user_group_info.group.name }}</p>
       {% if not user_group_info.is_admin %}
         <p>Leave Group</p>
+      {% else %}
+        <p>Delete Group</p>
+        {% for mem in members %}
+          {{mem.usernmame}}
+        {% endfor %}
+
       {% endif %}
     </div>
   {% endfor %}
-{% else %}
-  <p>You are not part of any groups.</p>
-{% endif %}
+{% comment %} {% else %}
+  <p>Not admin group</p>
+  {% comment %} <p>{{  }}</p>
+  
+{% endif %} {% endcomment %}
 
 {% endblock %}
