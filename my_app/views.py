@@ -790,13 +790,13 @@ def join_groups(request):
         username = request.user.username
 
         groups = Group.objects.all()
-        search = request.POST.get("search_input", "")
+        search = request.POST.get("search_input", "").lower()
         if search == "":
             sorted = groups
         else:
             for group in groups:
                 # Only gets the transactions of the currently logged in user
-                if search in group.name:
+                if search in group.name.lower():
                     sorted.append(group)
 
         context = {

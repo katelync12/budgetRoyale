@@ -489,16 +489,17 @@ a.nav-headers.active {
 /* for join group boxes */
 
 .join_group_box {
-  width: 200px; 
+  width: 250px; 
   height: 200px;
-  border: 1px solid #000;
-  background-color: #7477d7;
-  margin: 10px;
+  border: 3px solid #bcbff5;
+  background-color: #F8F8F8;
+  margin: 15px;
   padding: 20px;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 20px;
 }
 
 .join_group_container {
@@ -511,9 +512,12 @@ a.nav-headers.active {
 }
 .group_name_label {
   justify-content: center;
+  font-size: 2em;
+  font-weight: 100;
 }
 .group_admin_label {
   justify-content: center;
+  font-size: 1.25em;
 }
 
 .join_group_text {
@@ -522,5 +526,39 @@ a.nav-headers.active {
   word-wrap: break-word;
   max-width: 100%;
 }
+.join_group_btn {
+  background-color: #7477d7;
+  outline: none;
+  color: white;
+}
 
 /* end join group boxes */
+
+/* join group searching */
+
+.show-inline{
+  display: flex;
+  justify-content: center; /* Align the form elements in the center horizontally */
+  margin-bottom: 20px;
+}
+.join-group-search-bar {
+  width: 60%; /* Set the width of the input field */
+  height: 35px;
+  border-radius: 10px; /* Round the corners of the input field */
+  border: 1px solid #ccc; /* Add a border */
+  background-image: url(https://www.freeiconspng.com/thumbs/magnifying-glass-icon/magnifying-glass-icon-13.png);
+  background-position: 10px center;
+  background-repeat: no-repeat;
+  background-size: 20px;
+  padding-left: 40px;
+  margin-right: 10px;
+}
+.search-btn {
+  border-radius: 10px;
+  background-color: white;
+  width: 85px;
+  outline: none;
+  border: none;
+}
+
+/* end join group searching */
