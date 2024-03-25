@@ -341,11 +341,7 @@ def view_transactions(request, view_all = True):
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
         current_user = request.user
-
         selected_categories = request.GET.getlist('selected_categories')
-        print("---------")
-        print(selected_categories)
-        print("---------")
         
         # Gets all transactions
         sorted = []
@@ -359,6 +355,9 @@ def view_transactions(request, view_all = True):
         if not view_all:
             transactions = Transactions.objects.all()
         else:
+            categories_list = []
+            if len(selected_categories) == 1:
+                categories_list = selected_categories[0].split(",")
             if start_date_str and end_date_str:
                 start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
                 end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
@@ -375,7 +374,11 @@ def view_transactions(request, view_all = True):
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
             if (transaction.user.username == username):
-                sorted.append(transaction)
+                if (len(selected_categories) == 1):
+                    if (transaction.category.category_id in categories_list):
+                        sorted.append(transaction)
+                else:
+                    sorted.append(transaction)
 
         categories = UserJoinCategory.objects.filter(user=current_user)
 
