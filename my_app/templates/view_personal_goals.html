@@ -1,86 +1,208 @@
 {% extends "base.html" %} 
+
 {% block content %}
-<p>Personal Goals</p>
-<p><a href="{% url 'home' %}">home</a></p>
-<a href="{% url 'create_personal_goals' %}">Create</a>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .goal-container {
+      
+      justify-content: center;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      text-align: center;
+      
+      
+    }
 
-<div class="table-container">
-    <table class="styled-table">
-        <tr>
-            <th>name</th>
-            <th>amount</th>
-            <th>is spending</th>
-            <th>sum transaction</th>
-            <th>start date</th>
-            <th>end date</th>
-            <th>category</th>
-        </tr>
-        {% for goal in goals %}
-            <tr>
-                <th>{{ goal.goal_name }}</th>
-                <th>{{ goal.goal_amount|floatformat:2 }}</th> {# Ensure amount is displayed with 2 decimal points #}
-                <th>{{ goal.is_spending }}</th>
-                <th>{{ goal.sum_transaction|floatformat:2 }}</th> {# Ensure sum_transaction is displayed with 2 decimal points #}
-                <th>{{ goal.start_date }}</th>
-                <th>{{ goal.end_date }}</th>
-                <th style="display: flex; justify-content: space-between;">
-                    <span>
-                        {% if goal.category %}
-                        {{ goal.category.category_id }}
-                    {% else %}
-                        Any Category
-                    {% endif %}
-                    </span>
-                    <div>
-                        <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editPersonalGoal({{ goal.id }})"></i>
-                        <i class="fas fa-trash-alt delete-personal-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
-                    </div>
-                </th>
-            </tr>
-        {% endfor %}
-    </table>
-</div>
-<ul>
-</ul>
+    .chart-container {
+      width: 100%; /* Ensure the chart fills the container */
+      height: auto; /* Allow the chart to adjust its height */
+      text-align: center;
+    }
 
-<script>
-    document.querySelectorAll('.delete-personal-goal').forEach(item => {
-        item.addEventListener('click', event => {
-            const goalId = event.target.dataset.goalId;
-            const goalName = event.target.dataset.goalName;
-            
-            // Prompt user for confirmation
-            const isConfirmed = confirm(`Are you sure you want to delete ${goalName} goal?`);
-            if (!isConfirmed) {
-                return; // Abort deletion if user cancels
-            }
-            
-            fetch(`/delete_goal/${goalId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    // Remove the transaction row from the table
-                    event.target.closest('tr').remove();
-                } else {
-                    console.error('Error deleting transaction:', data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error deleting transaction:', error);
-            });
-        });
+    @media only screen and (min-width: 801px) {
+      .goal-container {
+        height: 400px;
+        width: 420px;
+        padding: 10px;
+        margin-bottom: 30px;
+        margin-right: 10px;
+        margin-top: 5px;
+        margin-left: 10px;
+      }
+      .chart-container {
+        justify-content: center;
+        align-items: center;
+        display: column;
+        width: 100%;
+      }
+    }
+
+    /* Media query for mobile screens */
+    @media only screen and (max-width: 800px) {
+      .goal-container {
+        height: 430px;
+        width: 95%;
+        padding: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+      } 
+      .chart-container {
+        justify-content: center;
+        align-items: center;
+        display: column;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h2 style="text-align: center; margin-bottom: 15px;">Personal Goals</h2>
+
+  <div class="button-container">
+    <button onclick="window.location.href='{% url 'home' %}'">Home</button>
+    <button onclick="window.location.href='{% url 'create_personal_goals' %}'">Create</button>
+  </div>
+
+  <div style = "display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: 1%;
+  margin-right: 1%;">
+    {% for goal in goals %}
+    <div class="goal-container">
+      <h3 style="text-align: center;">{{ goal.goal_name }}</h3>
+      <div class="goal-details" style="text-align: center; margin-bottom: 2%;">
+        <!-- Edit button -->
+        <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editPersonalGoal({{ goal.id }})"></i>
+        <!-- Delete button -->
+        <i class="fas fa-trash-alt delete-personal-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
+      </div>
+      <!-- Donut chart container -->
+      <div class="chart-container" style="margin-bottom: 3%;">
+        <canvas class="progress-chart" id="progress-chart-{{ goal.id }}"></canvas>
+        <br>
+      </div>
+    </div>
+    <br>
+    {% endfor %}
+  </div>
+  
+  
+
+  <script>
+    {% for goal in goals %}
+    
+    const progressData{{ goal.id }} = {{ goal.sum_transaction }};
+    const goalAmount{{ goal.id }} = {{ goal.goal_amount }};
+    const percentage{{ goal.id }} = ((progressData{{ goal.id }} / goalAmount{{ goal.id }}) * 100).toFixed(2);
+
+    const ctx{{ goal.id }} = document.getElementById('progress-chart-{{ goal.id }}').getContext('2d');
+    const progressChart{{ goal.id }} = new Chart(ctx{{ goal.id }}, {
+        type: 'doughnut',
+        data: {
+            labels: ['Progress', 'Remaining'],
+            datasets: [{
+                label: 'Progress',
+                data: [progressData{{ goal.id }}, goalAmount{{ goal.id }} - progressData{{ goal.id }}],
+                backgroundColor: [
+                    'rgba(91,95,197, 0.6)',
+                    'rgba(211, 211, 211, 0.6)'
+                ],
+                borderColor: [
+                  'rgba(91,95,197, 1)',
+                    'rgba(169,169,169, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                },
+                tooltip: {
+                  callbacks: {
+                      label: function(context) {
+                          var label = context.label || '';
+                          if (label) {
+                              label += ': ';
+                          }
+                          if (context.parsed !== null) {
+                              label += context.parsed + '%';
+                          }
+                          return label;
+                      }
+                  }
+              }
+            },
+            layout: {
+              padding: {
+                  top: 50
+              }
+          },
+          elements: {
+              center: {
+                  text: percentage{{ goal.id }} + '%',
+                  color: '#000000', // Default is #000000 (black)
+                  fontStyle: 'Arial', // Default is Arial
+                  sidePadding: 20, // Default is 20 (as a percentage)
+                  minFontSize: 10, // Default is 20 (in px), set to false and text will not wrap.
+                  lineHeight: 25 // Default is 25 (in px), used for when text wraps
+              }
+          }
+        }
     });
-</script>
+    {% endfor %}
+  </script>
 
-<script>
+  <script>
+    document.querySelectorAll('.delete-personal-goal').forEach(item => {
+      item.addEventListener('click', event => {
+        const goalId = event.target.dataset.goalId;
+        const goalName = event.target.dataset.goalName;
+
+        // Prompt user for confirmation
+        const isConfirmed = confirm(`Are you sure you want to delete ${goalName} goal?`);
+        if (!isConfirmed) {
+          return; // Abort deletion if user cancels
+        }
+
+        fetch(`/delete_goal/${goalId}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.message) {
+            // Remove the goal container from the page
+            event.target.closest('.goal-container').remove();
+          } else {
+            console.error('Error deleting goal:', data.error);
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting goal:', error);
+        });
+      });
+    });
+
     function editPersonalGoal(goalId) {
-        window.location.href = `/edit_personal_goal/${goalId}/`;
-    }    
-</script>
+      window.location.href = `/edit_personal_goal/${goalId}/`;
+    }
+  </script>
+
+</body>
 
 {% endblock %}
+
+
+
+
+

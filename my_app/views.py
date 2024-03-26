@@ -433,6 +433,7 @@ def check_user_group(request, page):
             context = {
             'is_admin': is_admin
             }
+            print(page)
         # Render the template with the transactions data
             return render(request, page + '.html', context)
         else:
