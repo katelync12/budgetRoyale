@@ -434,6 +434,7 @@ def delete_transaction(request, transaction_id):
     
 @login_required
 def check_user_group(request, page):
+    print("check_user_group")
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
         username = request.user.username
@@ -472,7 +473,7 @@ def create_group(request):
     try:
             print("try")
             UserJoinGroup.objects.get(user=request.user)
-            return redirect(reverse('check_user_group', kwargs={'page': 'group_settings'}))
+            return redirect('group_settings')
 
     except:
             # Create a new relationship between user and group
@@ -798,8 +799,7 @@ def create_group_goal(request):
             is_primary = is_primary
         )
         group_goal.save()
-        return redirect(reverse('check_user_group', kwargs={'page': 'group_goals'}))
-
+        return redirect('group_settings')
 
 def join_groups(request):
     # Ensure user is authenticated before accessing request.user
@@ -807,7 +807,7 @@ def join_groups(request):
         try:
             print("try")
             UserJoinGroup.objects.get(user=request.user)
-            return redirect(reverse('check_user_group', kwargs={'page': 'group_settings'}))
+            return redirect('group_settings')
         except:
             # Create a new relationship between user and group
             print()
@@ -821,9 +821,7 @@ def join_groups(request):
         # Gets all transactions
         sorted = []
         username = request.user.username
-        group = UserJoinGroup.objects.get(user=request.user)
-        if not group:
-            return redirect(reverse('check_user_group', kwargs={'page': 'group_settings'}))
+
 
         groups = Group.objects.all()
         search = request.POST.get("search_input", "").lower()
@@ -861,9 +859,14 @@ def join_group_action(request, group_id):
 def join_specific_group_action(request, group_id):
     if request.user.is_authenticated:
         group_password = request.POST.get("password")
-        group = UserJoinGroup.objects.get(user=request.user)
-        if not group:
-            return redirect(reverse('check_user_group', kwargs={'page': 'group_settings'}))
+    try:
+        UserJoinGroup.objects.get(user=request.user)
+        return redirect('group_settings')
+
+
+    except:
+            # Create a new relationship between user and group
+        print()
         username = request.user.username
         user = User.objects.get(username=username)
         group = Group.objects.get(id=group_id)
