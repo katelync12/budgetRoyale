@@ -9,6 +9,14 @@
   <button type="submit">Log Out</button>
 </form>
 
+hello
+{% for goal in goals %}
+  <div>
+    name: {{ goal.goal_name }}, Primary: {{ goal.is_primary }}, is_spending: {{ goal.is_primary }}
+  </div>
+{% endfor%}
+
+
 {% if error_message %}
 <script>
   alert('{{ error_message }}');
