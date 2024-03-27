@@ -1137,6 +1137,63 @@ def search_group_w(username, password):
             return "Passed"
     except:
         return "Failed"
+    
+def create_group_no_name(username, password):
+    try:
+        login(username, password)
+        url = 'http://127.0.0.1:8000/groups/create/'
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            label_element = driver.find_element(By.XPATH, "//label[@for='name' and text()='Name your group!'][@style='font-size: medium; font-family: Verdana, Geneva, Tahoma, sans-serif;']")
+            return "Passed"
+        except:
+            return "Failed"
+    except:
+        return "Failed"
+    
+def create_group_existing_username(username, password):
+    login(username, password)
+    url = 'http://127.0.0.1:8000/groups/create/'
+    driver.get(url)
+    time.sleep(buffer_constant)
+    button = driver.find_element("xpath", "//input[@style='width: 80%;'][@type='text'][@id='name']")
+    button.send_keys("w")
+    button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
+    button.click()
+    time.sleep(buffer_constant)
+    try:
+        alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+        alert.accept()
+        time.sleep(buffer_constant)
+        return ("Passed")
+    except TimeoutException:
+        return ("Failed")
+    
+def create_group_mismatching_passwords(username, password):
+    login(username, password)
+    url = 'http://127.0.0.1:8000/groups/create/'
+    driver.get(url)
+    time.sleep(buffer_constant)
+    button = driver.find_element("xpath", "//input[@style='width: 80%;'][@type='text'][@id='name']")
+    button.send_keys("testing4325")
+    password_input = driver.find_element(By.NAME, "password1")
+    password_input.send_keys("test")
+    password_input = driver.find_element(By.NAME, "password2")
+    password_input.send_keys("testing")
+    button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
+    button.click()
+    time.sleep(buffer_constant)
+    try:
+        alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+        alert.accept()
+        time.sleep(buffer_constant)
+        return ("Passed")
+    except TimeoutException:
+        return ("Failed")
 
 browser_options = ChromeOptions()
 browser_options.headless = False
@@ -1193,6 +1250,12 @@ temp_result = search_group_leaderboard(username, password)
 print(f"{'Select for the group leaderboard':<45} {temp_result}")
 temp_result = search_group_w(username, password)
 print(f"{'Select for the group w':<45} {temp_result}")
+temp_result = create_group_no_name(username, password)
+print(f"{'Create group with no name':<45} {temp_result}")
+temp_result = create_group_existing_username(username, password)
+print(f"{'Create group with existing group name':<45} {temp_result}")
+temp_result = create_group_mismatching_passwords(username, password)
+print(f"{'Create group with mismatching passwords':<45} {temp_result}")
 temp_result = delete_account_fail(username, password)
 print(f"{'Delete account failed':<45} {temp_result}")
 temp_result = delete_account_success(username, password)
