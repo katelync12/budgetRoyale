@@ -23,7 +23,19 @@ from django.db.models import Sum
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
-
+@login_required
+def delete_group(request, group_id):
+    if request.method == 'POST':
+        user = request.user
+        group = Group.objects.get(pk=group_id)
+        if user == group.admin_user:
+            group.delete()
+            return JsonResponse({'message': 'Group deleted successfully.'})
+        else:
+            return JsonResponse({'error': 'You are not authorized to delete this group.'}, status=403)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
+    
 @login_required
 def group_leaderboard(request):
     user = request.user
