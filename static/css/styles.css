@@ -316,7 +316,7 @@ a.nav-headers.active {
     width: 100%;
   }
   .pie_chart {
-    height: 550px;
+    height: 100%;
     width: 95%;
     padding: 10px;
     margin-bottom: 30px;
