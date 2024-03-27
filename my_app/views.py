@@ -15,6 +15,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
+from django.urls import reverse
 from datetime import date
 from datetime import timedelta, datetime
 from django.http import HttpResponseRedirect
@@ -442,10 +443,20 @@ def check_user_group(request, page):
             is_admin = True
         # Check if there's an existing relationship between user and category
         if UserJoinGroup.objects.filter(user=user).exists():
-            context = {
-            'is_admin': is_admin
-            }
-            print(page)
+            if page == "group_goals":
+                user_join_groups = UserJoinGroup.objects.filter(user = request.user)
+                for the_group in user_join_groups:
+                    print(the_group.group.name)
+                    user_group = the_group.group
+                    group_goals = GroupGoal.objects.filter(group = user_group)
+                context = {
+                    'goals': group_goals,
+                    'is_admin': is_admin
+                }
+            else:
+                context = {
+                'is_admin': is_admin
+                }
         # Render the template with the transactions data
             return render(request, page + '.html', context)
         else:
@@ -458,6 +469,15 @@ def check_user_group(request, page):
 
 @login_required  # Requires the user to be logged in to access this view
 def create_group(request):
+    try:
+            print("try")
+            UserJoinGroup.objects.get(user=request.user)
+            return redirect(reverse('check_user_group', kwargs={'page': 'group_settings'}))
+
+    except:
+            # Create a new relationship between user and group
+        print()
+
     group_name = request.POST.get("name")
     group_password = request.POST.get("password1")
     group_password2 = request.POST.get("password2")
@@ -732,9 +752,6 @@ def create_group_goal_page(request):
     if not group:
         messages.error(request, "Only admins are authorized to access this page.")
         return render(request, "group_goals.html", {'error_message': "You are not authorized to access this page."})
-    
-       
-
     return render(request, "create_group_goal.html")
 
     
@@ -769,11 +786,6 @@ def create_group_goal(request):
             messages.error(request, "You already have a primary goal!")
             return render(request, "create_group_goal.html", {'error_message': "You already have a primary goal!"})
 
-
-        # Print out the amount, category, spending/savings status, and the user
-        print("Amount:", amount)
-        print("Spending:", is_spending)
-        print("User:", username)
         group_goal = GroupGoal(
             group=group,
             amount=amount,
@@ -786,11 +798,19 @@ def create_group_goal(request):
             is_primary = is_primary
         )
         group_goal.save()
-    return redirect('group_settings')
+        return redirect(reverse('check_user_group', kwargs={'page': 'group_goals'}))
+
 
 def join_groups(request):
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
+        try:
+            print("try")
+            UserJoinGroup.objects.get(user=request.user)
+            return redirect(reverse('check_user_group', kwargs={'page': 'group_settings'}))
+        except:
+            # Create a new relationship between user and group
+            print()
         current_user = request.user
 
         # selected_categories = request.GET.getlist('selected_categories')
@@ -801,6 +821,9 @@ def join_groups(request):
         # Gets all transactions
         sorted = []
         username = request.user.username
+        group = UserJoinGroup.objects.get(user=request.user)
+        if not group:
+            return redirect(reverse('check_user_group', kwargs={'page': 'group_settings'}))
 
         groups = Group.objects.all()
         search = request.POST.get("search_input", "").lower()
@@ -838,7 +861,9 @@ def join_group_action(request, group_id):
 def join_specific_group_action(request, group_id):
     if request.user.is_authenticated:
         group_password = request.POST.get("password")
-
+        group = UserJoinGroup.objects.get(user=request.user)
+        if not group:
+            return redirect(reverse('check_user_group', kwargs={'page': 'group_settings'}))
         username = request.user.username
         user = User.objects.get(username=username)
         group = Group.objects.get(id=group_id)
