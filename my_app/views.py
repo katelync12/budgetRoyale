@@ -24,6 +24,11 @@ from django.db.models import Sum
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
+
+@login_required
+def view_group_goals(request):
+    #TODO: implement
+    return redirect('home')
 @login_required
 def delete_group(request, group_id):
     if request.method == 'POST':
@@ -56,27 +61,30 @@ def group_leaderboard(request):
     # Iterate through each user
     for user_group in leaderboard_users:
         # Initialize variables to store transaction amounts for savings and spendings
-        savings_sum = 0
-        spendings_sum = 0
-        
+        total_score = 0
+        transactions = []
+        if primary_group_goal.is_overall:
+            transactions = Transactions.objects.filter(
+            user=user_group.user,
+            week__range=[primary_group_goal.start_date, primary_group_goal.end_date]  # Filter by transaction week within range
+            )
+        else: 
         # Get transactions related to the user and group goals
-        transactions = Transactions.objects.filter(
+            transactions = Transactions.objects.filter(
             user=user_group.user, 
             group_goal__is_primary=True, 
             group_goal__group__in=user_groups,
             week__range=[primary_group_goal.start_date, primary_group_goal.end_date]  # Filter by transaction week within range
-        )
+            )
         
         # Iterate through transactions and calculate sums based on savings or spendings
         for transaction in transactions:
-            if transaction.group_goal.is_spending and transaction.amount < 0:
-                spendings_sum += transaction.amount
-            elif not transaction.group_goal.is_spending and transaction.amount > 0:
-                savings_sum += transaction.amount
-        
-        # Total score is the sum of savings and spendings
-        total_score = savings_sum + spendings_sum
-        
+            if (primary_group_goal.is_spending):
+                if transaction.amount < 0:
+                    total_score += transaction.amount
+            else:
+                if transaction.amount > 0:
+                    total_score += transaction.amount       
         # Append user's name and total score to the leaderboard
         leaderboard.append({'name': user_group.user.username, 'score': total_score})
     
@@ -831,7 +839,7 @@ def create_group_goal(request):
             is_primary = is_primary
         )
         group_goal.save()
-        return redirect('group_settings')
+        return redirect('view_group_goals')
 
 def join_groups(request):
     # Ensure user is authenticated before accessing request.user

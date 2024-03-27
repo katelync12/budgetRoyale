@@ -1,7 +1,6 @@
 {% extends "base.html" %} 
 
 {% block content %}
-
 <p class="header">Group Settings!</p>
 <p><a href="{% url 'create_data' %}">Password Change</a></p>
 <p><a href="{% url 'view_transactions' %}">Transactions</a></p>
@@ -17,25 +16,25 @@
       <p>{{ user_group_info.group.name }}</p>
       {% if not user_group_info.is_admin %}
         <form action="{% url 'leave_group' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Leave Group</button>
+          {% csrf_token %}
+          <button type="submit">Leave Group</button>
         </form>
         {% for member in members %}
-        <div>
-          {{ member.username }} 
-          {% if member == admin %}
-            ADMIN
-          {% endif %}
-          {% if member == user %}
-            SELF
-          {% endif %}
-        </div>
-      {% endfor %}
+          <div>
+            {{ member.username }} 
+            {% if member == admin %}
+              ADMIN
+            {% endif %}
+            {% if member == user %}
+              SELF
+            {% endif %}
+          </div>
+        {% endfor %}
       {% else %}
         {% comment %} Admin {% endcomment %}
-        <form action="{% url 'delete_group' user_group_info.group.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Delete Group</button>
+        <form id="delete-group-form" action="{% url 'delete_group' user_group_info.group.id %}" method="post">
+          {% csrf_token %}
+          <button type="button" onclick="confirmDelete()">Delete Group</button>
         </form>
         {% for member in members %}
           <div>
@@ -49,12 +48,10 @@
         {% for mem in members %}
           {{mem.usernmame}}
         {% endfor %}
-
       {% endif %}
     </div>
   {% endfor %}
-
-
+  
 {% block messages %}
   {% if messages %}
     <script>
@@ -65,11 +62,18 @@
     </script>
   {% endif %}
 {% endblock %}
+
+<script>
+  function confirmDelete() {
+    if (confirm("Are you sure you want to delete this group?")) {
+      document.getElementById("delete-group-form").submit();
+    }
+  }
+</script>
   
 {% comment %} {% else %}
   <p>Not admin group</p>
   {% comment %} <p>{{  }}</p>
-  
 {% endif %} {% endcomment %}
 
 {% endblock %}

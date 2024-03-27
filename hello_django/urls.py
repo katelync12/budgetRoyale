@@ -76,7 +76,8 @@ urlpatterns = [
     
     # Matches groups/<str:page>/
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),
-    
+    path('groups/group_goals/create/', views.create_group_goal_page, name="create_group_goal"),
+    path("groups/group_goals/", views.view_group_goals, name="view_group_goals"),
     # Matches groups/
     path("groups/", views.join_groups, name="groups"),
     
@@ -94,7 +95,7 @@ urlpatterns = [
     path('verify_unique_category/', views.verify_unique_category, name='verify_unique_category'),
     path('generate_expenses_pie_chart/', views.generate_expenses_pie_chart, name='generate_expenses_pie_chart'),
     path('generate_income_pie_chart/', views.generate_income_pie_chart, name='generate_income_pie_chart'),
-    path('groups/group_goals/create/', views.create_group_goal_page, name="create_group_goal"),
+
     path('create_group_goal/', views.create_group_goal, name='create_group_goal_action'),
 
 ]
