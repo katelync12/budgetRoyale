@@ -87,11 +87,10 @@ def login_logout(username, password):
     
 def create_transaction(username, password):
     try:
+        time.sleep(buffer_constant)
         login(username, password)
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
-        button.click()
+        url = "http://127.0.0.1:8000/transactions/"
+        driver.get(url)
         time.sleep(buffer_constant)
         button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
         button.click()
@@ -131,7 +130,7 @@ def create_account(username, password):
         password_input.send_keys(password)
         button = driver.find_element("xpath", "//button[text()='Sign Up']")
         button.click()
-        time.sleep(buffer_constant)
+        time.sleep(2)
         return "Passed"
     except:
         return "Failed"
@@ -181,7 +180,7 @@ def edit_transaction(username, password):
         check = driver.find_element("xpath", '//th[contains(text(), "Testing Edited")]')
         return "Passed"
     except:
-        "Failed"
+        return "Failed"
     
 def cancel_delete_transaction(username, password):
     try:
@@ -430,7 +429,7 @@ def create_personal_goal_negative_amount(username, password):
         button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
         button.click()
         time.sleep(buffer_constant)
-        button = driver.find_element("xpath", '//a[contains(text(), "Create")]')
+        button = driver.find_element("xpath", "//button[@onclick=\"window.location.href='/personal-goals/create/'\"]")
         button.click()
         time.sleep(buffer_constant)
         transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
@@ -457,7 +456,7 @@ def create_personal_goal_dates_error(username, password):
         button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
         button.click()
         time.sleep(buffer_constant)
-        button = driver.find_element("xpath", '//a[contains(text(), "Create")]')
+        button = driver.find_element("xpath", "//button[@onclick=\"window.location.href='/personal-goals/create/'\"]")
         button.click()
         time.sleep(buffer_constant)
         transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
@@ -499,10 +498,8 @@ def savings_personal_goal_value_groceries(username, password):
         time.sleep(buffer_constant)
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #check all values to see if they are correct
@@ -547,10 +544,8 @@ def savings_personal_goal_value_groceries(username, password):
         time.sleep(buffer_constant)
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #check values again
@@ -714,10 +709,8 @@ def spendings_personal_goal_value_groceries(username, password):
         submit.click()
         time.sleep(buffer_constant)
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
         #check all values to see if they are correct
         row = driver.find_element("xpath", "//th[text()='1']")
