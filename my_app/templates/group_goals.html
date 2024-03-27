@@ -1,26 +1,177 @@
 {% extends "base.html" %} 
 
 {% block content %}
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .goal-container {
+      
+      justify-content: center;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      text-align: center;
+      
+      
+    }
 
-<p class="header">group goals!</p>
-<p><a href="{% url 'create_group_goal' %}">Create Group Goal</a></p>
-<form action="{% url 'logout' %}" method="post">
-  {% csrf_token %}
-  <button type="submit">Log Out</button>
-</form>
+    .chart-container {
+      width: 100%; /* Ensure the chart fills the container */
+      height: auto; /* Allow the chart to adjust its height */
+      text-align: center;
+    }
 
-hello
-{% for goal in goals %}
-  <div>
-    name: {{ goal.goal_name }}, Primary: {{ goal.is_primary }}, is_spending: {{ goal.is_primary }}
+    @media only screen and (min-width: 801px) {
+      .goal-container {
+        height: 50%;
+        width: 420px;
+        margin-bottom: 30px;
+        margin-right: 10px;
+        margin-top: 10px;
+        margin-left: 10px;
+      }
+      .chart-container {
+        margin-bottom: 30px;
+        padding:0px;
+        justify-content: center;
+        align-items: center;
+        display: column;
+        width: 100%;
+      }
+    }
+
+    /* Media query for mobile screens */
+    @media only screen and (max-width: 800px) {
+      .goal-container {
+        height: 100%;
+        width: 95%;
+        padding: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 30px;
+      } 
+      .chart-container {
+        margin-bottom:30px;
+        justify-content: center;
+        align-items: center;
+        display: column;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h2 style="text-align: center; margin-bottom: 15px;">Group Goals</h2>
+
+  <div class="button-container" style="margin-bottom: 2px;">
+    <button onclick="window.location.href='{% url 'home' %}'">Home</button>
+    <button onclick="window.location.href='{% url 'create_group_goal' %}'">Create</button>
   </div>
-{% endfor%}
+
+  <div style = "display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: 1%;
+  margin-right: 1%;">
+  {% for goal in goals %}
+  {% if goal.sum_transaction < goal.amount %}
+  <div class="goal-container">
+    {% if goal.is_primary %}
+    <h3 style="text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Primary goal: {{ goal.goal_name }}</h3>
+    {% else %}
+    <h3 style="text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Goal name: {{ goal.goal_name }}</h3>
+    {% endif %}
+    <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Total amount: {{ goal.amount }}</h5>
+    <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Contribution: {{ goal.sum_transaction }}</h5>
+    <!-- Donut chart container -->
+    
+    
+    <div class="chart-container">
+      <canvas class="progress-chart" id="progress-chart-{{ goal.id }}"></canvas>
+    </div>
+    
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
 
 
-{% if error_message %}
-<script>
-  alert('{{ error_message }}');
-</script>
-{% endif %}
+  {% if error_message %}
+    <script>
+      alert('{{ error_message }}');
+    </script>
+  {% endif %}
+
+  <script>
+    {% for goal in goals %}
+    {% if goal.sum_transaction < goal.amount %}
+    const progressData{{ goal.id }} = {{ goal.sum_transaction }};
+    const goalAmount{{ goal.id }} = {{ goal.amount }};
+    const percentage{{ goal.id }} = ((progressData{{ goal.id }} / goalAmount{{ goal.id }}) * 100).toFixed(2);
+
+    const ctx{{ goal.id }} = document.getElementById('progress-chart-{{ goal.id }}').getContext('2d');
+    const progressChart{{ goal.id }} = new Chart(ctx{{ goal.id }}, {
+        type: 'doughnut',
+        data: {
+            labels: ['Progress', 'Remaining'],
+            datasets: [{
+                label: 'Progress',
+                data: [progressData{{ goal.id }}, goalAmount{{ goal.id }} - progressData{{ goal.id }}],
+                backgroundColor: [
+                    'rgba(91,95,197, 0.6)',
+                    'rgba(229, 228, 226, 0.6)'
+                ],
+                borderColor: [
+                  'rgba(91,95,197, 1)',
+                    'rgba(169,169,169, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                },
+                tooltip: {
+                  callbacks: {
+                      label: function(context) {
+                          var label = context.label || '';
+                          if (label) {
+                              label += ': ';
+                          }
+                          if (context.parsed !== null) {
+                              label += context.parsed + '%';
+                          }
+                          return label;
+                      }
+                  }
+              }
+            },
+            layout: {
+              padding: {
+                  top: 50
+              }
+          },
+          elements: {
+              center: {
+                  text: percentage{{ goal.id }} + '%',
+                  color: '#000000', // Default is #000000 (black)
+                  fontStyle: 'Arial', // Default is Arial
+                  sidePadding: 20, // Default is 20 (as a percentage)
+                  minFontSize: 10, // Default is 20 (in px), set to false and text will not wrap.
+                  lineHeight: 25 // Default is 25 (in px), used for when text wraps
+              }
+          }
+        }
+    });
+    {% endif %}
+    {% endfor %}
+    
+  </script>
+</body>
 
 {% endblock %}
