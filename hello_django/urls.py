@@ -50,6 +50,8 @@ urlpatterns = [
     path("delete_account/", views.delete_account, name="delete_account"),
     path("form_confirm/", TemplateView.as_view(template_name="form_confirm.html"), name="form_confirm"),
     path("personal-goals/", views.view_personal_goals, name="view_personal_goals"),
+    path("personal-goals-test/", views.view_personal_goals_test, name="view_personal_goals_test"),
+    
     path("personal-goals/create/", views.create_personal_goal_page, name="create_personal_goals"),
 
     path("edit_personal_goal/", TemplateView.as_view(template_name="edit_personal_goal.html"), name="edit_personal_goal_view"),

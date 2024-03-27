@@ -236,7 +236,7 @@ def create_personal_goal(username, password):
         button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
         button.click()
         time.sleep(buffer_constant)
-        button = driver.find_element("xpath", '//a[contains(text(), "Create")]')
+        button = driver.find_element("xpath", "//button[@onclick=\"window.location.href='/personal-goals/create/'\"]")
         button.click()
         time.sleep(buffer_constant)
         transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
@@ -247,15 +247,18 @@ def create_personal_goal(username, password):
         end_date.send_keys("06/12/2005")
         start_date = driver.find_element(By.ID, "start_date")
         start_date.send_keys("06/12/2004")
-        
         submit = driver.find_element("xpath", '//button[contains(text(), "Submit")]')
         submit.click()
         time.sleep(buffer_constant)
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+
         check = driver.find_element("xpath", '//th[contains(text(), "Testing Goal")]')
         return "Passed"
     except:
         return "Failed"
-    
+
 def create_personal_goal_custom(username, password):
     try:
         login(username, password)
@@ -375,10 +378,8 @@ def create_personal_goal_custom(username, password):
 def edit_personal_goal(username, password):
     try:
         login(username, password)
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
         row = driver.find_element("xpath", "//th[text()='Testing Goal']")
         row_element = row.find_element("xpath", "./parent::tr")
@@ -391,6 +392,9 @@ def edit_personal_goal(username, password):
         submit = driver.find_element("xpath", '//button[contains(text(), "Save")]')
         submit.click()
         time.sleep(buffer_constant)
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
+        time.sleep(buffer_constant)
         check = driver.find_element("xpath", '//th[contains(text(), "Testing Edited")]')
         return "Passed"
     except:
@@ -399,10 +403,8 @@ def edit_personal_goal(username, password):
 def delete_personal_goal(username, password):
     try:
         login(username, password)
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
         row = driver.find_element("xpath", "//th[text()='Testing Edited']")
         row_element = row.find_element("xpath", "./parent::tr")
