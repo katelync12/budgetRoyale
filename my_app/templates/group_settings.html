@@ -39,7 +39,11 @@
         {% for member in members %}
           <div>
             {% if member != admin %}
-              {{ member.username }} <button>Promote to admin</button>
+              {{ member.username }} 
+              <form method="POST" action="{% url 'promote_to_admin' userToPromote=member.id %}">
+                {% csrf_token %}
+                    <button type="submit">Promote to Admin</button>
+              </form>
             {% else %}
               {{ member.username }} SELF
             {% endif %}

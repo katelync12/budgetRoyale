@@ -933,3 +933,18 @@ def join_specific_group_action(request, group_id):
     else:
         # Redirect to login page if user is not authenticated
         return redirect('login')
+
+@login_required
+def promote_to_admin(request, userToPromote):
+    if request.user.is_authenticated:
+        new_admin = User.objects.get(id=userToPromote)
+        group = Group.objects.get(admin_user=request.user)
+        if group == None:
+            return redirect('group_settings')
+        group.admin_user = new_admin
+        group.save()
+        return redirect('group_settings')
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+
