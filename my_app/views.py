@@ -832,6 +832,8 @@ def join_specific_group_action(request, group_id):
         group = Group.objects.get(id=group_id)
         group_password = request.POST.get("password")
         if (group_password != group.password):
+            print("testing")
+            messages.error(request, "Invalid Group Password.")
             return redirect('join_group_action', group_id=group.id)
 
         user_to_group = UserJoinGroup(user=user, group=group)
