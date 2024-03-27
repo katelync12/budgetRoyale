@@ -30,13 +30,10 @@ def delete_group(request, group_id):
         group = Group.objects.get(pk=group_id)
         if user == group.admin_user:
             group.delete()
-            messages.success(request, "Group deleted successfully.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
         else:
-            messages.error(request, "You are not the admin of this group.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     else:
-        messages.error(request, "Failed to process delete group request.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     
 @login_required
