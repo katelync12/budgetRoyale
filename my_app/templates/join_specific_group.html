@@ -4,9 +4,6 @@
 {% load static %}
 
 
-<p class="header">GROUP!</p>
-
-
 <div class="button-container">
     <button onclick="window.location.href='{% url 'groups' %}'">Join Group</button>
     <button onclick="window.location.href='{% url 'create_groups' %}'">Create Group</button>
@@ -46,5 +43,16 @@
       cursor: pointer;"> Submit </button>
     </div>
 </form>
+
+{% block messages %}
+  {% if messages %}
+    <script>
+      // JavaScript to show alert box with messages
+      window.onload = function() {
+        alert("{% for message in messages %}{{ message }}\n{% endfor %}");
+      };
+    </script>
+  {% endif %}
+{% endblock %}
 
 {% endblock %}
