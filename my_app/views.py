@@ -534,6 +534,29 @@ def view_personal_goals(request):
         # Redirect to login page if user is not authenticated
         return redirect('login')
     
+def view_personal_goals_test(request):
+    # Ensure user is authenticated before accessing request.user
+    if request.user.is_authenticated:
+        current_user = request.user
+        
+        # Gets all goals
+        username = request.user.username
+        goals = PersonalGoal.objects.all()
+        sorted = []
+        for goal in goals:
+            # Only gets the transactions of the currently logged in user
+            if (goal.user.username == username):
+                sorted.append(goal)
+        context = {
+            'goals': sorted,
+            'current_user': current_user,
+        }
+        # Render the template with the transactions data
+        return render(request, 'view_personal_goals_test.html', context)
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+    
 def delete_goal(request, goal_id):
     if request.method == 'POST':
         goal = PersonalGoal.objects.get(pk=goal_id)
