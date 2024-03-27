@@ -20,11 +20,32 @@
         {% csrf_token %}
         <button type="submit">Leave Group</button>
         </form>
+        {% for member in members %}
+        <div>
+          {{ member.username }} 
+          {% if member == admin %}
+            ADMIN
+          {% endif %}
+          {% if member == user %}
+            SELF
+          {% endif %}
+        </div>
+      {% endfor %}
       {% else %}
+        {% comment %} Admin {% endcomment %}
         <form action="{% url 'delete_group' user_group_info.group.id %}" method="post">
         {% csrf_token %}
         <button type="submit">Delete Group</button>
         </form>
+        {% for member in members %}
+          <div>
+            {% if member != admin %}
+              {{ member.username }} <button>Promote to admin</button>
+            {% else %}
+              {{ member.username }} SELF
+            {% endif %}
+          </div>
+        {% endfor %}
         {% for mem in members %}
           {{mem.usernmame}}
         {% endfor %}
@@ -32,6 +53,19 @@
       {% endif %}
     </div>
   {% endfor %}
+
+
+{% block messages %}
+  {% if messages %}
+    <script>
+      // JavaScript to show alert box with messages
+      window.onload = function() {
+        alert("{% for message in messages %}{{ message }}\n{% endfor %}");
+      };
+    </script>
+  {% endif %}
+{% endblock %}
+  
 {% comment %} {% else %}
   <p>Not admin group</p>
   {% comment %} <p>{{  }}</p>
