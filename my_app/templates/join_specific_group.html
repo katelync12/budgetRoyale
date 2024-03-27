@@ -9,7 +9,7 @@
 
 <div class="button-container">
     <button onclick="window.location.href='{% url 'groups' %}'">Join Group</button>
-    <button onclick="window.location.href='{% url 'groups' %}'">Create Group</button>
+    <button onclick="window.location.href='{% url 'create_groups' %}'">Create Group</button>
 </div>
 
 <form method="POST" action="{% block action %}{% url 'join_specific_group_action' group_id=group.id %}{% endblock %}">
@@ -26,10 +26,15 @@
     justify-content: space-around;
     margin-bottom: 30px;">
 
-        <label for="password" style="font-size: medium; font-family: Verdana, Geneva, Tahoma, sans-serif;">Enter password</label>
-
+        <label for="password" style="font-size: medium; font-family: Verdana, Geneva, Tahoma, sans-serif;">Enter password for Group:</label>
         <div>
-          <input type="password" name="password" placeholder="Password" required>
+          <label style="font-size: medium; font-family: Verdana, Geneva, Tahoma, sans-serif;">
+            {{group.name}}
+          </label>
+        </div>
+        <p>Admin: {{group.admin_user.username}}</p>
+        <div>
+          <input type="password" name="password" placeholder="Password" class="create-group-pwfield" style="margin-right: 80px; margin-left: 80px; margin-top: 25px; margin-bottom: 25px;" required>
         </div>
 
         <button type="submit" style="background-color: #5B5FC5; /* Blue button color */
