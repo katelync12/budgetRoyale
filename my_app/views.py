@@ -494,6 +494,10 @@ def create_group(request):
     username = request.user.username
     user = User.objects.get(username=username)
     group = None
+    existing_groups = Group.objects.filter(name=group_name).exists()
+    if existing_groups:
+        messages.error(request, "Group name already exists, please choose a different one.")
+        return render(request, 'create_groups.html')
 
     '''if UserJoinGroup.objects.filter(user=user).exists():
         # any popup?

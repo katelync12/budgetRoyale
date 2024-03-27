@@ -1095,6 +1095,48 @@ def select_groceries_category(username, password):
         return "Failed"
     except:
         return "Passed"
+    
+def search_group_leaderboard(username, password):
+    try:
+        login(username, password)
+        url = 'http://127.0.0.1:8000/groups/'
+        driver.get(url)
+        time.sleep(buffer_constant)
+        search_input = driver.find_element(By.ID, "search_input")
+        search_input.click()
+        search_input.send_keys("leaderboard")
+        search_button = driver.find_element(By.CLASS_NAME, "search-btn")
+        search_button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//p[@class='group_name_label' and contains(text(), 'leaderboard')]")
+        try:
+            button = driver.find_element("xpath", "//p[@class='group_name_label' and contains(text(), 'testGroup')]")
+            return "Failed"
+        except:
+            return "Passed"
+    except:
+        return "Failed"
+    
+def search_group_w(username, password):
+    try:
+        login(username, password)
+        url = 'http://127.0.0.1:8000/groups/'
+        driver.get(url)
+        time.sleep(buffer_constant)
+        search_input = driver.find_element(By.ID, "search_input")
+        search_input.click()
+        search_input.send_keys("w")
+        search_button = driver.find_element(By.CLASS_NAME, "search-btn")
+        search_button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//p[@class='group_name_label' and contains(text(), 'w')]")
+        try:
+            button = driver.find_element("xpath", "//p[@class='group_name_label' and contains(text(), 'testGroup')]")
+            return "Failed"
+        except:
+            return "Passed"
+    except:
+        return "Failed"
 
 browser_options = ChromeOptions()
 browser_options.headless = False
@@ -1147,6 +1189,10 @@ temp_result = spendings_personal_goal_value_groceries(username, password)
 print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
 temp_result = spendings_multiple_and_edit(username, password)
 print(f"{'Spendings multiple and edit':<45} {temp_result}")
+temp_result = search_group_leaderboard(username, password)
+print(f"{'Select for the group leaderboard':<45} {temp_result}")
+temp_result = search_group_w(username, password)
+print(f"{'Select for the group w':<45} {temp_result}")
 temp_result = delete_account_fail(username, password)
 print(f"{'Delete account failed':<45} {temp_result}")
 temp_result = delete_account_success(username, password)
