@@ -37,6 +37,7 @@ urlpatterns = [
 
     path('create_personal_goal/', views.create_personal_goals, name='create_personal_goal_action'),
     path('delete_transaction/<int:transaction_id>/', views.delete_transaction, name='delete_transaction'),
+
     path('delete_goal/<int:goal_id>/', views.delete_goal, name='delete_goal'),
     path('transactions/', views.view_transactions, name='transactions'),
     path('admin/', admin.site.urls),
@@ -67,6 +68,7 @@ urlpatterns = [
     
     # Matches groups/leave/
     path("groups/leave/", views.leave_group, name="leave_group"),
+    path("groups/delete/<int:group_id>/", views.delete_group, name="delete_group"),
     path("groups/group_settings/", views.group_settings, name="group_settings"),
     #path("e", views.group_settings, name="group_settings"),
     
