@@ -16,9 +16,15 @@
     <div>
       <p>{{ user_group_info.group.name }}</p>
       {% if not user_group_info.is_admin %}
-        <p>Leave Group</p>
+        <form action="{% url 'leave_group' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Leave Group</button>
+        </form>
       {% else %}
-        <p>Delete Group</p>
+        <form action="{% url 'delete_group' user_group_info.group.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Delete Group</button>
+        </form>
         {% for mem in members %}
           {{mem.usernmame}}
         {% endfor %}

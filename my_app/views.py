@@ -31,11 +31,14 @@ def delete_group(request, group_id):
         group = Group.objects.get(pk=group_id)
         if user == group.admin_user:
             group.delete()
-            return JsonResponse({'message': 'Group deleted successfully.'})
+            messages.success(request, "Group deleted successfully.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
         else:
-            return JsonResponse({'error': 'You are not authorized to delete this group.'}, status=403)
+            messages.error(request, "You are not the admin of this group.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     else:
-        return JsonResponse({'error': 'Invalid request method.'}, status=400)
+        messages.error(request, "Failed to process delete group request.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     
 @login_required
 def group_leaderboard(request):
@@ -510,7 +513,7 @@ def create_group(request):
             print("exception")
     # this causes an error when you refresh after creating the group
     # Changing to redirect instantly has error when you hit create
-    return render(request, 'group_settings.html')
+    return redirect('group_settings')
 
 def view_personal_goals(request):
     # Ensure user is authenticated before accessing request.user
@@ -531,6 +534,29 @@ def view_personal_goals(request):
         }
         # Render the template with the transactions data
         return render(request, 'view_personal_goals.html', context)
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+    
+def view_personal_goals_test(request):
+    # Ensure user is authenticated before accessing request.user
+    if request.user.is_authenticated:
+        current_user = request.user
+        
+        # Gets all goals
+        username = request.user.username
+        goals = PersonalGoal.objects.all()
+        sorted = []
+        for goal in goals:
+            # Only gets the transactions of the currently logged in user
+            if (goal.user.username == username):
+                sorted.append(goal)
+        context = {
+            'goals': sorted,
+            'current_user': current_user,
+        }
+        # Render the template with the transactions data
+        return render(request, 'view_personal_goals_test.html', context)
     else:
         # Redirect to login page if user is not authenticated
         return redirect('login')
