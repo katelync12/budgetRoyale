@@ -476,21 +476,19 @@ def check_user_group(request, page):
 @login_required  # Requires the user to be logged in to access this view
 def create_group(request):
     try:
-            print("try")
             UserJoinGroup.objects.get(user=request.user)
             return redirect('group_settings')
 
     except:
             # Create a new relationship between user and group
         print()
-    if request.POST.get("public") == "public":
-        group_name = request.POST.get("name")
-        group_password = ""
-        group_password2 = ""
-    else:
-        group_name = request.POST.get("name")
-        group_password = request.POST.get("password1")
-        group_password2 = request.POST.get("password2")
+    
+    group_name = request.POST.get("name")
+    group_password = request.POST.get("password1")
+    group_password2 = request.POST.get("password2")
+    if (str(group_password) != str(group_password2)):
+        messages.error(request, "Group passwords do not match")
+        return render(request, 'create_groups.html')
         
     print(group_password)
     print(group_password2)

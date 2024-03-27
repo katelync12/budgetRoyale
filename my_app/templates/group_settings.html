@@ -55,7 +55,16 @@
   {% endfor %}
 
 
-
+{% block messages %}
+  {% if messages %}
+    <script>
+      // JavaScript to show alert box with messages
+      window.onload = function() {
+        alert("{% for message in messages %}{{ message }}\n{% endfor %}");
+      };
+    </script>
+  {% endif %}
+{% endblock %}
   
 {% comment %} {% else %}
   <p>Not admin group</p>

@@ -33,5 +33,15 @@
 {% endfor %}
 </div>
 
+{% block messages %}
+  {% if messages %}
+    <script>
+      // JavaScript to show alert box with messages
+      window.onload = function() {
+        alert("{% for message in messages %}{{ message }}\n{% endfor %}");
+      };
+    </script>
+  {% endif %}
+{% endblock %}
 
 {% endblock %}
