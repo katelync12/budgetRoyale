@@ -114,6 +114,7 @@ def group_settings(request):
         user_groups_info.append({'group': user_group.group, 'is_admin': is_admin})
         members_id = UserJoinGroup.objects.filter(group=user_group.group)
         admin = user_group.group.admin_user
+        group_add = user_group.group
     
     for ujg in members_id:
         members.append(ujg.user)
@@ -121,6 +122,7 @@ def group_settings(request):
     context = {
         'admin': admin,
         'user_groups_info': user_groups_info,
+        'group': group_add,
         'members': members
     }
     print(context)
@@ -933,3 +935,18 @@ def join_specific_group_action(request, group_id):
     else:
         # Redirect to login page if user is not authenticated
         return redirect('login')
+
+@login_required
+def promote_to_admin(request, userToPromote):
+    if request.user.is_authenticated:
+        new_admin = User.objects.get(id=userToPromote)
+        group = Group.objects.get(admin_user=request.user)
+        if group == None:
+            return redirect('group_settings')
+        group.admin_user = new_admin
+        group.save()
+        return redirect('group_settings')
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
+
