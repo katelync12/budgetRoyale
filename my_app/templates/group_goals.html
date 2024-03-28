@@ -75,7 +75,7 @@
   margin-left: 1%;
   margin-right: 1%;">
   {% for goal in goals %}
-  {% if goal.sum_transaction < goal.amount %}
+  
   <div class="goal-container">
     {% if goal.is_primary %}
     <h3 style="text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Primary goal: {{ goal.goal_name }}</h3>
@@ -92,7 +92,6 @@
     </div>
     
   </div>
-  {% endif %}
   {% endfor %}
 </div>
 
@@ -105,8 +104,8 @@
 
   <script>
     {% for goal in goals %}
-    {% if goal.sum_transaction < goal.amount %}
-    const progressData{{ goal.id }} = {{ goal.sum_transaction }};
+    
+    const progressData{{ goal.id }} = {% if goal.sum_transaction < goal.amount %}{{ goal.sum_transaction }}{% else %}{{ goal.amount }}{% endif %};
     const goalAmount{{ goal.id }} = {{ goal.amount }};
     const percentage{{ goal.id }} = ((progressData{{ goal.id }} / goalAmount{{ goal.id }}) * 100).toFixed(2);
 
@@ -168,7 +167,7 @@
           }
         }
     });
-    {% endif %}
+    
     {% endfor %}
     
   </script>
