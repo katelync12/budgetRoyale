@@ -1,60 +1,84 @@
 {% extends "base.html" %} 
 
 {% block content %}
-<p class="header">Group Settings!</p>
 <p><a href="{% url 'create_data' %}">Password Change</a></p>
-<p><a href="{% url 'view_transactions' %}">Transactions</a></p>
 <p><a href="{% url 'create_data' %}">Create Data</a></p>
 <p><a href="{% url 'form' %}">Form</a></p>
-<p><a href="{% url 'create_group_goal' %}">Group Goals</a></p>
-<p><a href="{% url 'groups' %}">Groups</a></p>
+
 
 {% comment %} {% if user_groups_info.is_admin %} {% endcomment %}
-  <h2>Your Groups:</h2>
-  {% for user_group_info in user_groups_info %}
-    <div>
-      <p>{{ user_group_info.group.name }}</p>
-      {% if not user_group_info.is_admin %}
-        <form action="{% url 'leave_group' %}" method="post">
-          {% csrf_token %}
-          <button type="submit">Leave Group</button>
-        </form>
+  <h2>Group: {{ group.name }}</h2>
+  <h2>Group Members:</h2>
+
+
+  <div class="table-container">
+    <table class="styled-table">
+        <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>options</th>
+        </tr>
         {% for member in members %}
-          <div>
-            {{ member.username }} 
-            {% if member == admin %}
-              ADMIN
-            {% endif %}
-            {% if member == user %}
-              SELF
-            {% endif %}
-          </div>
+            <tr>
+                <th>{{ member.username }}</th>
+                  {% if admin == user %}
+
+                  
+                    {% if member != user %}
+                    <th>
+                      Member
+                    </th>
+
+                      <th>
+                      <form method="POST" action="{% url 'promote_to_admin' userToPromote=member.id %}">
+                        {% csrf_token %}
+                            <button type="submit">Promote to Admin</button>
+                      </form>
+                      </th>
+                    
+                    {% else %}
+                    <th>
+                      Self
+                    </th>
+                      <th>
+
+                      </th>
+                    {% endif %}
+
+
+
+                  {% else %}
+                    {% if member == admin %}
+                    <th>
+                      Admin
+                    </th>
+                      <th>
+
+                      </th>
+                    {% elif member == user %}
+                      <th>
+                        Self
+                      </th>
+                        <th>
+
+                        </th>
+                    {% else %}
+                      <th>
+                        Member
+                      </th>
+                        <th>
+
+                        </th>
+                    {% endif %}
+
+
+
+                  {% endif %}
+
+            </tr>
         {% endfor %}
-      {% else %}
-        {% comment %} Admin {% endcomment %}
-        <form id="delete-group-form" action="{% url 'delete_group' user_group_info.group.id %}" method="post">
-          {% csrf_token %}
-          <button type="button" onclick="confirmDelete()">Delete Group</button>
-        </form>
-        {% for member in members %}
-          <div>
-            {% if member != admin %}
-              {{ member.username }} 
-              <form method="POST" action="{% url 'promote_to_admin' userToPromote=member.id %}">
-                {% csrf_token %}
-                    <button type="submit">Promote to Admin</button>
-              </form>
-            {% else %}
-              {{ member.username }} SELF
-            {% endif %}
-          </div>
-        {% endfor %}
-        {% for mem in members %}
-          {{mem.usernmame}}
-        {% endfor %}
-      {% endif %}
-    </div>
-  {% endfor %}
+    </table>
+  </div>
   
 {% block messages %}
   {% if messages %}

@@ -114,6 +114,7 @@ def group_settings(request):
         user_groups_info.append({'group': user_group.group, 'is_admin': is_admin})
         members_id = UserJoinGroup.objects.filter(group=user_group.group)
         admin = user_group.group.admin_user
+        group_add = user_group.group
     
     for ujg in members_id:
         members.append(ujg.user)
@@ -121,6 +122,7 @@ def group_settings(request):
     context = {
         'admin': admin,
         'user_groups_info': user_groups_info,
+        'group': group_add,
         'members': members
     }
     print(context)
