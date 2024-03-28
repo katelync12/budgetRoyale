@@ -79,6 +79,18 @@
         {% endfor %}
     </table>
   </div>
+
+
+  {% if user != admin %}
+    <form action="{% url 'leave_group' %}" method="post">
+      {% csrf_token %}
+    <button type="submit">Leave Group</button>
+  {% else %}
+    <form id="delete-group-form" action="{% url 'delete_group' group.id %}" method="post">
+      {% csrf_token %}
+      <button type="button" onclick="confirmDelete()">Delete Group</button>
+    </form>
+  {% endif %}
   
 {% block messages %}
   {% if messages %}
