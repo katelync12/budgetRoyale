@@ -239,6 +239,42 @@ def create_personal_goals(request):
             start_date = goal_start_date,
             end_date = goal_end_date
         )
+        transactions = []
+        if (category):
+            if (is_spending):
+                transactions = Transactions.objects.filter(
+                user=user,
+                week__range=[goal_start_date, goal_end_date],  # Filter by transaction week within range
+                amount__lt=0,
+                category = category
+                )
+                print("category existed, was spending")
+            else:
+                transactions = Transactions.objects.filter(
+                user=user,
+                week__range=[goal_start_date, goal_end_date],  # Filter by transaction week within range
+                amount__gt=0,
+                category = category
+                )
+                print("category existed was savings") 
+        else:
+            if (is_spending):
+                transactions = Transactions.objects.filter(
+                user=user,
+                week__range=[goal_start_date, goal_end_date],  # Filter by transaction week within range
+                amount__lt=0
+                )
+                print("category existed, was spending")
+            else:
+                transactions = Transactions.objects.filter(
+                user=user,
+                week__range=[goal_start_date, goal_end_date],  # Filter by transaction week within range
+                amount__gt=0
+                )
+                print("category existed was savings") 
+        print(transactions)
+        for transaction in transactions:
+            personal_goal.sum_transaction += abs(transaction.amount)
         personal_goal.save()
     return redirect('view_personal_goals')
 
@@ -843,8 +879,34 @@ def create_group_goal(request):
             is_overall = is_overall,
             is_primary = is_primary
         )
-        group_goal.save()
-        return redirect('view_group_goals')
+        all_users = UserJoinGroup.objects.filter(group=group).select_related('user')
+        print("ALL USERS")
+        print(all_users)
+    # Iterate through each user
+    for user_group in all_users:
+        # Initialize variables to store transaction amounts for savings and spendings
+        total_score = 0
+        transactions = []
+        if (is_overall):
+            if (is_spending):
+                transactions = Transactions.objects.filter(
+                user=user_group.user,
+                week__range=[goal_start_date, goal_end_date],  # Filter by transaction week within range
+                amount__lt=0,
+                )
+                print("category existed, was spending")
+            else:
+                transactions = Transactions.objects.filter(
+                user=user_group.user,
+                week__range=[goal_start_date, goal_end_date],  # Filter by transaction week within range
+                amount__gt=0,
+                )
+                print("category existed, was savings")
+        
+        for transaction in transactions:
+            group_goal.sum_transaction += abs(transaction.amount)
+    group_goal.save()
+    return redirect('view_group_goals')
 
 def join_groups(request):
     # Ensure user is authenticated before accessing request.user
