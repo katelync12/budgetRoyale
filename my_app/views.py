@@ -833,7 +833,6 @@ def create_group_goal_page(request):
     current_user = request.user
     group = Group.objects.filter(admin_user = current_user)
     if not group:
-        messages.error(request, "Only admins are allowed to access this page")
         return redirect('view_group_goals') 
         
     return render(request, "create_group_goal.html")
