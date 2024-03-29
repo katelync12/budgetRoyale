@@ -1326,7 +1326,7 @@ def create_group_goal(username, password):
         button = driver.find_element("xpath", '//a[contains(text(), "Group Goals")]')
         button.click()
         time.sleep(buffer_constant)
-        button = driver.find_element("xpath", '//a[contains(text(), "Create Group Goal")]')
+        button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
         button.click()
         time.sleep(buffer_constant)
         transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
@@ -1350,7 +1350,8 @@ def create_group_goal(username, password):
         time.sleep(buffer_constant)
     #   TODO: CONFIRM WE HAVE LANDED ON THE RIGHT PAGE
         return "Passed"
-    except:
+    except Exception as e:
+        print(e)
         return "Failed"
     
 def create_group_goal2(username, password):
@@ -1361,7 +1362,7 @@ def create_group_goal2(username, password):
         button = driver.find_element("xpath", '//a[contains(text(), "Group Goals")]')
         button.click()
         time.sleep(buffer_constant)
-        button = driver.find_element("xpath", '//a[contains(text(), "Create Group Goal")]')
+        button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
         button.click()
         time.sleep(buffer_constant)
         transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")

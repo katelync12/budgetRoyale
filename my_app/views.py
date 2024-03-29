@@ -60,7 +60,8 @@ def group_leaderboard(request):
     
     # Get the name of the primary group goal
     primary_group_goal = GroupGoal.objects.filter(group__in=user_groups, is_primary=True).first()
-    
+    if (primary_group_goal == None):
+        return redirect('group_settings')
     # Iterate through each user
     for user_group in leaderboard_users:
         # Initialize variables to store transaction amounts for savings and spendings
