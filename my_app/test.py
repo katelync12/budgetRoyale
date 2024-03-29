@@ -1441,7 +1441,6 @@ def join_group(username, password):
         button.click()
         button = driver.find_element("xpath", '//h2[@class="group-members-settings"]')
         time.sleep(buffer_constant)
-
         return "Passed"
     except:
         return "Failed"
