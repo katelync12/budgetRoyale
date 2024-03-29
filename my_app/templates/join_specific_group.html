@@ -24,8 +24,11 @@
     margin-bottom: 30px;">
 
 
-    
+        {% if not public %}
         <label for="password" style="font-size: medium; font-family: Verdana, Geneva, Tahoma, sans-serif;">Enter password for Group:</label>
+        {% else %}
+        <label for="password" style="font-size: medium; font-family: Verdana, Geneva, Tahoma, sans-serif;">Hit join to join the group:</label>
+        {% endif %}
         <div>
           <label style="font-size: medium; font-family: Verdana, Geneva, Tahoma, sans-serif;">
             {{group.name}}
