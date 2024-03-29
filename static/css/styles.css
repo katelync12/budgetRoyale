@@ -576,3 +576,28 @@ a.nav-headers.active {
 }
 
 /* end create group */
+
+/* Styling for group settings */
+.group-header-settings {
+  text-align: center;
+  font-weight: 600;
+}
+
+.group-settings-button {
+    margin-top: 15px;
+    background-color: #5B5FC5;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    cursor: pointer;
+    text-align: center;
+}
+
+.group-members-settings {
+  font-size: 20px;
+  margin-left: 25px;
+  font-weight: 800px;
+}
+/* End of styling for group settings */
