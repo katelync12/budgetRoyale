@@ -88,6 +88,11 @@
       <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Total amount: {{goal.goal_amount}}</h5>
       <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Contribution: {{goal.sum_transaction}}</h5>
       <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">From {{goal.start_date}} to {{goal.end_date}}</h5>
+      {% if goal.category_id == NULL %}
+        <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">All categories</h5>
+      {% else %}
+      <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Category: {{goal.category_id}}</h5>
+      {% endif %}
       <!-- Donut chart container -->
       <div class="chart-container" style="margin-bottom: 3%;">
         <canvas class="progress-chart" id="progress-chart-{{ goal.id }}"></canvas>
