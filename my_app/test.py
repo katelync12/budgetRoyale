@@ -958,7 +958,7 @@ def delete_account_fail(username, password):
         driver.get(url)
         button = driver.find_element("xpath", "//button[text()='Delete Account']")
         button.click()
-        time.sleep(2)
+        time.sleep(1)
         prompt = driver.switch_to.alert
         prompt.send_keys("HelloHello")
         prompt.accept()
@@ -980,11 +980,11 @@ def delete_account_success(username, password):
         time.sleep(buffer_constant)
         button = driver.find_element("xpath", "//button[text()='Delete Account']")
         button.click()
-        time.sleep(2)
+        time.sleep(1)
         prompt = driver.switch_to.alert
         prompt.send_keys(username)
         prompt.accept()
-        
+        time.sleep(1)
         try:
             button = driver.find_element("xpath", "//button[text()='Delete Account']")
             return "Failed"
@@ -1216,8 +1216,7 @@ def create_group(username, password):
         time.sleep(1)
         group_element = driver.find_element("xpath", "//*[contains(text(), 'AUTOMATED_TEST_GROUP')]")
         return "Passed"
-    except Exception as e:
-        print(e)
+    except:
         return "Failed"
     
 def cancel_delete_group(username, password):
@@ -1255,12 +1254,9 @@ def delete_group(username, password):
         alert = driver.switch_to.alert
         alert.accept()
         time.sleep(2)
-        alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
-        alert.accept()
-        #check = driver.find_element("xpath", '//button[contains(text(), "Create Group")]')
+        check = driver.find_element("xpath", '//button[contains(text(), "Create Group")]')
         return "Passed"
-    except Exception as e:
-        print(e)
+    except:
         return "Failed"
 
 def create_transaction_subroutine(name, amount, date, is_spending, category):
@@ -1330,7 +1326,7 @@ def create_group_goal(username, password):
         button = driver.find_element("xpath", '//a[contains(text(), "Group Goals")]')
         button.click()
         time.sleep(buffer_constant)
-        button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
+        button = driver.find_element("xpath", '//a[contains(text(), "Create Group Goal")]')
         button.click()
         time.sleep(buffer_constant)
         transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
@@ -1354,8 +1350,7 @@ def create_group_goal(username, password):
         time.sleep(buffer_constant)
     #   TODO: CONFIRM WE HAVE LANDED ON THE RIGHT PAGE
         return "Passed"
-    except Exception as e:
-        print(e)
+    except:
         return "Failed"
     
 def create_group_goal2(username, password):
@@ -1366,7 +1361,7 @@ def create_group_goal2(username, password):
         button = driver.find_element("xpath", '//a[contains(text(), "Group Goals")]')
         button.click()
         time.sleep(buffer_constant)
-        button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
+        button = driver.find_element("xpath", '//a[contains(text(), "Create Group Goal")]')
         button.click()
         time.sleep(buffer_constant)
         transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
@@ -1412,6 +1407,58 @@ def leaderboard_savings_overall_calculation(username, password):
         if (score == 15.0):
             return "Passed"
         return "Failed"
+    except Exception as e:
+        print("An exception occurred:", e)
+        return "Failed"
+    
+def admin_leave_group(username, password):
+    try:
+        login(username, password)
+        url = 'http://127.0.0.1:8000/groups/group_settings/'
+        driver.get(url)
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//button[contains(text(), "Leave Group")]')
+            return "Failed"
+        except:
+            return "Passed"
+    except:
+        return "Failed"
+
+def join_group(username, password):
+    try:
+        login(username, password)
+        url = 'http://127.0.0.1:8000/groups/'
+        driver.get(url)
+        time.sleep(buffer_constant)
+        # group_to_join = driver.find_element("xpath", '//p[@class="group_name_label" and text()="w"]/following-sibling::div/button[text()="Join Group"]')
+        group_to_join = driver.find_element("xpath", '//p[@class="group_name_label" and text()="w"]/following-sibling::div[contains(@class, "button-container")]/button[text()="Join Group"]')
+        group_to_join.click()
+        time.sleep(buffer_constant)  
+        password_input = driver.find_element("xpath", '//input[@type="password" and @name="password"]')
+        password_input.send_keys("123")
+        button = driver.find_element("xpath", '//button[contains(text(), "Join!")]')
+        button.click()
+        button = driver.find_element("xpath", '//h2[@class="group-members-settings"]')
+        time.sleep(buffer_constant)
+
+        return "Passed"
+    except:
+        return "Failed"
+
+def member_leave_group(username, password):
+    try:
+        login(username, password)
+        url = 'http://127.0.0.1:8000/groups/group_settings'
+        driver.get(url)
+        time.sleep(buffer_constant)
+        time.sleep(5)
+        check = driver.find_element("xpath", '//button[contains(text(), "Leave Group")]')
+        check.click()
+
+        time.sleep(buffer_constant)
+        join = driver.find_element("xpath", './/input[@id="search_input"]')
+        return "Passed"
     except:
         return "Failed"
     
@@ -1434,7 +1481,8 @@ def leaderboard_spending_calculation(username, password):
         if (score == -10.0):
             return "Passed"
         return "Failed"
-    except:
+    except Exception as e:
+        print("An exception occurred:", e)
         return "Failed"
 browser_options = ChromeOptions()
 browser_options.headless = False
@@ -1509,15 +1557,13 @@ temp_result = delete_group(username, password)
 print(f"{'Delete Group':<45} {temp_result}")
 #steps for this integration test since delete group goal doesnt exist
 temp_result = create_group(username, password)
-print(f"{'Create/join group after delete group':<45} {temp_result}")
+print(f"{'Able to create or join group after deleting your group':<45} {temp_result}")
 temp_result = create_group_goal2(username, password)
 print(f"{'Create Spendings, Nonoverall Group Goal':<45} {temp_result}")
 temp_result = leaderboard_spending_calculation(username, password)
 print(f"{'Spending Leaderboard Calculation':<45} {temp_result}")
 temp_result = delete_group(username, password)
 #end of integration test
-temp_result = delete_account_success(username, password)
-print(f"{'Delete account success':<45} {temp_result}")
 temp_result = start_after_end_date("test-dates", "testpassword")
 print(f"{'Start after End Date Error':<45} {temp_result}")
 temp_result = start_after_current_date("test-dates", "testpassword")
@@ -1528,5 +1574,13 @@ temp_result = unselect_category("test-piechart", "testpassword")
 print(f"{'Select no categories in view transaction':<45} {temp_result}")
 temp_result = select_groceries_category("test-piechart", "testpassword")
 print(f"{'Select only groceries category':<45} {temp_result}")
+temp_result = admin_leave_group("group_test", "testpassword")
+print(f"{'No leave group option for admin':<45} {temp_result}")
+temp_result = join_group(username, password)
+print(f"{'Member joining group':<45} {temp_result}")
+temp_result = member_leave_group(username, password)
+print(f"{'Member leaving group':<45} {temp_result}")
+temp_result = delete_account_success(username, password)
+print(f"{'Delete account success':<45} {temp_result}")
 
 driver.quit()
