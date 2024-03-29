@@ -1,22 +1,17 @@
 {% extends "base.html" %} 
 
 {% block content %}
-<p><a href="{% url 'create_data' %}">Password Change</a></p>
-<p><a href="{% url 'create_data' %}">Create Data</a></p>
-<p><a href="{% url 'form' %}">Form</a></p>
 
-
-{% comment %} {% if user_groups_info.is_admin %} {% endcomment %}
-  <h2>Group: {{ group.name }}</h2>
-  <h2>Group Members:</h2>
+  <h2 class="group-header-settings">Group: {{ group.name }}</h2>
+  <h2 class="group-members-settings">Group Members:</h2>
 
 
   <div class="table-container">
     <table class="styled-table">
         <tr>
-            <th>Name</th>
+            <th>Member</th>
             <th>Role</th>
-            <th>options</th>
+            <th>Options</th>
         </tr>
         {% for member in members %}
             <tr>
@@ -32,13 +27,13 @@
                       <th>
                       <form method="POST" action="{% url 'promote_to_admin' userToPromote=member.id %}">
                         {% csrf_token %}
-                            <button type="submit">Promote to Admin</button>
+                            <button type="submit">Set Admin</button>
                       </form>
                       </th>
                     
                     {% else %}
                     <th>
-                      Self
+                      Admin
                     </th>
                       <th>
 
@@ -55,13 +50,6 @@
                       <th>
 
                       </th>
-                    {% elif member == user %}
-                      <th>
-                        Self
-                      </th>
-                        <th>
-
-                        </th>
                     {% else %}
                       <th>
                         Member
@@ -82,13 +70,13 @@
 
 
   {% if user != admin %}
-    <form action="{% url 'leave_group' %}" method="post">
+    <form style="display: flex; justify-content: center;" action="{% url 'leave_group' %}" method="post">
       {% csrf_token %}
-    <button type="submit">Leave Group</button>
+    <button class="group-settings-button" type="submit">Leave Group</button>
   {% else %}
-    <form id="delete-group-form" action="{% url 'delete_group' group.id %}" method="post">
+    <form id="delete-group-form" style="display: flex; justify-content: center;" action="{% url 'delete_group' group.id %}" method="post">
       {% csrf_token %}
-      <button type="button" onclick="confirmDelete()">Delete Group</button>
+      <button type="button" class="group-settings-button" onclick="confirmDelete()">Delete Group</button>
     </form>
   {% endif %}
   
