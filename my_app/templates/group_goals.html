@@ -84,6 +84,13 @@
     {% endif %}
     <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Total amount: {{ goal.amount }}</h5>
     <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Contribution: {{ goal.sum_transaction }}</h5>
+    <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">From {{goal.start_date}} to {{goal.end_date}}</h5>
+
+    {% if goal.is_overall %}
+    <h5 style="text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Overall</h3>
+    {% else %}
+    <h5 style="text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Not overall</h3>
+    {% endif %}
     <!-- Donut chart container -->
     
     
