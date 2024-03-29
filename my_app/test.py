@@ -1217,7 +1217,7 @@ def create_group(username, password):
         group_element = driver.find_element("xpath", "//*[contains(text(), 'AUTOMATED_TEST_GROUP')]")
         return "Passed"
     except Exception as e:
-        print(e)
+        #print(e)
         return "Failed"
     
 def cancel_delete_group(username, password):
@@ -1260,7 +1260,7 @@ def delete_group(username, password):
         #check = driver.find_element("xpath", '//button[contains(text(), "Create Group")]')
         return "Passed"
     except Exception as e:
-        print(e)
+        #print(e)
         return "Failed"
 
 def create_transaction_subroutine(name, amount, date, is_spending, category):
@@ -1355,7 +1355,7 @@ def create_group_goal(username, password):
     #   TODO: CONFIRM WE HAVE LANDED ON THE RIGHT PAGE
         return "Passed"
     except Exception as e:
-        print(e)
+        #print(e)
         return "Failed"
     
 def create_group_goal2(username, password):
