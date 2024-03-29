@@ -1407,8 +1407,7 @@ def leaderboard_savings_overall_calculation(username, password):
         if (score == 15.0):
             return "Passed"
         return "Failed"
-    except Exception as e:
-        print("An exception occurred:", e)
+    except:
         return "Failed"
     
 def leaderboard_spending_calculation(username, password):
@@ -1430,8 +1429,7 @@ def leaderboard_spending_calculation(username, password):
         if (score == -10.0):
             return "Passed"
         return "Failed"
-    except Exception as e:
-        print("An exception occurred:", e)
+    except:
         return "Failed"
 browser_options = ChromeOptions()
 browser_options.headless = False
@@ -1506,12 +1504,11 @@ temp_result = delete_group(username, password)
 print(f"{'Delete Group':<45} {temp_result}")
 #steps for this integration test since delete group goal doesnt exist
 temp_result = create_group(username, password)
-print(f"{'Able to create or join group after deleting your group':<45} {temp_result}")
+print(f"{'Create/join group after delete group':<45} {temp_result}")
 temp_result = create_group_goal2(username, password)
 print(f"{'Create Spendings, Nonoverall Group Goal':<45} {temp_result}")
 temp_result = leaderboard_spending_calculation(username, password)
 print(f"{'Spending Leaderboard Calculation':<45} {temp_result}")
-temp_result = delete_group(username, password)
 #end of integration test
 temp_result = delete_account_success(username, password)
 print(f"{'Delete account success':<45} {temp_result}")
