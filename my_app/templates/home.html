@@ -31,6 +31,12 @@
         <button onclick="submitDates()">Submit</button>
     </div>
   </div>
+
+  <div class="container-line">
+    <div class="line_chart">
+        <canvas id="incomeLineChart" width="800" height="400"></canvas>
+    </div>
+  </div> 
   
   <div class="container-line">
     <div class="pie_chart">
@@ -46,6 +52,7 @@
   <script>
       var myChart;
       var myChart2;
+      var myLineChart;
       fetch('/generate_expenses_pie_chart/')
           .then(response => response.json())
           .then(data => {
@@ -88,7 +95,7 @@
               });
           });
 
-          fetch('/generate_income_pie_chart/')
+        fetch('/generate_income_pie_chart/')
         .then(response => response.json())
         .then(data => {
             var ctx = document.getElementById('incomeChart').getContext('2d');
@@ -129,6 +136,49 @@
                 }
             });
         });
+
+        fetch('/generate_income_line_chart/')
+        .then(response => response.json())
+        .then(data => {
+            var ctx = document.getElementById('incomeLineChart').getContext('2d');
+            myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Income',
+                        data: data.data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date'
+                            },
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            }
+                        }],
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Amount'
+                            },
+                            ticks: {
+                                suggestedMin: 0
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+
 
         function submitDates() {
             var startDate = document.getElementById('start_date').value;
