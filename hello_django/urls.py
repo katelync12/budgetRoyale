@@ -97,6 +97,7 @@ urlpatterns = [
     path('verify_unique_category/', views.verify_unique_category, name='verify_unique_category'),
     path('generate_expenses_pie_chart/', views.generate_expenses_pie_chart, name='generate_expenses_pie_chart'),
     path('generate_income_pie_chart/', views.generate_income_pie_chart, name='generate_income_pie_chart'),
+    path('generate_income_line_chart/', views.generate_income_line_chart, name='generate_income_line_chart'),
 
     path('create_group_goal/', views.create_group_goal, name='create_group_goal_action'),
 
