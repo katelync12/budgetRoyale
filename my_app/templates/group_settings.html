@@ -25,9 +25,13 @@
                     </th>
 
                       <th>
-                      <form method="POST" action="{% url 'promote_to_admin' userToPromote=member.id %}">
+                      <form id="promote-admin-form" action="{% url 'promote_to_admin' userToPromote=member.id %}" method="post">
                         {% csrf_token %}
-                            <button type="submit">Set Admin</button>
+                            <button type="button" onclick="confirmSetAdmin('{{member.username}}')">Set Admin</button>
+                      </form>
+                      <form id="remove-member-form" action="{% url 'remove_member' userToRemove=member.id %}" method="post">
+                        {% csrf_token %}
+                            <button type="button" onclick="confirmRemoveMember('{{member.username}}')">Remove Member</button>
                       </form>
                       </th>
                     
@@ -70,14 +74,16 @@
 
 
   {% if user != admin %}
-    <form style="display: flex; justify-content: center;" action="{% url 'leave_group' %}" method="post">
+    <form id="leave-group-form" style="display: flex; justify-content: center;" action="{% url 'leave_group' %}" method="post">
       {% csrf_token %}
-    <button class="group-settings-button" type="submit">Leave Group</button>
+    <button class="group-settings-button" type="button" onclick="confirmLeave()">Leave Group</button>
+    </form>
   {% else %}
     <form id="delete-group-form" style="display: flex; justify-content: center;" action="{% url 'delete_group' group.id %}" method="post">
       {% csrf_token %}
       <button type="button" class="group-settings-button" onclick="confirmDelete()">Delete Group</button>
     </form>
+    
   {% endif %}
   
 {% block messages %}
@@ -95,6 +101,21 @@
   function confirmDelete() {
     if (confirm("Are you sure you want to delete this group?")) {
       document.getElementById("delete-group-form").submit();
+    }
+  }
+  function confirmLeave() {
+    if (confirm("Are you sure you want to leave this group?")) {
+      document.getElementById("leave-group-form").submit();
+    }
+  }
+  function confirmSetAdmin(mem) {
+    if (confirm("Are you sure you want to promote "+mem+" to admin of this group?")) {
+      document.getElementById("promote-admin-form").submit();
+    }
+  }
+  function confirmRemoveMember(mem) {
+    if (confirm("Are you sure you want to remove "+mem+" from the group?")) {
+      document.getElementById("remove-member-form").submit();
     }
   }
 </script>
