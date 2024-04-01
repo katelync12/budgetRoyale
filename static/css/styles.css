@@ -618,3 +618,27 @@ a.nav-headers.active {
 
 /* End of styling for group settings */
 
+@media screen and (min-width: 501px) {
+  .line_chart {
+    height: 100%;
+    width: 825px;
+    padding: 10px;
+    margin-bottom: 30px;
+    margin-right: 10px;
+    margin-left: 10px;
+    border: 2px solid #a1a5c1;
+  }
+}
+
+@media screen and (max-width: 501px) {
+  .line_chart {
+    height: 100%;
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 30px;
+    margin-right: 10px;
+    margin-left: 10px;
+    border: 2px solid #a1a5c1;
+  }
+}
+

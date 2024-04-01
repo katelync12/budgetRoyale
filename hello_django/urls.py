@@ -44,7 +44,7 @@ urlpatterns = [
     path('create_data/', views.add, name='create_data'),
     path("accounts/", include("accounts.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("", views.home_view, name="home"),
     path("form/", TemplateView.as_view(template_name="form.html"), name="form"),
     path("send_form/", views.send_form, name="send_form"),
     path("delete_account/", views.delete_account, name="delete_account"),

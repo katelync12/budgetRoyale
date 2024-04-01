@@ -20,6 +20,7 @@ from datetime import date
 from datetime import timedelta, datetime
 from django.http import HttpResponseRedirect
 from django.db.models import Sum
+from django_user_agents.utils import get_user_agent
 
 # def logout_view(request):
 #     logout(request)
@@ -484,6 +485,19 @@ def delete_transaction(request, transaction_id):
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
     
+def home_view(request):
+    user_agent = get_user_agent(request)
+    screen_width = None
+
+    if user_agent.is_mobile:
+        screen_width = 400
+    elif user_agent.is_tablet:
+        screen_width = 600
+    else:
+        screen_width = 800
+
+    return render(request, 'home.html', {'screen_width': screen_width})
+    
 @login_required
 def check_user_group(request, page):
     print("check_user_group")
@@ -733,6 +747,10 @@ def generate_expenses_pie_chart(request):
         negative_transactions = negative_transactions.filter(week__gte=start_date)
     if end_date:
         negative_transactions = negative_transactions.filter(week__lte=end_date)
+    if not start_date and not end_date:
+        end_date = timezone.now().date()
+        start_date = end_date - timedelta(days=7)
+        negative_transactions = negative_transactions.filter(week__range=[start_date, end_date])
 
     username = request.user
 
@@ -781,6 +799,10 @@ def generate_income_pie_chart(request):
         positive_transactions = positive_transactions.filter(week__gte=start_date)
     if end_date:
         positive_transactions = positive_transactions.filter(week__lte=end_date)
+    if not start_date and not end_date:
+        end_date = timezone.now().date()
+        start_date = end_date - timedelta(days=7)
+        positive_transactions = positive_transactions.filter(week__range=[start_date, end_date])
 
     username = request.user
 
@@ -850,10 +872,6 @@ def generate_income_line_chart(request):
 
     labels = [date.strftime('%Y-%m-%d') for date, _ in sorted_transaction_dict]
     data = [amount for _, amount in sorted_transaction_dict]
-    print("------")
-    print(labels)
-    print(data)
-    print("------")
 
     return JsonResponse({'labels': labels, 'data': data})
 
