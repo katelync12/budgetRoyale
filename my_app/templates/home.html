@@ -34,7 +34,11 @@
 
   <div class="container-line">
     <div class="line_chart">
-        <canvas id="incomeLineChart" width="800" height="400"></canvas>
+        {% if screen_width > 500 %}
+            <canvas id="incomeLineChart" width="800" height="400"></canvas>
+        {% else %}
+            <canvas id="incomeLineChart" width="80%", height="80%"></canvas>
+        {% endif %}
     </div>
   </div> 
   

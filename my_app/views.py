@@ -20,6 +20,7 @@ from datetime import date
 from datetime import timedelta, datetime
 from django.http import HttpResponseRedirect
 from django.db.models import Sum
+from django_user_agents.utils import get_user_agent
 
 # def logout_view(request):
 #     logout(request)
@@ -484,6 +485,19 @@ def delete_transaction(request, transaction_id):
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
     
+def home_view(request):
+    user_agent = get_user_agent(request)
+    screen_width = None
+
+    if user_agent.is_mobile:
+        screen_width = 400
+    elif user_agent.is_tablet:
+        screen_width = 600
+    else:
+        screen_width = 800
+
+    return render(request, 'home.html', {'screen_width': screen_width})
+    
 @login_required
 def check_user_group(request, page):
     print("check_user_group")
@@ -850,10 +864,6 @@ def generate_income_line_chart(request):
 
     labels = [date.strftime('%Y-%m-%d') for date, _ in sorted_transaction_dict]
     data = [amount for _, amount in sorted_transaction_dict]
-    print("------")
-    print(labels)
-    print(data)
-    print("------")
 
     return JsonResponse({'labels': labels, 'data': data})
 
