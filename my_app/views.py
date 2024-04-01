@@ -1058,3 +1058,18 @@ def promote_to_admin(request, userToPromote):
         # Redirect to login page if user is not authenticated
         return redirect('login')
 
+@login_required
+def remove_member(request, userToRemove):
+    if request.user.is_authenticated:
+        user_to_remove = User.objects.get(id=userToRemove)
+        group = Group.objects.get(admin_user=request.user)
+        if group == None:
+            return redirect('group_settings')
+        if user_to_remove == group.admin_user:
+            return redirect('group_settings')
+        to_remove = UserJoinGroup.objects.get(user=user_to_remove)
+        to_remove.delete()
+        return redirect('group_settings')
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
