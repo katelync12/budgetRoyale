@@ -600,9 +600,21 @@ a.nav-headers.active {
   margin-left: 25px;
   font-weight: 800px;
 }
-/* End of styling for group settings */
 
 .make-inline {
-    display: inline-block;
-    margin-right: 10px;
+  display: flex;
+  align-items: center;
+  align-self: center;
+  height: 100%;
 }
+.set-admin-btn {
+  margin: 10px;
+  color:#7477d7;
+}
+.remove-member-btn {
+  margin: 10px;
+  color: red;
+}
+
+/* End of styling for group settings */
+

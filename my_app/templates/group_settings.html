@@ -1,6 +1,7 @@
 {% extends "base.html" %} 
 
 {% block content %}
+{% load static %}
 
   <h2 class="group-header-settings">Group: {{ group.name }}</h2>
   <h2 class="group-members-settings">Group Members:</h2>
@@ -24,14 +25,14 @@
                       Member
                     </th>
 
-                      <th>
+                      <th class="make-inline">
                       <form id="promote-admin-form{{ member.username }}" action="{% url 'promote_to_admin' userToPromote=member.id %}" method="post">
                         {% csrf_token %}
-                            <button type="button" onclick="confirmSetAdmin('{{ member.username }}')">Set Admin</button>
+                            <button type="button" class="set-admin-btn" onclick="confirmSetAdmin('{{ member.username }}')">Set Admin</button>
                       </form>
                       <form id="remove-member-form{{ member.username }}" action="{% url 'remove_member' userToRemove=member.id %}" method="post">
                         {% csrf_token %}
-                            <button type="button" onclick="confirmRemoveMember('{{ member.username }}')">Remove Member</button>
+                            <button type="button" class="remove-member-btn" onclick="confirmRemoveMember('{{ member.username }}')">Remove</button>
                       </form>
                       </th>
                     
