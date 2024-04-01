@@ -747,6 +747,10 @@ def generate_expenses_pie_chart(request):
         negative_transactions = negative_transactions.filter(week__gte=start_date)
     if end_date:
         negative_transactions = negative_transactions.filter(week__lte=end_date)
+    if not start_date and not end_date:
+        end_date = timezone.now().date()
+        start_date = end_date - timedelta(days=7)
+        negative_transactions = negative_transactions.filter(week__range=[start_date, end_date])
 
     username = request.user
 
@@ -795,6 +799,10 @@ def generate_income_pie_chart(request):
         positive_transactions = positive_transactions.filter(week__gte=start_date)
     if end_date:
         positive_transactions = positive_transactions.filter(week__lte=end_date)
+    if not start_date and not end_date:
+        end_date = timezone.now().date()
+        start_date = end_date - timedelta(days=7)
+        positive_transactions = positive_transactions.filter(week__range=[start_date, end_date])
 
     username = request.user
 

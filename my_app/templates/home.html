@@ -35,9 +35,11 @@
   <div class="container-line">
     <div class="line_chart">
         {% if screen_width > 500 %}
+            <h2 style="text-align: center">Income Over Time</h2>
             <canvas id="incomeLineChart" width="800" height="400"></canvas>
         {% else %}
-            <canvas id="incomeLineChart" width="80%", height="80%"></canvas>
+            <h2 style="text-align: center">Income Over Time</h2>
+            <canvas id="incomeLineChart" width="80%", height="70%"></canvas>
         {% endif %}
     </div>
   </div> 
@@ -167,7 +169,7 @@
                             type: 'time',
                             time: {
                                 unit: 'day'
-                            }
+                            },
                         }],
                         yAxes: [{
                             scaleLabel: {
@@ -178,6 +180,15 @@
                                 suggestedMin: 0
                             }
                         }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                console.log("callback hit")
+                                return '$' + value.toFixed(2);
+                            }
+                        }
                     }
                 }
             });
