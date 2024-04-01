@@ -601,3 +601,8 @@ a.nav-headers.active {
   font-weight: 800px;
 }
 /* End of styling for group settings */
+
+.make-inline {
+    display: inline-block;
+    margin-right: 10px;
+}
