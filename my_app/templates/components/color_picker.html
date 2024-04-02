@@ -1,0 +1,82 @@
+{% block color_picker %}
+{% load static %}
+<input class="hue-slider" type="range" min="0" max="360" value="0" id="hue-slider">
+<div class="selected-color" id="selected-color"></div>
+<button onclick="updateProfileColor()" style="background-color: #5B5FC5; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif; cursor: pointer; display: block; margin: 20px auto;">Update Profile Color</button>
+
+
+<!-- Inline CSS styles -->
+<style>
+    .selected-color {
+        width: 50px;
+        height: 50px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        background-color: hsl(0, 100%, 87%);
+    }
+    .hue-slider {
+        width: 100px !important;
+        margin-top: 10px;
+        background-color: #FFFFFF;
+        color: #FFFFFF;
+    }
+    .hue-slider::-webkit-slider-runnable-track {
+      background-color: transparent; /* Set track color to transparent */
+    }
+    .hue-slider::-webkit-slider-thumb {
+      background-color: green; /* Set thumb color to green */
+    }
+  </style>
+  
+  <script>
+    const hueSlider = document.getElementById('hue-slider');
+    const selectedColor = document.getElementById('selected-color');
+    function rgbToHex(rgb) {
+      // Separate the RGB components
+      const [r, g, b] = rgb.match(/\d+/g);
+      // Convert each component to hexadecimal and concatenate them
+      return "#" + ((1 << 24) + (parseInt(r) << 16) + (parseInt(g) << 8) + parseInt(b)).toString(16).slice(1);
+    }
+    function updateProfileColor() {
+      // Get the current hue value from the slider
+      const s = document.getElementById('selected-color');
+      const color = s.style.backgroundColor;
+      // Convert the color to a hexadecimal string
+      const hexColor = rgbToHex(color);
+      console.log('Hex Color:', hexColor);
+      console.log('Color:', color); // Add this line to print the color value
+      // Convert hue value to HSL color format (Hue, Saturation, Lightness)
+      const encodedColor = encodeURIComponent(hexColor);
+      // Send a POST request to update the user's profile color
+      fetch(`/update_profile_color/?color=${encodedColor}`)
+      .then(response => {
+        // Handle response
+        if (response.ok) {
+          // Profile color updated successfully
+          alert('Profile color updated successfully!');
+        } else {
+          // Error handling
+          alert('Failed to update profile color!');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to update profile color!');
+      });
+  }
+  
+    // Event listener for the hue slider input
+    hueSlider.addEventListener('input', function() {
+      const hue = this.value;
+      // Convert hue value to HSL color format (Hue, Saturation, Lightness)
+      const hslColor = `hsl(${hue}, 40%, 60%)`;
+      // Set the background color of the selected color div
+      selectedColor.style.backgroundColor = hslColor;
+      this.style.background = hslColor;
+    });
+  
+    // Function to update profile color
+    
+  </script>
+{% endblock %}

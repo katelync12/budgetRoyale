@@ -34,7 +34,6 @@ urlpatterns = [
     path('create_transaction/', views.create_transaction, name='create_transaction_action'),
     path('create_group/', views.create_group, name='create_group_action'),
     # path('groups/', views.groups, name='search_group_action'),
-
     path('create_personal_goal/', views.create_personal_goals, name='create_personal_goal_action'),
     path('delete_transaction/<int:transaction_id>/', views.delete_transaction, name='delete_transaction'),
 
@@ -84,10 +83,11 @@ urlpatterns = [
     path("groups/", views.join_groups, name="groups"),
     
     # Matches groups/settings/
-    
-
+    path('add_session_filter/', views.add_session_filter, name='add_session_filter'),
+    path('clear4_session_filter/', views.clear_session_filter, name='clear_session_filter'),   
     path("edit_transaction/", TemplateView.as_view(template_name="edit_transaction.html"), name="edit_transactions_view"),
     path("edit_transaction/<int:transaction_id>/", views.edit_transaction_action, name="edit_transaction_action"),
+    path('update_profile_color/', views.update_profile_color, name='update_profile_color'),
     path("settings/", TemplateView.as_view(template_name="profile_settings.html"), name="profile_settings"),
     path("transactions/", TemplateView.as_view(template_name="view_transactions.html"), name="view_transactions"),
     path("transactions/create/", views.create_transaction_page, name="create_transactions"),

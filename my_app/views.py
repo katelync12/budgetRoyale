@@ -20,11 +20,53 @@ from datetime import date
 from datetime import timedelta, datetime
 from django.http import HttpResponseRedirect
 from django.db.models import Sum
+import json
 from django_user_agents.utils import get_user_agent
 
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
+@login_required
+def clear_session_filter(request):
+    request.session['selected_categories'] = []
+    request.session['start_date_str'] = None
+    request.session['end_date_str'] = None
+    return redirect('view_transactions')
+@login_required 
+def add_session_filter(request):
+    current_user = request.user
+    selected_categories = request.GET.getlist('selected_categories')
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+    if start_date_str is not None:
+        request.session['start_date_str'] = start_date_str
+
+    # Check if end_date_str exists in the form
+    if end_date_str is not None:
+        request.session['end_date_str'] = end_date_str
+
+    # Check if selected_categories exists in the form
+    if selected_categories:
+        request.session['selected_categories'] = selected_categories
+    return redirect('view_transactions')
+@login_required
+def update_profile_color(request):
+        # Parse JSON data from request body
+        color = request.GET.get('color', '')
+        print(str(color) + "color")
+        
+        user = request.user
+        
+        # Get or create UserProfile for the user
+        user_profile, created = UserProfile.objects.get_or_create(user=user)
+        
+        # Update color
+        user_profile.color = color
+        user_profile.save()
+        
+        # Return success response
+        return JsonResponse({'message': 'Profile color updated successfully!'}, status=200)
+
 
 @login_required
 def view_group_goals(request):
@@ -89,9 +131,15 @@ def group_leaderboard(request):
                     total_score += transaction.amount
             else:
                 if transaction.amount > 0:
-                    total_score += transaction.amount       
+                    total_score += transaction.amount
+        color = None
+        try:
+            user_profile = UserProfile.objects.get(user=user_group.user)
+            color = user_profile.color  # Get user's color from UserProfile
+        except:
+            pass
         # Append user's name and total score to the leaderboard
-        leaderboard.append({'name': user_group.user.username, 'score': total_score})
+        leaderboard.append({'name': user_group.user.username, 'score': total_score, 'color': color})
     
     # Sort the leaderboard by score in descending order
     leaderboard.sort(key=lambda x: x['score'], reverse=True)
@@ -386,11 +434,10 @@ def add_category(request):
 
 def add(request):
     # Check if Student table exists
-    if not GroupGoal._meta.db_table in connection.introspection.table_names():
+    if not UserProfile._meta.db_table in connection.introspection.table_names():
         # Create the Student table if it doesn't exist
         with connection.schema_editor() as schema_editor:
-            schema_editor.create_model(GroupGoal)
-            schema_editor.create_model(Transactions)
+            schema_editor.create_model(UserProfile)
 
     # # Insert a new student named "Mark" with a GPA of 4.0
     # mark = Student(grade="Mark", gpa=4.0)
@@ -409,27 +456,37 @@ def view_transactions(request, view_all = True):
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
         current_user = request.user
-        selected_categories = request.GET.getlist('selected_categories')
+        #selected_categories = request.GET.getlist('selected_categories')
         
         # Gets all transactions
         sorted = []
         username = request.user.username
-        start_date_str = request.GET.get('start_date')
-        end_date_str = request.GET.get('end_date')
-
+        #start_date_str = request.GET.get('start_date')
+        #end_date_str = request.GET.get('end_date')
+        selected_categories = request.session.get('selected_categories')
+        start_date_str = request.session.get('start_date_str')
+        end_date_str = request.session.get('end_date_str')
+        print("view_transactions sesion stuff!:")
+        print(selected_categories)
+        print(start_date_str)
+        print(end_date_str)
+        categories_list = []
         view_all = False
         view_all = request.GET.get('view_all') == 'True'
+        transactions = []
         
-        if not view_all:
+        if False:
             transactions = Transactions.objects.all()
+            print("view all???")
         else:
             categories_list = []
-            if len(selected_categories) == 1:
+            if selected_categories and not selected_categories == ['']:
                 categories_list = selected_categories[0].split(",")
             if start_date_str and end_date_str:
                 start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
                 end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
                 transactions = Transactions.objects.filter(week__gte=start_date, week__lte=end_date)
+                print("case both start and end date")
             elif start_date_str:
                 start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
                 transactions = Transactions.objects.filter(week__gte=start_date)
@@ -438,11 +495,12 @@ def view_transactions(request, view_all = True):
                 transactions = Transactions.objects.filter(week__lte=end_date)
             else:
                 transactions = Transactions.objects.all()
+                print("neither start nor end date")
 
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
             if (transaction.user.username == username):
-                if (len(selected_categories) == 1):
+                if (selected_categories and not selected_categories == ['']):
                     if (transaction.category.category_id in categories_list):
                         sorted.append(transaction)
                 else:
@@ -454,6 +512,9 @@ def view_transactions(request, view_all = True):
             'transactions': sorted,
             'current_user': current_user,
             'categories': categories,
+            'start_date': start_date_str,
+            'end_date': end_date_str,
+            'selected_categories': categories_list,
         }
         # Render the template with the transactions data
         return render(request, 'view_transactions.html', context)
