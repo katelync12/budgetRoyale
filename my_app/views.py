@@ -861,13 +861,16 @@ def generate_income_line_chart(request):
     transaction_dict = {entry['week']: entry['total_amount'] for entry in aggregated_data}
 
     # Fill in missing dates with zero amounts
+    if not end_date:
+        end_date = timezone.now().date()
+    if not start_date:
+        start_date = end_date - timedelta(days=7)
     current_date = start_date
     while current_date <= end_date:
         if current_date not in transaction_dict:
             transaction_dict[current_date] = 0
         current_date += timedelta(days=1)
 
-    # Sort the dictionary by date and extract labels and data
     sorted_transaction_dict = sorted(transaction_dict.items())
 
     labels = [date.strftime('%Y-%m-%d') for date, _ in sorted_transaction_dict]
