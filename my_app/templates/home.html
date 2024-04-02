@@ -198,10 +198,8 @@
         function submitDates() {
             var startDate = document.getElementById('start_date').value;
             var endDate = document.getElementById('end_date').value;
-            console.log("hello")
 
             var currentDate = new Date();
-            console.log(currentDate)
             var currentDateString = currentDate.toISOString().split('T')[0];
             var startDateObj = new Date(startDate);
             var endDateObj = new Date(endDate);
@@ -224,11 +222,19 @@
             });
         
             fetch(`/generate_income_pie_chart/?start_date=${startDate}&end_date=${endDate}`)
-                .then(response => response.json())
-                .then(data => {
-                    var ctx = document.getElementById('incomeChart').getContext('2d');
-                    updateData(myChart2, data.labels, data.data);
-                });
+            .then(response => response.json())
+            .then(data => {
+                var ctx = document.getElementById('incomeChart').getContext('2d');
+                updateData(myChart2, data.labels, data.data);
+            });
+
+            fetch(`/generate_income_line_chart/?start_date=${startDate}&end_date=${endDate}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("before error")
+                var ctx = document.getElementById('incomeLineChart').getContext('2d');
+                updateData(myLineChart, data.labels, data.data);
+            });
         }
         
         function updateData(chart, label, data) {
