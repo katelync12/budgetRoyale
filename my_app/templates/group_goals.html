@@ -65,7 +65,14 @@
 
   <div class="button-container" style="margin-bottom: 2px;">
     <button onclick="window.location.href='{% url 'home' %}'">Home</button>
-    <button onclick="window.location.href='{% url 'create_group_goal' %}'">Create</button>
+    {% if is_admin %}
+      {% if not goals %}
+        <p>Get started by creating a group goal!</p>
+      {% endif %}
+      <button onclick="window.location.href='{% url 'create_group_goal' %}'">Create</button>
+    {% elif not goals %}
+      <p>Tell your admin to create group goals to get started!</p>
+    {% endif %}
   </div>
 
   <div style = "display: flex;
@@ -103,11 +110,18 @@
 </div>
 
 
-  {% if error_message %}
+  
+
+  {% block messages %}
+  {% if messages %}
     <script>
-      alert('{{ error_message }}');
+      // JavaScript to show alert box with messages
+      window.onload = function() {
+        alert("{% for message in messages %}{{ message }}\n{% endfor %}");
+      };
     </script>
   {% endif %}
+{% endblock %}
 
   <script>
     {% for goal in goals %}

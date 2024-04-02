@@ -43,7 +43,7 @@ urlpatterns = [
     path('create_data/', views.add, name='create_data'),
     path("accounts/", include("accounts.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("", views.home_view, name="home"),
     path("form/", TemplateView.as_view(template_name="form.html"), name="form"),
     path("send_form/", views.send_form, name="send_form"),
     path("delete_account/", views.delete_account, name="delete_account"),
@@ -73,6 +73,7 @@ urlpatterns = [
     path("groups/group_settings/", views.group_settings, name="group_settings"),
     #path("e", views.group_settings, name="group_settings"),
     path('promote_to_admin/<int:userToPromote>/', views.promote_to_admin, name='promote_to_admin'),
+    path('remove_member/<int:userToRemove>/', views.remove_member, name='remove_member'),
 
     # Matches groups/<str:page>/
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),
@@ -96,6 +97,7 @@ urlpatterns = [
     path('verify_unique_category/', views.verify_unique_category, name='verify_unique_category'),
     path('generate_expenses_pie_chart/', views.generate_expenses_pie_chart, name='generate_expenses_pie_chart'),
     path('generate_income_pie_chart/', views.generate_income_pie_chart, name='generate_income_pie_chart'),
+    path('generate_income_line_chart/', views.generate_income_line_chart, name='generate_income_line_chart'),
 
     path('create_group_goal/', views.create_group_goal, name='create_group_goal_action'),
 
