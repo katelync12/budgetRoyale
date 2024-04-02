@@ -8,44 +8,43 @@
 </div>
 
 <div class="dropdown2" data-control="checkbox-dropdown">
-    <label class="dropdown-label">Filter by Category</label>
+  <label class="dropdown-label">Filter by Category</label>
+  
+  <div class="dropdown-list">
+    <button type="button" onclick="submitForm()">Submit</button>
+    <a href="#" data-toggle="check-all" class="dropdown-option">
+      Check All  
+    </a>
     
-    <div class="dropdown-list">
-      <button type="button" onclick="submitForm()">Submit</button>
-      <a href="#" data-toggle="check-all" class="dropdown-option">
-        Check All  
-      </a>
-      
-      <form id="category-form" method="GET" action="{% url 'view_transactions' %}">
-        {% for category in categories %}
-        <label class="dropdown-option">
-          <input type="checkbox" name="selected_categories" value="{{ category.category_id }}"{% if category.category_id in selected_categories %}checked{% endif %}>
-            {{ category.category_id }}
-        </label>
-        {% endfor %}
-    </form>
-    
-           
-    </div>
+    <form id="category-form" method="GET" action="{% url 'view_transactions' %}">
+      {% for category in categories %}
+      <label class="dropdown-option">
+        <input type="checkbox" name="selected_categories" value="{{ category.category_id }}" {% if category.category_id in selected_categories %}checked{% endif %}>
+          {{ category.category_id }}
+      </label>
+      {% endfor %}
+  </form>
+  
+         
   </div>
-
+</div>
 
 <div class="date-container" style="margin-top: 20px">
-    <div class="date-label">
-        <p>From</p>
-    </div>
-    <div class="date-input-container">
-        <input type="date" id="start_date" name="start_date" class="date-input" required>
-    </div>
-    <div class="date-label">
-        <p>to</p>
-    </div>
-    <div class="date-input-container">
-        <input type="date" id="end_date" name="end_date" class="date-input" required>
-    </div>
-    <div>
-        <button onclick="filterTransactions()">Submit</button>
-    </div>
+  <div class="date-label">
+      <p>From</p>
+  </div>
+  <div class="date-input-container">
+      <input type="date" id="start_date" name="start_date" class="date-input" value="{{ start_date }}" required>
+  </div>
+  <div class="date-label">
+      <p>to</p>
+  </div>
+  <div class="date-input-container">
+      <input type="date" id="end_date" name="end_date" class="date-input" value="{{ end_date }}" required>
+  </div>
+  <div>
+      <button onclick="filterTransactions()">Submit</button>
+  </div>
 </div>
 
 
@@ -74,7 +73,7 @@
     </table>
 </div>
 <div class="button-single" id="transactions-for-week-button">
-    <button onclick="filterTransactions()">View all Transactions</button>
+    <button onclick="clearSessionVariables()">View all Transactions</button>
 </div>
 
 <br></br>
@@ -117,7 +116,9 @@
     function editTransaction(transactionId) {
         window.location.href = `/edit_transaction/${transactionId}/`;
     }
-    
+    function clearSessionVariables() {
+        window.location.href = `{% url 'clear_session_filter' %}`;
+    }
     // Functionality for sending dates from filter transactions
     function filterTransactions() {
         const startDate = document.getElementById('start_date').value;
@@ -136,7 +137,7 @@
           return;
         }
 
-        const url = `{% url 'view_transactions' %}?start_date=${startDate}&end_date=${endDate}&view_all=True`;
+        const url = `{% url 'add_session_filter' %}?start_date=${startDate}&end_date=${endDate}&view_all=True`;
 
         window.location.href = url;
     }
@@ -151,7 +152,7 @@
           }
       });
       selected_categories = selected_categories.join(',');
-      const url = `{% url 'view_transactions' %}?selected_categories=${selected_categories}&view_all=True`;
+      const url = `{% url 'add_session_filter' %}?selected_categories=${selected_categories}&view_all=True`;
       window.location.href = url;
   }
   
@@ -247,7 +248,7 @@
         var checkboxesDropdowns = document.querySelectorAll('[data-control="checkbox-dropdown"]');
         for(var i = 0, length = checkboxesDropdowns.length; i < length; i++) {
           var dropdown = new CheckboxDropdown(checkboxesDropdowns[i]);
-          dropdown.onCheckAll(true);
+          //dropdown.onCheckAll(true);
         }   
       })(jQuery);
 </script>

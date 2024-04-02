@@ -29,19 +29,9 @@
   </script>
 {% endif %}
 
-<script>
-  function confirmDelete() {
-    // Display a confirmation dialog
-    var name = prompt("Enter your username again to confirm you would like to delete your account.", "");
-    
-    // If user confirms, proceed with deletion
-    if (name) {
-        // Redirect to the delete account URL
-        window.location.href = "{% url 'delete_account' %}?name=" + encodeURIComponent(name);
-    } else {
-        // Do nothing if user cancels
-        return false;
-    }
-}
-</script>
+
+{% include "components/color_picker.html" %}
+
+
+
 {% endblock %}
