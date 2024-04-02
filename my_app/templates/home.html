@@ -43,6 +43,18 @@
         {% endif %}
     </div>
   </div> 
+
+  <div class="container-line">
+    <div class="line_chart">
+        {% if screen_width > 500 %}
+            <h2 style="text-align: center">Expenses Over Time</h2>
+            <canvas id="expensesLineChart" width="800" height="400"></canvas>
+        {% else %}
+            <h2 style="text-align: center">Expenses Over Time</h2>
+            <canvas id="expensesLineChart" width="80%", height="70%"></canvas>
+        {% endif %}
+    </div>
+  </div> 
   
   <div class="container-line">
     <div class="pie_chart">
@@ -59,6 +71,7 @@
       var myChart;
       var myChart2;
       var myLineChart;
+      var myLineChart2;
       fetch('/generate_expenses_pie_chart/')
           .then(response => response.json())
           .then(data => {
@@ -154,7 +167,7 @@
                     datasets: [{
                         label: 'Income',
                         data: data.data,
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: '#219ebc',
                         borderWidth: 2,
                         fill: false
                     }]
@@ -181,15 +194,48 @@
                             }
                         }]
                     },
-                    tooltips: {
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-                                var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                                console.log("callback hit")
-                                return '$' + value.toFixed(2);
+                }
+            });
+        });
+
+        fetch('/generate_expenses_line_chart/')
+        .then(response => response.json())
+        .then(data => {
+            var ctx = document.getElementById('expensesLineChart').getContext('2d');
+            myLineChart2 = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Expense',
+                        data: data.data,
+                        borderColor: '#D98C26',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date'
+                            },
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            },
+                        }],
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Amount'
+                            },
+                            ticks: {
+                                suggestedMin: 0
                             }
-                        }
-                    }
+                        }]
+                    },
                 }
             });
         });
@@ -231,9 +277,15 @@
             fetch(`/generate_income_line_chart/?start_date=${startDate}&end_date=${endDate}`)
             .then(response => response.json())
             .then(data => {
-                console.log("before error")
                 var ctx = document.getElementById('incomeLineChart').getContext('2d');
                 updateData(myLineChart, data.labels, data.data);
+            });
+
+            fetch(`/generate_expenses_line_chart/?start_date=${startDate}&end_date=${endDate}`)
+            .then(response => response.json())
+            .then(data => {
+                var ctx = document.getElementById('expensesLineChart').getContext('2d');
+                updateData(myLineChart2, data.labels, data.data);
             });
         }
         

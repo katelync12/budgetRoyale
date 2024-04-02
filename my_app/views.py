@@ -939,6 +939,50 @@ def generate_income_line_chart(request):
 
     return JsonResponse({'labels': labels, 'data': data})
 
+def generate_expenses_line_chart(request):
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+
+    # Convert date strings to datetime objects
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
+
+    negative_transactions = Transactions.objects.filter(user=request.user, amount__lt=0)
+
+    if start_date:
+        negative_transactions = negative_transactions.filter(week__gte=start_date)
+    if end_date:
+        negative_transactions = negative_transactions.filter(week__lte=end_date)
+    if not start_date and not end_date:
+        end_date = timezone.now().date()
+        start_date = end_date - timedelta(days=7)
+        negative_transactions = negative_transactions.filter(week__range=[start_date, end_date])
+
+    aggregated_data = negative_transactions.values('week').annotate(total_amount=Sum('amount')).order_by('week')
+
+    for item in aggregated_data:    
+        item['total_amount'] *= -1
+
+    transaction_dict = {entry['week']: entry['total_amount'] for entry in aggregated_data}
+
+    # Fill in missing dates with zero amounts
+    if not end_date:
+        end_date = timezone.now().date()
+    if not start_date:
+        start_date = end_date - timedelta(days=7)
+    current_date = start_date
+    while current_date <= end_date:
+        if current_date not in transaction_dict:
+            transaction_dict[current_date] = 0
+        current_date += timedelta(days=1)
+
+    sorted_transaction_dict = sorted(transaction_dict.items())
+
+    labels = [date.strftime('%Y-%m-%d') for date, _ in sorted_transaction_dict]
+    data = [amount for _, amount in sorted_transaction_dict]
+
+    return JsonResponse({'labels': labels, 'data': data})
+
 @login_required
 def leave_group(request):
     # need to remove the entry in userjoingroup table    
