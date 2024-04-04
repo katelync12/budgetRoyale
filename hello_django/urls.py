@@ -102,4 +102,7 @@ urlpatterns = [
 
     path('create_group_goal/', views.create_group_goal, name='create_group_goal_action'),
 
+    path("edit_group_goal/", TemplateView.as_view(template_name="edit_group_goal.html"), name="edit_group_goal_view"),
+    path("edit_group_goal/<int:goal_id>/", views.edit_group_goal_action, name="edit_group_goal_action"),
+
 ]
