@@ -1199,3 +1199,51 @@ def remove_member(request, userToRemove):
     else:
         # Redirect to login page if user is not authenticated
         return redirect('login')
+
+def edit_group_goal_action(request, goal_id):
+    goal = get_object_or_404(GroupGoal, pk=goal_id)
+    if request.method == 'POST':
+        # Retrieve the form data from the POST request
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        amount = request.POST.get('amount')
+        name = request.POST.get('name')
+        #category_id = request.POST.get('type')
+        is_spending = request.POST.get("goal_type") == "on"
+        is_primary = request.POST.get("is_primary") == "on"
+        is_overall = request.POST.get("is_overall") == "on"
+    
+        print(is_primary)
+        print(is_overall)
+        if is_spending:
+            amount = str(float(amount) * -1)
+       # category = Category.objects.get(category_id=category_id)
+        goal.start_date = start_date
+        goal.end_date = end_date
+        goal.amount = amount
+        goal.goal_name = name
+        #goal.category= category
+        goal.is_spending = is_spending
+        goal.is_primary = is_primary
+        goal.is_overall = is_overall
+        goal.save()
+
+        return redirect('view_group_goals')
+    
+    # Retrieve all categories for populating the dropdown
+    user_id = request.user.id
+    current_user = request.user
+    
+    is_spending = goal.is_spending
+    if goal.is_spending:
+        goal.goal_amount = abs(goal.goal_amount)
+    
+    is_primary = goal.is_primary
+    is_overall = goal.is_overall
+    
+    
+    
+    
+    
+    
+    return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': is_primary, 'is_overall':is_overall, 'is_spending': goal.is_spending})

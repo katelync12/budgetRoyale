@@ -34,13 +34,16 @@
     </div>
     
     <div>
+        {% block editTr %}
         <select id="type" name="type" style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
             <optgroup label="Category Options">
+                {% block category %}
                 {% for category in categories %}
                     {% block categoryValue %}
                     <option value="{{ category.category_id }}" {% if category.category_id == transaction.category.category_id %} selected {% endif %}>{{ category.category_id }}</option>
                     {% endblock %}
                 {% endfor %}
+                {% endblock %}
             </optgroup>
         </select>
         <select id="type" name="group_goal" style="width: 70%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background-color: #E9ECFA; font-family: Verdana, Geneva, Tahoma, sans-serif">
@@ -51,12 +54,15 @@
                 {% endfor %}
             </optgroup>
         </select>
+        {% endblock %}
     </div>
 
     {% block dates %}
     <label for="date" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Date:</label>
     <input type="date" id="date" name="date" style="font-family: Verdana, Geneva, Tahoma, sans-serif; background-color: #E9ECFA; padding: 5px; border-radius: 5px; border: none;" required value="{{ transaction.week|date:'Y-m-d' }}">
     {% endblock %}
+
+    {% block primOver %} {% endblock %}
     <div>
         <label class="radio">
             <span class="savings-label">
