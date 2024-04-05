@@ -315,14 +315,37 @@ a.nav-headers.active {
     display: column;
     width: 100%;
   }
+  .container-dashboard-small {
+    display: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  .box-dashboard-small {
+    justify-content: center;
+    border: 2px solid #a1a5c1;
+    border-radius: 10px;
+    height: 150px;
+    width: 80%;
+    text-align: center;
+    padding: 5px;
+    margin: 10px;
+    margin-left: 35px;
+    margin-right: 30px;
+    margin-bottom: 20px;
+    background-color: #e2e3ed;
+  }
   .pie_chart {
     height: 100%;
-    width: 95%;
+    width: 90%;
     padding: 10px;
     margin-bottom: 30px;
     margin-right: 10px;
-    margin-left: 10px;
+    margin-left: 20px;
     border: 2px solid #a1a5c1;
+    border-radius: 10px;
+    background-color: #e2e3ed;
   }
 }
 @media screen and (min-width: 801px) {
@@ -331,6 +354,25 @@ a.nav-headers.active {
     justify-content: center;
     align-items: center;
     width: 100%;
+  }
+  .container-dashboard-small {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  .box-dashboard-small {
+    border: 2px solid #a1a5c1;
+    border-radius: 10px;
+    height: 150px;
+    width: 230px;
+    text-align: center;
+    padding: 5px;
+    margin: 10px;
+    margin-left: 30px;
+    margin-right: 30px;
+    background-color: #e2e3ed;
   }
   .pie_chart {
     height: 470px;
@@ -341,6 +383,8 @@ a.nav-headers.active {
     margin-top: 5px;
     margin-left: 10px;
     border: 2px solid #a1a5c1;
+    border-radius: 10px;
+    background-color: #e2e3ed;
   }
 }
 
@@ -627,6 +671,8 @@ a.nav-headers.active {
     margin-right: 10px;
     margin-left: 10px;
     border: 2px solid #a1a5c1;
+    border-radius: 10px;
+    background-color: #e2e3ed;
   }
 }
 
@@ -637,8 +683,10 @@ a.nav-headers.active {
     padding: 10px;
     margin-bottom: 30px;
     margin-right: 10px;
-    margin-left: 10px;
+    margin-left: 20px;
     border: 2px solid #a1a5c1;
+    border-radius: 10px;
+    background-color: #e2e3ed;
   }
 }
 
