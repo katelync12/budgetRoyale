@@ -90,7 +90,7 @@
       <!-- Edit button -->
       <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editGroupGoal({{ goal.id }})"></i>
       <!-- Delete button -->
-      <i class="fas fa-trash-alt delete-personal-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
+      <i class="fas fa-trash-alt delete-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
     </div>
     {% else %}
     <h3 style="text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Goal name: {{ goal.goal_name }}</h3>
@@ -98,7 +98,7 @@
       <!-- Edit button -->
       <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editGroupGoal({{ goal.id }})"></i>
       <!-- Delete button -->
-      <i class="fas fa-trash-alt delete-personal-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
+      <i class="fas fa-trash-alt delete-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
     </div>
     {% endif %}
     <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Total amount: {{ goal.amount }}</h5>
@@ -124,16 +124,7 @@
 
   
 
-  {% block messages %}
-  {% if messages %}
-    <script>
-      // JavaScript to show alert box with messages
-      window.onload = function() {
-        alert("{% for message in messages %}{{ message }}\n{% endfor %}");
-      };
-    </script>
-  {% endif %}
-{% endblock %}
+  
 
   <script>
     {% for goal in goals %}
@@ -204,7 +195,7 @@
     {% endfor %}
     
   </script>
-</body>
+
 
 <script>
   function editGroupGoal(goalId) {
@@ -212,4 +203,42 @@
     }
 </script>
 
+<script>
+  document.querySelectorAll('.delete-goal').forEach(item => {
+    item.addEventListener('click', event => {
+      const goalId = event.target.dataset.goalId;
+      const goalName = event.target.dataset.goalName;
+
+      // Prompt user for confirmation
+      const isConfirmed = confirm(`Are you sure you want to delete ${goalName} goal?`);
+      if (!isConfirmed) {
+        return; // Abort deletion if user cancels
+      }
+
+      fetch(`/delete_group_goal/${goalId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          // Remove the goal container from the page
+          event.target.closest('.goal-container').remove();
+        } else {
+          console.error('Error deleting goal:', data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error deleting goal:', error);
+      });
+    });
+  });
+
+  </script>
+</body>
+
 {% endblock %}
+
+
