@@ -1211,10 +1211,15 @@ def edit_group_goal_action(request, goal_id):
         #category_id = request.POST.get('type')
         is_spending = request.POST.get("goal_type") == "on"
         is_primary = request.POST.get("is_primary") == "on"
+        if is_primary and GroupGoal.objects.filter(is_primary=True).exclude(pk=goal_id).exists():
+            # Another primary goal already exists, show alert and redirect back
+            messages.error(request, 'Another primary goal already exists. You cannot set this goal as primary.')
+            return redirect('edit_group_goal_action')
+            #return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': goal.is_primary, 'is_overall': goal.is_overall, 'is_spending': goal.is_spending, 'goal_id': goal_id})
+            #messages.error(request, 'Another primary goal already exists. You cannot set this goal as primary.')
+            #return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': goal.is_primary, 'is_overall': goal.is_overall, 'is_spending': goal.is_spending})
         is_overall = request.POST.get("is_overall") == "on"
     
-        print(is_primary)
-        print(is_overall)
         if is_spending:
             amount = str(float(amount) * -1)
        # category = Category.objects.get(category_id=category_id)
@@ -1228,6 +1233,8 @@ def edit_group_goal_action(request, goal_id):
         goal.is_overall = is_overall
         goal.save()
 
+        #messages.success(request, 'Another primary goal already exists. You cannot set this goal as primary.')
+        #return render(request, 'view_group_goals', {'goal': goal, 'is_primary': goal.is_primary, 'is_overall': goal.is_overall, 'is_spending': goal.is_spending, 'error_message': '', 'goal_id': goal_id})
         return redirect('view_group_goals')
     
     # Retrieve all categories for populating the dropdown
@@ -1236,7 +1243,7 @@ def edit_group_goal_action(request, goal_id):
     
     is_spending = goal.is_spending
     if goal.is_spending:
-        goal.goal_amount = abs(goal.goal_amount)
+        goal.amount = abs(goal.amount)
     
     is_primary = goal.is_primary
     is_overall = goal.is_overall
@@ -1247,3 +1254,11 @@ def edit_group_goal_action(request, goal_id):
     
     
     return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': is_primary, 'is_overall':is_overall, 'is_spending': goal.is_spending})
+
+def delete_group_goal(request, goal_id):
+    if request.method == 'POST':
+        goal = GroupGoal.objects.get(pk=goal_id)
+        goal.delete()
+        return JsonResponse({'message': 'Goal deleted successfully.'})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)

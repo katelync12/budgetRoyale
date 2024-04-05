@@ -2,6 +2,9 @@
 
 {% block mainTitle %}Edit Group Goal{% endblock %}
 
+
+
+
 {% block action %}
     {% url 'edit_group_goal_action' goal.id %}
 {% endblock %}
@@ -80,7 +83,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
 {% block toggleName1 %}"goal_type"{% endblock %}
 {% block toggleName2 %}"goal_type"{% endblock %}
 
 {% block back %}onclick="window.location.href='{% url 'view_group_goals' %}'"{% endblock %}
+
+{% block messages %}
+  {% if messages %}
+    <script>
+      // JavaScript to show alert box with messages
+      window.onload = function() {
+        alert("{% for message in messages %}{{ message }}\n{% endfor %}");
+      };
+    </script>
+  {% endif %}
+{% endblock %}
