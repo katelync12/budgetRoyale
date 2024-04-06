@@ -1,13 +1,14 @@
 {% extends "base.html" %} 
 
 {% block content %}
-<div style="text-align: center;">
-  <div style="display: inline-block; background-color: white; padding: 20px; box-shadow: 0px 0px 10px #5B5FC5; border-radius: 10px;">
+<div class = "main-elements" >
+  <div class = "links" >
     <p><a href="{% url 'create_data' %}" style="text-decoration: none; color: #5B5FC5; font-family: Verdana, Geneva, Tahoma, sans-serif;">Password Change</a></p>
     <p><a href="{% url 'view_transactions' %}" style="text-decoration: none; color: #5B5FC5; font-family: Verdana, Geneva, Tahoma, sans-serif;">Transactions</a></p>
     <p><a href="{% url 'form' %}" style="text-decoration: none; color: #5B5FC5; font-family: Verdana, Geneva, Tahoma, sans-serif;">Form</a></p>
     <p><a href="{% url 'groups' %}" style="text-decoration: none; color: #5B5FC5; font-family: Verdana, Geneva, Tahoma, sans-serif;">Groups</a></p>
   </div>
+  {% include "components/color_picker.html" %}
 </div>
 
 <button type="submit" onclick="confirmDelete()" style="background-color: #5B5FC5; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif; cursor: pointer; display: block; margin: 20px auto;">Delete Account</button> 
@@ -17,8 +18,32 @@
   <button type="submit" style="background-color: #ffffff; color: #5B5FC5; border: none; padding: 10px 20px; border-radius: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif; cursor: pointer; display: block; margin: 20px auto;">Log Out</button>
 </form>
 
+<style>
+  .links {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    max-width: 300px;
+    margin: 20px;
+    background-color: white;
+    padding: 20px; 
+    box-shadow: 0px 0px 10px #5B5FC5;
+    border-radius: 10px;
+    max-height: 200px;
+  }
+  .main-elements {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin: 20px;
+  }
+</style>
 {% if messages %}
   <script>
+    
     // Wait for the DOM to be fully loaded before displaying alerts
     document.addEventListener("DOMContentLoaded", function() {
       // Display messages as alerts
@@ -28,10 +53,4 @@
     });
   </script>
 {% endif %}
-
-
-{% include "components/color_picker.html" %}
-
-
-
 {% endblock %}
