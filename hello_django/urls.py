@@ -90,7 +90,7 @@ urlpatterns = [
     path("edit_transaction/", TemplateView.as_view(template_name="edit_transaction.html"), name="edit_transactions_view"),
     path("edit_transaction/<int:transaction_id>/", views.edit_transaction_action, name="edit_transaction_action"),
     path('update_profile_color/', views.update_profile_color, name='update_profile_color'),
-    path("settings/", TemplateView.as_view(template_name="profile_settings.html"), name="profile_settings"),
+    path("settings/", views.profile_settings, name="profile_settings"),
     path("transactions/", TemplateView.as_view(template_name="view_transactions.html"), name="view_transactions"),
     path("transactions/create/", views.create_transaction_page, name="create_transactions"),
     path('login/', views.login_view, name='login'),
