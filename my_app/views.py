@@ -1262,3 +1262,19 @@ def delete_group_goal(request, goal_id):
         return JsonResponse({'message': 'Goal deleted successfully.'})
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+@login_required
+def update_toggle(request):
+    if request.method == 'POST':
+        print("testing uwu")
+        # data = json.loads(request.body)
+        # isChecked = data['isChecked']
+        
+        # # Update database field based on isChecked value
+        # # For example, if you have a model named YourModel with a field named 'toggle_field':
+        # UserProfile.objects.update(toggle_field=isChecked)
+
+        return JsonResponse({'message': 'Toggle updated successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+    
