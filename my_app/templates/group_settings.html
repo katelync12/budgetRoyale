@@ -73,6 +73,12 @@
     </table>
   </div>
 
+  {% load static %}
+  <label class="switch">
+    <input type="checkbox" id="toggleButton">
+    <span class="slider"></span>
+  </label>
+
 
   {% if user != admin %}
     <form id="leave-group-form" style="display: flex; justify-content: center;" action="{% url 'leave_group' %}" method="post">
