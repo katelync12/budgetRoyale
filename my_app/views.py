@@ -22,10 +22,48 @@ from django.http import HttpResponseRedirect
 from django.db.models import Sum
 import json
 from django_user_agents.utils import get_user_agent
-
+import colorsys
+#HELPER, DO NOT ADD LOGIN REQUIRED
+def hex_to_rgb(hex_color):
+    # Remove '#' symbol if present
+    hex_color = hex_color.lstrip('#')
+    # Convert hex to RGB
+    r = int(hex_color[0:2], 16)
+    g = int(hex_color[2:4], 16)
+    b = int(hex_color[4:6], 16)
+    return r, g, b
 # def logout_view(request):
 #     logout(request)
 #     return redirect('registration/login.html')
+@login_required
+def profile_settings(request):
+    print("profile_settings")
+    user = request.user
+    user_profile = UserProfile.objects.filter(user=user).first()
+    color = user_profile.color if user_profile and user_profile.color else ''
+    
+    # Calculate hue value
+    hue_value = 0
+    val = "0%"
+    if color:
+        # Parse the color to get RGB components
+        r, g, b = hex_to_rgb(color)
+
+        # Convert RGB to HSL
+        h, s, l = colorsys.rgb_to_hls(r / 255.0, g / 255.0, b / 255.0)
+
+        # Convert hue to degrees
+        hue_value = int(h * 360)
+        val = str((hue_value / 360) * 100) + '%'  # Calculate the hue value as a percentage
+    context = {
+        'color': color,
+        'val': val,
+        'hue': hue_value
+    }
+    print(color)
+    print(hue_value)
+    print(val)
+    return render(request, 'profile_settings.html', context)
 @login_required
 def clear_session_filter(request):
     request.session['selected_categories'] = []
