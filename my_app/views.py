@@ -145,6 +145,19 @@ def group_leaderboard(request):
         return redirect('group_settings')
     # Iterate through each user
     for user_group in leaderboard_users:
+        # skip if user has opted out
+        try:
+            profile = UserProfile.objects.get(user=user_group.user)
+            if profile != None and not profile.opt_in:
+                if request.user == user_group.user:
+                    opted = False
+                continue
+            else:
+                opted = True
+        except:
+            if request.user == user_group.user:
+                opted = True
+
         # Initialize variables to store transaction amounts for savings and spendings
         total_score = 0
         transactions = []
@@ -184,6 +197,7 @@ def group_leaderboard(request):
     
     context = {
         'leaderboard': leaderboard,
+        'opted': opted,
         'primary_group_goal': primary_group_goal.goal_name  # Pass the primary group goal's name in the context
     }
     return render(request, 'leaderboard.html', context)
