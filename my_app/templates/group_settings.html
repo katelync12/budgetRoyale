@@ -74,8 +74,9 @@
   </div>
 
   {% load static %}
+  Opt in for competetive features
   <label class="switch">
-    <input type="checkbox" id="toggleButton">
+    <input type="checkbox" id="toggleButton" {% comment %}{% if profile.opt_in %}checked{% endif %}{% endcomment %}>
     <span class="slider"></span>
   </label>
 
@@ -126,31 +127,34 @@
     }
   }
 
-  document.getElementById("toggleButton").addEventListener("change", function() {
-      var isChecked = this.checked;
-      var csrftoken = getCookie('csrftoken'); // Function to get CSRF token
+  document.addEventListener("DOMContentLoaded", function() {
+    const toggleButton = document.getElementById("toggleButton");
 
-      // Send AJAX request
-      fetch('/update_toggle/', {
-          method: 'POST',
-          headers: {
-              'X-CSRFToken': csrftoken,
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-              'isChecked': isChecked
-          })
-      }).then(response => {
-          if (!response.ok) {
-              throw new Error('Network response was not ok');
-          }
-          return response.json();
-      }).then(data => {
-          console.log(data); // Log response from server
-      }).catch(error => {
-          console.error('There was a problem with your fetch operation:', error);
-      });
-  });
+    toggleButton.addEventListener("change", function() {
+        const isChecked = this.checked;
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch('/update_toggle/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'isChecked': isChecked
+            })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data); // Log response from server
+        }).catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        });
+    });
+});
 
 </script>
   

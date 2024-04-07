@@ -210,13 +210,16 @@ def group_settings(request):
     for ujg in members_id:
         members.append(ujg.user)
     # Pass the user_groups_info context variable to the template
+    # profile = UserProfile.objects.get(user=request.user)
     context = {
         'admin': admin,
         'user_groups_info': user_groups_info,
         'group': group_add,
-        'members': members
+        'members': members,
+        # 'profile': profile,
     }
-    print(context)
+    # print(context)
+
     # Render the template with the context
     return render(request, 'group_settings.html', context)
 
@@ -1303,8 +1306,8 @@ def delete_group_goal(request, goal_id):
 
 @login_required
 def update_toggle(request):
+
     if request.method == 'POST':
-        print("testing uwu")
         # data = json.loads(request.body)
         # isChecked = data['isChecked']
         
