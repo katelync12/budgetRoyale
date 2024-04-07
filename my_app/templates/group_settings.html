@@ -76,7 +76,7 @@
   {% load static %}
   Opt in for competetive features
   <label class="switch">
-    <input type="checkbox" id="toggleButton" {% comment %}{% if profile.opt_in %}checked{% endif %}{% endcomment %}>
+    <input type="checkbox" id="toggleButton" {% if profile == None or profile.opt_in %}checked{% endif %}>
     <span class="slider"></span>
   </label>
 

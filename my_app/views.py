@@ -210,13 +210,17 @@ def group_settings(request):
     for ujg in members_id:
         members.append(ujg.user)
     # Pass the user_groups_info context variable to the template
-    # profile = UserProfile.objects.get(user=request.user)
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+    except:
+        profile = None
+
     context = {
         'admin': admin,
         'user_groups_info': user_groups_info,
         'group': group_add,
         'members': members,
-        # 'profile': profile,
+        'profile': profile,
     }
     # print(context)
 
@@ -1308,12 +1312,16 @@ def delete_group_goal(request, goal_id):
 def update_toggle(request):
 
     if request.method == 'POST':
-        # data = json.loads(request.body)
-        # isChecked = data['isChecked']
+        data = json.loads(request.body)
+        isChecked = data['isChecked']
         
-        # # Update database field based on isChecked value
-        # # For example, if you have a model named YourModel with a field named 'toggle_field':
-        # UserProfile.objects.update(toggle_field=isChecked)
+        try:
+            profile = UserProfile.objects.get(user=request.user)
+        except:
+            profile = UserProfile.objects.create(user=request.user)
+        
+        profile.opt_in = isChecked
+        profile.save()
 
         return JsonResponse({'message': 'Toggle updated successfully'})
     else:
