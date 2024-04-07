@@ -23,6 +23,8 @@ class Category(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     color = models.CharField(max_length=7)
+    opt_in = models.BooleanField(default=True)
+    streaks = models.IntegerField(default=0)
 
 class UserJoinCategory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
