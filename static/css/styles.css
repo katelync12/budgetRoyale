@@ -690,6 +690,11 @@ a.nav-headers.active {
   }
 }
 
+.dashboard-small-header {
+  margin-top: 10px;
+  font-size: 1.5em;
+  font-weight: 500;
+}
 /* start styling of toggle competition */
 
 .switch {
@@ -746,3 +751,8 @@ input:checked + .slider:before {
 }
 
 /* end styling of toggle competition */
+
+.dashboard-small-text {
+  font-weight: 600;
+  font-size: 2.7em;
+}
