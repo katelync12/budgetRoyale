@@ -13,7 +13,6 @@
                 <span class="player-name" style="color: white;">{{ player.name }}</span>
             </div>
             <div class="right-content">
-                
                 <div class="icon-container" style="margin-right: 10px;">
                     {% if forloop.first %}
                         <img src="{% static 'images/star.png' %}" alt="Star" class="icon">
@@ -25,6 +24,14 @@
             </div>
         </div>
     {% endfor %}
+
+    {% if not opted %}
+        <div class="opted_out_text">
+            <div>You are currently opted out of competition</div>
+            <div>Go to group settings to opt back in</div>
+        </div>
+    {% endif %}
+
 </div>
 
 <style>
@@ -60,6 +67,14 @@
         width: auto; /* Set width of the icon */
         height: 30px; /* Maintain aspect ratio */
     }
+    /* Style for the opted out text */
+    .opted_out_text {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+      }
+      
 </style>
 
 {% endblock %}

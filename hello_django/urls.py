@@ -75,6 +75,8 @@ urlpatterns = [
     path('promote_to_admin/<int:userToPromote>/', views.promote_to_admin, name='promote_to_admin'),
     path('remove_member/<int:userToRemove>/', views.remove_member, name='remove_member'),
 
+    path('update_toggle/', views.update_toggle, name='update_toggle'),
+
     # Matches groups/<str:page>/
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),
     path('groups/group_goals/create/', views.create_group_goal_page, name="create_group_goal"),

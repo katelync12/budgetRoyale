@@ -73,6 +73,13 @@
     </table>
   </div>
 
+  {% load static %}
+  Opt in for competetive features
+  <label class="switch">
+    <input type="checkbox" id="toggleButton" {% if profile == None or profile.opt_in %}checked{% endif %}>
+    <span class="slider"></span>
+  </label>
+
 
   {% if user != admin %}
     <form id="leave-group-form" style="display: flex; justify-content: center;" action="{% url 'leave_group' %}" method="post">
@@ -119,6 +126,36 @@
       document.getElementById("remove-member-form"+mem).submit();
     }
   }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const toggleButton = document.getElementById("toggleButton");
+
+    toggleButton.addEventListener("change", function() {
+        const isChecked = this.checked;
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch('/update_toggle/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'isChecked': isChecked
+            })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data); // Log response from server
+        }).catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        });
+    });
+});
+
 </script>
   
 {% comment %} {% else %}

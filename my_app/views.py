@@ -145,6 +145,19 @@ def group_leaderboard(request):
         return redirect('group_settings')
     # Iterate through each user
     for user_group in leaderboard_users:
+        # skip if user has opted out
+        try:
+            profile = UserProfile.objects.get(user=user_group.user)
+            if profile != None and not profile.opt_in:
+                if request.user == user_group.user:
+                    opted = False
+                continue
+            else:
+                opted = True
+        except:
+            if request.user == user_group.user:
+                opted = True
+
         # Initialize variables to store transaction amounts for savings and spendings
         total_score = 0
         transactions = []
@@ -184,6 +197,7 @@ def group_leaderboard(request):
     
     context = {
         'leaderboard': leaderboard,
+        'opted': opted,
         'primary_group_goal': primary_group_goal.goal_name  # Pass the primary group goal's name in the context
     }
     return render(request, 'leaderboard.html', context)
@@ -210,13 +224,20 @@ def group_settings(request):
     for ujg in members_id:
         members.append(ujg.user)
     # Pass the user_groups_info context variable to the template
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+    except:
+        profile = None
+
     context = {
         'admin': admin,
         'user_groups_info': user_groups_info,
         'group': group_add,
-        'members': members
+        'members': members,
+        'profile': profile,
     }
-    print(context)
+    # print(context)
+
     # Render the template with the context
     return render(request, 'group_settings.html', context)
 
@@ -585,6 +606,8 @@ def delete_transaction(request, transaction_id):
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
     
 def home_view(request):
+    current_user = request.user
+
     user_agent = get_user_agent(request)
     screen_width = None
 
@@ -595,7 +618,40 @@ def home_view(request):
     else:
         screen_width = 800
 
-    return render(request, 'home.html', {'screen_width': screen_width})
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+
+    positive_transactions = Transactions.objects.filter(user=current_user, amount__gte=0)
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
+
+    positive_transactions = Transactions.objects.filter(user=request.user, amount__gt=0)
+    negative_transactions = Transactions.objects.filter(user=request.user, amount__lt=0)
+
+    if start_date:
+        positive_transactions = positive_transactions.filter(week__gte=start_date)
+        negative_transactions = negative_transactions.filter(week__gte=start_date)
+    if end_date:
+        positive_transactions = positive_transactions.filter(week__lte=end_date)
+        negative_transactions = negative_transactions.filter(week__lte=end_date)
+    if not start_date and not end_date:
+        end_date = timezone.now().date()
+        start_date = end_date - timedelta(days=7)
+        positive_transactions = positive_transactions.filter(week__range=[start_date, end_date])
+        negative_transactions = negative_transactions.filter(week__range=[start_date, end_date])
+        
+    positive_sum = 0
+    for action in positive_transactions:
+        positive_sum += action.amount
+
+    negative_sum = 0
+    for action in negative_transactions:
+        negative_sum += action.amount * -1
+
+    positive_sum_str = "${:.2f}".format(positive_sum)
+    negative_sum_str = "${:.2f}".format(negative_sum)
+
+    return render(request, 'home.html', {'screen_width': screen_width, 'positive_sum': positive_sum_str, 'negative_sum': negative_sum_str})
     
 @login_required
 def check_user_group(request, page):
@@ -1299,3 +1355,23 @@ def delete_group_goal(request, goal_id):
         return JsonResponse({'message': 'Goal deleted successfully.'})
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+@login_required
+def update_toggle(request):
+
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        isChecked = data['isChecked']
+        
+        try:
+            profile = UserProfile.objects.get(user=request.user)
+        except:
+            profile = UserProfile.objects.create(user=request.user)
+        
+        profile.opt_in = isChecked
+        profile.save()
+
+        return JsonResponse({'message': 'Toggle updated successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+    
