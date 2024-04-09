@@ -24,6 +24,67 @@ import json
 from django_user_agents.utils import get_user_agent
 import colorsys
 #HELPER, DO NOT ADD LOGIN REQUIRED
+def calculate_weekly_savings(user):
+    # Get the start and end date for the past week
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=7)
+    
+    # Query transactions for the user within the past week with positive amounts
+    weekly_transactions = Transactions.objects.filter(user=user, 
+                                                      amount__gt=0, 
+                                                      week__range=(start_date, end_date))  
+    # Calculate total savings
+    total_savings = sum(transaction.amount for transaction in weekly_transactions)
+    
+    return total_savings
+
+def calculate_weekly_spendings(user):
+    # Get the start and end date for the past week
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=7)
+    
+    # Query transactions for the user within the past week with positive amounts
+    weekly_transactions = Transactions.objects.filter(user=user, 
+                                                      amount__lt=0, 
+                                                      week__range=(start_date, end_date))  
+    # Calculate total savings
+    total_savings = sum(transaction.amount for transaction in weekly_transactions)
+    
+    return total_savings * -1
+
+def send_subscription_email(user_id):
+    try:
+        # Retrieve the user object using the user_id
+        user = User.objects.get(id=user_id)
+        # Get the email address of the user
+        user_email = user.email
+
+        # Determine if the user is associated with any groups
+        user_groups = UserJoinGroup.objects.filter(user=user)
+        group_message = "You are not currently in any groups. You should consider joining a group to improve your budgeting experience."
+        if user_groups.exists():
+            # If the user is in at least one group, get the name of the first group
+            first_group_name = user_groups.first().group.name
+            group_message = f"You are currently in a group named '{first_group_name}'."
+
+
+        # Send email to the user's email address
+        send_mail(
+            f"Hello {user.username}",
+            f"This is your weekly subscription email. Here are some insights into your spending and savings this week:\n"
+            f"You saved: ${calculate_weekly_savings(user)}\n"
+            f"You spent: ${calculate_weekly_spendings(user)}\n\n"
+            f"{group_message}\n\n"
+            "We hope you enjoy your week. Keep budgeting!\n"
+            "Best, Budget Royale Team",
+            settings.EMAIL_HOST_USER,
+            [user_email],  # Sending email to the user's email address
+            fail_silently=False
+        )
+    except User.DoesNotExist:
+        # Handle the case where the user does not exist
+        # You can log this or perform any other necessary actions
+        pass  # Or raise an appropriate exception
 def hex_to_rgb(hex_color):
     # Remove '#' symbol if present
     hex_color = hex_color.lstrip('#')
@@ -32,9 +93,58 @@ def hex_to_rgb(hex_color):
     g = int(hex_color[2:4], 16)
     b = int(hex_color[4:6], 16)
     return r, g, b
-# def logout_view(request):
-#     logout(request)
-#     return redirect('registration/login.html')
+
+@login_required
+def spendings_breakdown(request):
+    #DEFAULT DATES
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=7)
+    print("spendings_breakdown")
+
+    user = request.user
+
+    leaderboard = []
+    
+    # Get all group IDs that the user is a part of
+    user_groups = UserJoinGroup.objects.filter(user=user).values_list('group', flat=True)
+    if not user_groups:
+        return redirect('groups')
+    # Get all users in the same groups as the current user
+    leaderboard_users = UserJoinGroup.objects.filter(group__in=user_groups).select_related('user')
+    print(leaderboard_users)
+    # Iterate through each user
+    for user_group in leaderboard_users:
+        print(str(user_group.user) + "is user")
+        print("go wow wow")
+        transactions = Transactions.objects.filter(
+        user=user_group.user,
+        amount__lt=0,
+        week__range=(start_date, end_date))
+
+# Calculate total score as the sum of negative amounts
+        total_score = 0
+
+# If total_score is None (i.e., no transactions found), set it to 0
+        if transactions is not None:
+            total_score = transactions.aggregate(total_score=Sum('amount'))['total_score'] * -1
+
+        color = None
+        try:
+            user_profile = UserProfile.objects.get(user=user_group.user)
+            color = user_profile.color  # Get user's color from UserProfile
+        except:
+            pass
+        # Append user's name and total score to the leaderboard
+        leaderboard.append({'name': user_group.user.username, 'score': total_score, 'color': color})
+    
+    # Sort the leaderboard by score in descending order
+    leaderboard.sort(key=lambda x: x['score'], reverse=True)
+    
+    context = {
+        'leaderboard': leaderboard,  # Pass the primary group goal's name in the context
+    }
+    return render(request, 'spendings_breakdown.html', context)
+
 @login_required
 def profile_settings(request):
     print("profile_settings")
@@ -58,7 +168,8 @@ def profile_settings(request):
     context = {
         'color': color,
         'val': val,
-        'hue': hue_value
+        'hue': hue_value,
+        'subscribed': SubscriberList.objects.filter(user=user).exists()
     }
     print(color)
     print(hue_value)
@@ -98,7 +209,7 @@ def update_profile_color(request):
         # Get or create UserProfile for the user
         user_profile, created = UserProfile.objects.get_or_create(user=user)
         
-        # Update color
+        # Update color and save the UserProfile object
         user_profile.color = color
         user_profile.save()
         
@@ -1433,3 +1544,37 @@ def update_toggle(request):
     else:
         return JsonResponse({'error': 'Invalid request method'})
     
+@login_required
+def update_subscribe(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        isChecked = data.get('isChecked', False)  # Default to False if not provided
+
+        # Get the current user
+        user = request.user
+        if isChecked:
+            # Check if the user is already subscribed
+            if not SubscriberList.objects.filter(user=user).exists():
+                # If not subscribed, add the user to the SubscriberList
+                SubscriberList.objects.create(user=user)
+            send_mail(
+                f"Subscribed to Weekly Subscription Email",
+                "You have successfully subscribed to our weekly email updates!",
+                settings.EMAIL_HOST_USER,
+                [user.email],  # Sending email to the user's email address
+                fail_silently=False
+                )
+        else:
+            # If isChecked is False, remove the user from SubscriberList if they are on it
+            SubscriberList.objects.filter(user=user).delete()
+            send_mail(
+                f"Unsubscribed from Weekly Subscription Email",
+                "You have successfully unsubscribed from our weekly email updates!",
+                settings.EMAIL_HOST_USER,
+                [user.email],  # Sending email to the user's email address
+                fail_silently=False
+                )
+
+        return JsonResponse({'message': 'Subscription preferences updated successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})

@@ -12,7 +12,7 @@ class Group(models.Model):
     password = models.CharField(max_length=255)
     admin_user = models.ForeignKey(User, on_delete=models.CASCADE)
     
-
+ 
 class UserJoinGroup(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
@@ -24,11 +24,11 @@ class SubscriberList(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    color = models.CharField(max_length=7)
-    opt_in = models.BooleanField(default=True)
-    streaks = models.IntegerField(default=0)
-    last_login = models.DateField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    color = models.CharField(max_length=7, null=True, blank=True)
+    opt_in = models.BooleanField(default=True, null=True, blank=True)
+    streaks = models.IntegerField(default=0, null=True, blank=True)
+    last_login = models.DateField(null=True, blank=True)
 
 class UserJoinCategory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

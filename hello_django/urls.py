@@ -31,6 +31,7 @@ urlpatterns = [
 
     # path("", include("my_app.urls")),
     # path('edit_transaction/', views.edit_transaction, name='edit_transaction_action'),
+    path('rr/', views.spendings_breakdown, name="testspending"),
     path('create_transaction/', views.create_transaction, name='create_transaction_action'),
     path('create_group/', views.create_group, name='create_group_action'),
     # path('groups/', views.groups, name='search_group_action'),
@@ -76,6 +77,7 @@ urlpatterns = [
     path('remove_member/<int:userToRemove>/', views.remove_member, name='remove_member'),
 
     path('update_toggle/', views.update_toggle, name='update_toggle'),
+    path('update_subscribe/', views.update_subscribe, name='update_subscribe'),
 
     # Matches groups/<str:page>/
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),

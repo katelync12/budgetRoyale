@@ -1,12 +1,24 @@
 {% load static %}
-  Opt in for competetive features
+<div class="container1" style=" padding: 20px; box-shadow: 0px 0px 10px #5B5FC5; border-radius: 10px; background: white">
+  <p style="text-decoration: none; color: #5B5FC5; font-family: Verdana, Geneva, Tahoma, sans-serif;">Weekly Email Subscriptions<p>
   <label class="switch">
-    <input type="checkbox" id="toggleButton" {% if profile == None or profile.opt_in %}checked{% endif %}>
+    <input type="checkbox" id="toggleButton" {% if subscribed %}checked{% endif %}>
     <span class="slider round"></span>
   </label>
-
+</div>
+ 
   <style>
-    
+    .container1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-height: 200px; /* Adjust as needed */
+        max-width: 200px;
+        margin: 20px;
+        text-align: center;
+        
+      }
     .switch {
       position: relative;
       display: inline-block;
@@ -22,19 +34,19 @@
     }
     
     /* The slider */
-    .slider {
+    .switch .slider {
       position: absolute;
       cursor: pointer;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: greenyellow;
+      background-color: gray;
       -webkit-transition: .4s;
       transition: .4s;
     }
     
-    .slider:before {
+    .switch .slider:before {
       position: absolute;
       content: "";
       height: 26px;
@@ -50,7 +62,7 @@
       background-color: #2196F3;
     }
     
-    input:focus + .slider {
+    input:focus +  .slider {
       box-shadow: 0 0 1px #2196F3;
     }
     
@@ -61,11 +73,11 @@
     }
     
     /* Rounded sliders */
-    .slider.round {
+    .switch .slider.round {
       border-radius: 34px;
     }
     
-    .slider.round:before {
+    .switch .slider.round:before {
       border-radius: 50%;
     }
     
