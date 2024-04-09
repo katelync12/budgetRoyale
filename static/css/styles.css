@@ -690,3 +690,13 @@ a.nav-headers.active {
   }
 }
 
+.dashboard-small-text {
+  font-weight: 600;
+  font-size: 2.7em;
+}
+
+.dashboard-small-header {
+  margin-top: 10px;
+  font-size: 1.5em;
+  font-weight: 500;
+}

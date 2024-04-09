@@ -116,6 +116,35 @@ def create_transaction(username, password):
         return "Passed"
     except:
         return "Failed"
+    
+def create_transaction_large(username, password):
+    try:
+        time.sleep(buffer_constant)
+        login(username, password)
+        url = "http://127.0.0.1:8000/transactions/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
+        button.click()
+        time.sleep(buffer_constant)
+        transaction_name = driver.find_element("xpath", "//input[@placeholder='Transaction Name']")
+        transaction_name.send_keys("Testing Transaction")
+        amount = driver.find_element("xpath", "//input[@placeholder='Amount']")
+        amount.send_keys("1200")
+        date = driver.find_element(By.ID, "date")
+        date.send_keys("03/30/2024")
+        dropdown = driver.find_element(By.ID, "type")
+        dropdown.click()
+        option_transportation = driver.find_element("xpath", "//option[text()='Transportation']")
+        option_transportation.click()
+        submit = driver.find_element("xpath", '//button[contains(text(), "Submit")]')
+        submit.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Testing Transaction")]')
+        return "Passed"
+    except:
+        return "Failed"
+    
 def create_account(username, password):
     try:
         url = "http://127.0.0.1:8000/accounts/signup/"
@@ -1073,29 +1102,32 @@ def unselect_category(username, password):
         return "Failed"
     
 def select_groceries_category(username, password):
-    login(username, password)
-    button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-    button.click()
-    button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//label[@class='dropdown-label' and text()='Filter by Category']")
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//a[@href='#' and @data-toggle='check-all' and @class='dropdown-option' and text()='Uncheck All']")
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Groceries']")
-    button.click()
-    button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
-    button.click()
-    time.sleep(buffer_constant)
-    check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
     try:
-        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
-        return "Failed"
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//label[@class='dropdown-label' and text()='Filter by Category']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//a[@href='#' and @data-toggle='check-all' and @class='dropdown-option' and text()='Uncheck All']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Groceries']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            return "Failed"
+        except:
+            return "Passed"
     except:
-        return "Passed"
+        return "Failed"
     
 def search_group_leaderboard(username, password):
     try:
@@ -1465,7 +1497,6 @@ def member_leave_group(username, password):
     except:
         return "Failed"
 
-
 def leaderboard_spending_calculation(username, password):
     try:
         login(username, password)
@@ -1487,6 +1518,77 @@ def leaderboard_spending_calculation(username, password):
         return "Failed"
     except:
         return "Failed"
+    
+def spendings_total_zero(username, password):
+    try:
+        login(username, password)
+        expenses_total_element = driver.find_element(By.ID, "expenses_total")
+        expenses_total_text = expenses_total_element.text
+        if expenses_total_text == "$0.00":
+            return "Passed"
+        else:
+            return "Failed"
+    except:
+        return "Failed"
+    
+def transaction_not_in_past_week(username, password):
+    try:
+        create_transaction(username, password)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Dashboard")]')
+        button.click()
+        time.sleep(buffer_constant)
+        expenses_total_element = driver.find_element(By.ID, "expenses_total")
+        expenses_total_text = expenses_total_element.text
+        if expenses_total_text == "$0.00":
+            return "Passed"
+        else:
+            return "Failed"
+    except:
+        return "Failed"
+    
+def date_toggle_spendings_total(username, password):
+    try:
+        login(username, password)
+        date = driver.find_element(By.ID, "start_date")
+        date.send_keys("06/10/2004")
+        button = driver.find_element("xpath", "//button[@onclick='submitDates()']")
+        button.click()
+        time.sleep(1)
+        expenses_total_element = driver.find_element(By.ID, "expenses_total")
+        expenses_total_text = expenses_total_element.text
+        if expenses_total_text == "$8.99":
+            return "Passed"
+        else:
+            return "Failed"
+    except:
+        return "Failed"
+    
+def savings_total_large(username, password):
+    try:
+        create_transaction_large(username, password)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Dashboard")]')
+        button.click()
+        time.sleep(buffer_constant)
+        date = driver.find_element(By.ID, "start_date")
+        date.send_keys("03/29/2024")
+        button = driver.find_element("xpath", "//button[@onclick='submitDates()']")
+        button.click()
+        time.sleep(1)
+        expenses_total_element = driver.find_element(By.ID, "income_total")
+        expenses_total_text = expenses_total_element.text
+        if expenses_total_text == "$1.20K":
+            return "Passed"
+        else:
+            return "Failed"
+    except:
+        return "Failed"
+
 browser_options = ChromeOptions()
 browser_options.headless = False
 browser_options.add_argument('--ignore-certificate-errors-spki-list')
@@ -1500,42 +1602,42 @@ driver = Chrome(options=browser_options)
 
 username = str(uuid.uuid4())[:20]
 password="testpassword"
-# temp_result = login_failed("sam", "test")
-# print(f"{'Login failed':<45} {temp_result}")
-# temp_result = login_success("sam", "testpassword")
-# print(f"{'Login success':<45} {temp_result}")
-# login_logout("sam", "testpassword")
+temp_result = login_failed("sam", "test")
+print(f"{'Login failed':<45} {temp_result}")
+temp_result = login_success("sam", "testpassword")
+print(f"{'Login success':<45} {temp_result}")
+login_logout("sam", "testpassword")
 temp_result = create_account(username, password)
 print(f"{'Create account':<45} {temp_result}")
-# temp_result = create_transaction(username, password)
-# print(f"{'Create transaction':<45} {temp_result}")
-# temp_result = cancel_transaction(username, password)
-# print(f"{'Cancel transaction':<45} {temp_result}")
-# temp_result = edit_transaction(username, password)
-# print(f"{'Edit transaction':<45} {temp_result}")
-# temp_result = cancel_delete_transaction(username, password)
-# print(f"{'Cancel delete transaction':<45} {temp_result}")
-# temp_result = delete_transaction(username, password)
-# print(f"{'Delete transaction':<45} {temp_result}")
-# temp_result = create_personal_goal(username, password)
-# print(f"{'Create personal goal':<45} {temp_result}")
-# temp_result = edit_personal_goal(username, password)
-# print(f"{'Edit personal goal':<45} {temp_result}")
-# temp_result = delete_personal_goal(username, password)
-# print(f"{'Delete personal goal':<45} {temp_result}")
-# temp_result = create_personal_goal_negative_amount(username, password)
-# print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
-# temp_result = create_personal_goal_dates_error(username, password)
-# print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
-# create_personal_goal_custom(username, password)
-# temp_result = savings_personal_goal_value_groceries(username, password)
-# print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
-# temp_result = savings_personal_goal_value_transportation(username, password)
-# print(f"{'Savings personal goal: Transportation':<45} {temp_result}")
-# temp_result = spendings_personal_goal_value_groceries(username, password)
-# print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
-# temp_result = spendings_multiple_and_edit(username, password)
-# print(f"{'Spendings multiple and edit':<45} {temp_result}")
+temp_result = create_transaction(username, password)
+print(f"{'Create transaction':<45} {temp_result}")
+temp_result = cancel_transaction(username, password)
+print(f"{'Cancel transaction':<45} {temp_result}")
+temp_result = edit_transaction(username, password)
+print(f"{'Edit transaction':<45} {temp_result}")
+temp_result = cancel_delete_transaction(username, password)
+print(f"{'Cancel delete transaction':<45} {temp_result}")
+temp_result = delete_transaction(username, password)
+print(f"{'Delete transaction':<45} {temp_result}")
+temp_result = create_personal_goal(username, password)
+print(f"{'Create personal goal':<45} {temp_result}")
+temp_result = edit_personal_goal(username, password)
+print(f"{'Edit personal goal':<45} {temp_result}")
+temp_result = delete_personal_goal(username, password)
+print(f"{'Delete personal goal':<45} {temp_result}")
+temp_result = create_personal_goal_negative_amount(username, password)
+print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
+temp_result = create_personal_goal_dates_error(username, password)
+print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
+create_personal_goal_custom(username, password)
+temp_result = savings_personal_goal_value_groceries(username, password)
+print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
+temp_result = savings_personal_goal_value_transportation(username, password)
+print(f"{'Savings personal goal: Transportation':<45} {temp_result}")
+temp_result = spendings_personal_goal_value_groceries(username, password)
+print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
+temp_result = spendings_multiple_and_edit(username, password)
+print(f"{'Spendings multiple and edit':<45} {temp_result}")
 temp_result = search_group_leaderboard(username, password)
 print(f"{'Select for the group leaderboard':<45} {temp_result}")
 temp_result = search_group_w(username, password)
@@ -1567,8 +1669,6 @@ temp_result = leaderboard_spending_calculation(username, password)
 print(f"{'Spending Leaderboard Calculation':<45} {temp_result}")
 temp_result = delete_group(username, password)
 #end of integration test
-# temp_result = delete_account_success(username, password)
-# print(f"{'Delete account success':<45} {temp_result}")
 temp_result = start_after_end_date("test-dates", "testpassword")
 print(f"{'Start after End Date Error':<45} {temp_result}")
 temp_result = start_after_current_date("test-dates", "testpassword")
@@ -1587,5 +1687,20 @@ temp_result = member_leave_group(username, password)
 print(f"{'Member leaving group':<45} {temp_result}")
 temp_result = delete_account_success(username, password)
 print(f"{'Delete account success':<45} {temp_result}")
+username = "test-dashboard"
+password = "testpassword"
+temp_result = create_account(username, password)
+print(f"{'Create second account':<45} {temp_result}")
+temp_result = spendings_total_zero(username, password)
+print(f"{'Spendings total no transactions':<45} {temp_result}")
+temp_result = transaction_not_in_past_week(username, password)
+print(f"{'Transaction not within past week':<45} {temp_result}")
+temp_result = date_toggle_spendings_total(username, password)
+print(f"{'Date Toggle Spendings Total':<45} {temp_result}")
+temp_result = savings_total_large(username, password)
+print(f"{'Savings Total Large Number':<45} {temp_result}")
+temp_result = delete_account_success(username, password)
+print(f"{'Delete second account':<45} {temp_result}")
+
 
 driver.quit()
