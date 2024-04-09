@@ -28,6 +28,7 @@ class UserProfile(models.Model):
     color = models.CharField(max_length=7)
     opt_in = models.BooleanField(default=True)
     streaks = models.IntegerField(default=0)
+    last_login = models.DateField()
 
 class UserJoinCategory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
