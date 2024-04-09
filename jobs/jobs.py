@@ -5,6 +5,13 @@ import random
 #python manage.py runserver --noreload
 from my_app.models import *
 from my_app.views import send_subscription_email
+from django.core.management import call_command
+
+
+def cleanup():
+    # Call Django management command to clear sessions
+    print("clear!")
+    call_command('clearsessions')
 
 
 def schedule_api():

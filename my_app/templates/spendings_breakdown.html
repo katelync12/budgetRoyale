@@ -1,0 +1,66 @@
+{% extends "base.html" %} 
+
+{% block content %}
+{% load static %}
+<div style="text-align: center; margin-bottom: 20px;">
+  <h1 style="margin-bottom: 30px;"> Spendings Breakdown </h1>
+</div>
+<div id="leaderboard" style="max-width: 500px; margin: 0 auto;">
+    {% for player in leaderboard %}
+    <div class="leaderboard-entry" style="{% if player.color %} background-color: {{ player.color }}; {% endif %}">
+            <div class="left-content">
+                <span class="player-name" style="color: white;">{{ player.name }}</span>
+            </div>
+            <div class="right-content">
+                <span class="player-score" style="color: white; margin-right: 10px;">{{ player.score }}</span>
+            </div>
+        </div>
+    {% endfor %}
+
+
+</div>
+
+<style>
+    /* Style for leaderboard entries */
+    .leaderboard-entry {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px; /* Add bottom margin between entries */
+        border-radius: 5px;
+        border: 2px solid white;
+        background-color: rgba(91, 95, 197, .4);
+        height: 50px;
+        padding: 10px;
+        margin-left:20px;
+        margin-right:20px;
+    }
+    /* Style for the left content */
+    .left-content {
+        flex-grow: 1;
+    }
+    /* Style for the right content */
+    .right-content {
+        display: flex;
+        align-items: center;
+    }
+    /* Style for the icon container */
+    .icon-container {
+        margin-left: 10px; /* Add left margin */
+    }
+    /* Style for the icon */
+    .icon {
+        width: auto; /* Set width of the icon */
+        height: 30px; /* Maintain aspect ratio */
+    }
+    /* Style for the opted out text */
+    .opted_out_text {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+</style>
+
+{% endblock %}
