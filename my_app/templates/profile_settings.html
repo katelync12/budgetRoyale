@@ -10,7 +10,7 @@
   </div>
   {% include "components/color_picker.html" %}
 </div>
-
+{% include "components/subscribe_optin.html" %}
 <button type="submit" onclick="confirmDelete()" style="background-color: #5B5FC5; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif; cursor: pointer; display: block; margin: 20px auto;">Delete Account</button> 
 
 <form action="{% url 'logout' %}" method="post">
@@ -68,5 +68,34 @@
         return false;
     }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  const toggleButton = document.getElementById("toggleButton");
+
+  toggleButton.addEventListener("change", function() {
+      const isChecked = this.checked;
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+      fetch('/update_subscribe/', {
+          method: 'POST',
+          headers: {
+              'X-CSRFToken': csrftoken,
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              'isChecked': isChecked
+          })
+      }).then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      }).then(data => {
+          console.log(data); // Log response from server
+      }).catch(error => {
+          console.error('There was a problem with your fetch operation:', error);
+      });
+  });
+});
 </script>
 {% endblock %}  

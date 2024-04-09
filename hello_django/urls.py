@@ -76,6 +76,7 @@ urlpatterns = [
     path('remove_member/<int:userToRemove>/', views.remove_member, name='remove_member'),
 
     path('update_toggle/', views.update_toggle, name='update_toggle'),
+    path('update_subscribe/', views.update_subscribe, name='update_subscribe'),
 
     # Matches groups/<str:page>/
     path("groups/<str:page>/", views.check_user_group, name="check_user_group"),
