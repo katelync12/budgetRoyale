@@ -627,22 +627,22 @@ def home_view(request):
     positive_sum_str = "${:.2f}".format(positive_sum)
     negative_sum_str = "${:.2f}".format(negative_sum)
 
-    if positive_sum > 1000:
+    if positive_sum >= 1000:
         positive_sum_str = "${:.2f}K".format(positive_sum / 1000)
     
-    if positive_sum > 1000000:
+    if positive_sum >= 1000000:
         positive_sum_str = "${:.2f}M".format(positive_sum / 1000000)
 
-    if positive_sum > 1000000000:
+    if positive_sum >= 1000000000:
         positive_sum_str = "${:.2f}B".format(positive_sum / 1000000000)
 
-    if negative_sum > 1000:
+    if negative_sum >= 1000:
         negative_sum_str = "${:.2f}K".format(negative_sum / 1000)
     
-    if negative_sum > 1000000:
+    if negative_sum >= 1000000:
         negative_sum_str = "${:.2f}M".format(negative_sum / 1000000)
 
-    if negative_sum > 1000000000:
+    if negative_sum >= 1000000000:
         negative_sum_str = "${:.2f}B".format(negative_sum / 1000000000)
 
     return render(request, 'home.html', {'screen_width': screen_width, 'positive_sum': positive_sum_str, 'negative_sum': negative_sum_str})
