@@ -302,7 +302,6 @@ def create_personal_goal_page(request):
 def create_personal_goals(request):
     print("create_personal_goals ")
     if request.method == "POST":
-        print("create_personal_goals POST")
         amount = float(request.POST.get("amount"))
         category_name = request.POST.get("type")
         is_spending = request.POST.get("goal_type") == "on"
@@ -334,10 +333,6 @@ def create_personal_goals(request):
         # If it's a spending, make the amount negative
 
         # Print out the amount, category, spending/savings status, and the user
-        print("Amount:", amount)
-        print("Category:", category_name)
-        print("Spending:", is_spending)
-        print("User:", username)
         personal_goal = PersonalGoal(
             user=user,
             goal_amount=amount,
@@ -357,7 +352,6 @@ def create_personal_goals(request):
                 amount__lt=0,
                 category = category
                 )
-                print("category existed, was spending")
             else:
                 transactions = Transactions.objects.filter(
                 user=user,
@@ -365,7 +359,6 @@ def create_personal_goals(request):
                 amount__gt=0,
                 category = category
                 )
-                print("category existed was savings") 
         else:
             if (is_spending):
                 transactions = Transactions.objects.filter(
@@ -373,15 +366,12 @@ def create_personal_goals(request):
                 week__range=[goal_start_date, goal_end_date],  # Filter by transaction week within range
                 amount__lt=0
                 )
-                print("category existed, was spending")
             else:
                 transactions = Transactions.objects.filter(
                 user=user,
                 week__range=[goal_start_date, goal_end_date],  # Filter by transaction week within range
                 amount__gt=0
                 )
-                print("category existed was savings") 
-        print(transactions)
         for transaction in transactions:
             personal_goal.sum_transaction += abs(transaction.amount)
         personal_goal.save()
@@ -498,15 +488,6 @@ def add(request):
         with connection.schema_editor() as schema_editor:
             schema_editor.create_model(UserProfile)
 
-    # # Insert a new student named "Mark" with a GPA of 4.0
-    # mark = Student(grade="Mark", gpa=4.0)
-    # mark.save()
-    # all_students = Student.objects.all()
-
-    # Print student data (for demonstration purposes)
-    # for student in all_students:
-    #     print(f"Student: {student.grade}, GPA: {student.gpa}")
-
     result = 1
     return JsonResponse({'result': result})
 
@@ -525,10 +506,6 @@ def view_transactions(request, view_all = True):
         selected_categories = request.session.get('selected_categories')
         start_date_str = request.session.get('start_date_str')
         end_date_str = request.session.get('end_date_str')
-        print("view_transactions sesion stuff!:")
-        print(selected_categories)
-        print(start_date_str)
-        print(end_date_str)
         categories_list = []
         view_all = False
         view_all = request.GET.get('view_all') == 'True'
@@ -545,7 +522,6 @@ def view_transactions(request, view_all = True):
                 start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
                 end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
                 transactions = Transactions.objects.filter(week__gte=start_date, week__lte=end_date)
-                print("case both start and end date")
             elif start_date_str:
                 start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
                 transactions = Transactions.objects.filter(week__gte=start_date)
@@ -554,7 +530,6 @@ def view_transactions(request, view_all = True):
                 transactions = Transactions.objects.filter(week__lte=end_date)
             else:
                 transactions = Transactions.objects.all()
-                print("neither start nor end date")
 
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
@@ -671,10 +646,75 @@ def home_view(request):
         negative_sum_str = "${:.2f}B".format(negative_sum / 1000000000)
 
     return render(request, 'home.html', {'screen_width': screen_width, 'positive_sum': positive_sum_str, 'negative_sum': negative_sum_str})
+
+@login_required
+def update_home_view(request):
+    current_user = request.user
+
+    user_agent = get_user_agent(request)
+    screen_width = None
+
+    if user_agent.is_mobile:
+        screen_width = 400
+    elif user_agent.is_tablet:
+        screen_width = 600
+    else:
+        screen_width = 800
+
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+
+    positive_transactions = Transactions.objects.filter(user=current_user, amount__gte=0)
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
+
+    positive_transactions = Transactions.objects.filter(user=request.user, amount__gt=0)
+    negative_transactions = Transactions.objects.filter(user=request.user, amount__lt=0)
+
+    if start_date:
+        positive_transactions = positive_transactions.filter(week__gte=start_date)
+        negative_transactions = negative_transactions.filter(week__gte=start_date)
+    if end_date:
+        positive_transactions = positive_transactions.filter(week__lte=end_date)
+        negative_transactions = negative_transactions.filter(week__lte=end_date)
+    if not start_date and not end_date:
+        end_date = timezone.now().date()
+        start_date = end_date - timedelta(days=7)
+        positive_transactions = positive_transactions.filter(week__range=[start_date, end_date])
+        negative_transactions = negative_transactions.filter(week__range=[start_date, end_date])
+        
+    positive_sum = 0
+    for action in positive_transactions:
+        positive_sum += action.amount
+
+    negative_sum = 0
+    for action in negative_transactions:
+        negative_sum += action.amount * -1
+
+    positive_sum_str = "${:.2f}".format(positive_sum)
+    negative_sum_str = "${:.2f}".format(negative_sum)
+
+    if positive_sum > 1000:
+        positive_sum_str = "${:.2f}K".format(positive_sum / 1000)
+    
+    if positive_sum > 1000000:
+        positive_sum_str = "${:.2f}M".format(positive_sum / 1000000)
+
+    if positive_sum > 1000000000:
+        positive_sum_str = "${:.2f}B".format(positive_sum / 1000000000)
+
+    if negative_sum > 1000:
+        negative_sum_str = "${:.2f}K".format(negative_sum / 1000)
+    
+    if negative_sum > 1000000:
+        negative_sum_str = "${:.2f}M".format(negative_sum / 1000000)
+
+    if negative_sum > 1000000000:
+        negative_sum_str = "${:.2f}B".format(negative_sum / 1000000000)
+    return JsonResponse({'screen_width': screen_width, 'positive_sum': positive_sum_str, 'negative_sum': negative_sum_str})
     
 @login_required
 def check_user_group(request, page):
-    print("check_user_group")
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
         username = request.user.username
@@ -687,7 +727,6 @@ def check_user_group(request, page):
             if page == "group_goals":
                 user_join_groups = UserJoinGroup.objects.filter(user = request.user)
                 for the_group in user_join_groups:
-                    print(the_group.group.name)
                     user_group = the_group.group
                     group_goals = GroupGoal.objects.filter(group = user_group)
                 context = {
