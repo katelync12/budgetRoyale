@@ -274,6 +274,19 @@
                 return;
             }
 
+            fetch(`/update_home_view/?start_date=${startDate}&end_date=${endDate}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.querySelector('.box-dashboard-small:nth-child(3) .dashboard-small-text').textContent = data.positive_sum;
+                document.querySelector('.box-dashboard-small:nth-child(2) .dashboard-small-text').textContent = data.negative_sum;
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
             fetch(`/generate_expenses_pie_chart/?start_date=${startDate}&end_date=${endDate}`)
             .then(response => response.json())
             .then(data => {
