@@ -20,6 +20,9 @@ class UserJoinGroup(models.Model):
 class Category(models.Model):
     category_id = models.CharField(max_length=255, primary_key=True)
 
+class SubscriberList(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     color = models.CharField(max_length=7)
