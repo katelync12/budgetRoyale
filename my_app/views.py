@@ -604,8 +604,8 @@ def delete_transaction(request, transaction_id):
         return JsonResponse({'message': 'Transaction deleted successfully.'})
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
-
-@login_required 
+    
+@login_required
 def home_view(request):
     current_user = request.user
 
