@@ -64,6 +64,8 @@ urlpatterns = [
     path('join_specific_group/<int:group_id>/', views.join_specific_group_action, name='join_specific_group_action'),
 
     path('groups/join/<int:group_id>/', views.join_group_action, name='join_group_action'),
+    path('groups/join/<int:group_id>/<str:password>/', views.join_group_from_link, name='join_group_from_link'),
+
     path('join_specific_group/<int:group_id>/', views.join_specific_group_action, name='join_specific_group_action'),
 
     path("groups/leaderboard/", views.group_leaderboard, name="group_leaderboard"),

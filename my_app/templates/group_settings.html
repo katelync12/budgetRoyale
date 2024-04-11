@@ -74,6 +74,11 @@
   </div>
   {% include "components/optin.html" %}
 
+  <div>
+    <button id="showInvLink">Generate Invite Link</button>
+    <div id="hiddenInvLink" class="hiddenInvLink">Join Group Link: http://127.0.0.1:8000/groups/join/{{ group.id }}/{{ encrypted_password }}/</div>
+    {% comment %} make the link have the password after the group number {% endcomment %}
+  </div>
 
   {% if user != admin %}
     <form id="leave-group-form" style="display: flex; justify-content: center;" action="{% url 'leave_group' %}" method="post">
@@ -81,11 +86,6 @@
     <button class="group-settings-button" type="button" onclick="confirmLeave()">Leave Group</button>
     </form>
   {% else %}
-    <div>
-      <button id="showInvLink">Generate Invite Link</button>
-      <div id="hiddenInvLink" class="hiddenInvLink">Join Group Link: http://127.0.0.1:8000/groups/join/{{ group.id }}/</div>
-    </div>
-
     <form id="delete-group-form" style="display: flex; justify-content: center;" action="{% url 'delete_group' group.id %}" method="post">
       {% csrf_token %}
       <button type="button" class="group-settings-button" onclick="confirmDelete()">Delete Group</button>

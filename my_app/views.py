@@ -21,8 +21,15 @@ from datetime import timedelta, datetime
 from django.http import HttpResponseRedirect
 from django.db.models import Sum
 import json
+import base64
 from django_user_agents.utils import get_user_agent
 import colorsys
+from cryptography.fernet import Fernet
+
+key = Fernet.generate_key()
+cipher = Fernet(key)
+
+
 #HELPER, DO NOT ADD LOGIN REQUIRED
 def calculate_weekly_savings(user):
     # Get the start and end date for the past week
@@ -340,12 +347,23 @@ def group_settings(request):
     except:
         profile = None
 
+    # encrypted_bytes = cipher.encrypt(group_add.password.encode())
+    # encrypted_password = encrypted_bytes.decode()
+
+
+    password_bytes = group_add.password.encode()
+    encrypted_bytes = cipher.encrypt(password_bytes)
+    encrypted_base64_bytes = base64.urlsafe_b64encode(encrypted_bytes)
+    encrypted_password = encrypted_base64_bytes.decode()
+
+
     context = {
         'admin': admin,
         'user_groups_info': user_groups_info,
         'group': group_add,
         'members': members,
         'profile': profile,
+        'encrypted_password': encrypted_password,
     }
     # print(context)
 
@@ -1522,11 +1540,6 @@ def edit_group_goal_action(request, goal_id):
     is_primary = goal.is_primary
     is_overall = goal.is_overall
     
-    
-    
-    
-    
-    
     return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': is_primary, 'is_overall':is_overall, 'is_spending': goal.is_spending})
 
 def delete_group_goal(request, goal_id):
@@ -1590,3 +1603,43 @@ def update_subscribe(request):
         return JsonResponse({'message': 'Subscription preferences updated successfully'})
     else:
         return JsonResponse({'error': 'Invalid request method'})
+
+@login_required
+def join_group_from_link(request, group_id, password):
+    if request.user.is_authenticated:
+        try:
+            UserJoinGroup.objects.get(user=request.user)
+            messages.error(request, "You are already in a group.")
+            return redirect('group_settings')
+        except:
+            # Create a new relationship between user and group
+            pass
+        username = request.user.username
+        user = User.objects.get(username=username)
+        group = Group.objects.get(id=group_id)
+
+        # group_password = request.POST.get("password")
+
+        encrypted_base64_bytes = password.encode()
+        encrypted_bytes = base64.urlsafe_b64decode(encrypted_base64_bytes)
+        decrypted_bytes = cipher.decrypt(encrypted_bytes)
+        group_password = decrypted_bytes.decode()
+
+        if group_password == None:
+            group_password = ""
+        print("-" + group_password + "-")
+        print("-" + group.password + "-")
+        if (group_password != group.password):
+            print("testing")
+            messages.error(request, "Invalid Group Password.")
+            return redirect('join_group_action', group_id=group.id)
+
+        user_to_group = UserJoinGroup(user=user, group=group)
+        user_to_group.save()
+
+        # this causes an error when you refresh after creating the group
+        # Changing to redirect instantly has error when you hit create
+        return redirect('group_settings')
+    else:
+        # Redirect to login page if user is not authenticated
+        return redirect('login')
