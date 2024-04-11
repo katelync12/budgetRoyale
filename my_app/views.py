@@ -774,7 +774,33 @@ def home_view(request):
     if negative_sum >= 1000000000:
         negative_sum_str = "${:.2f}B".format(negative_sum / 1000000000)
 
-    return render(request, 'home.html', {'screen_width': screen_width, 'positive_sum': positive_sum_str, 'negative_sum': negative_sum_str})
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+    except:
+        profile = UserProfile.objects.create(user=request.user)
+
+    streak = 0
+    today = datetime.now().date()
+    yesterday = today - timedelta(days=1)
+    if profile.streaks == 0 or profile.last_login == None:
+        profile.streaks = 1
+        profile.last_login = today
+        profile.save()
+        streak = profile.streaks
+    elif profile.last_login == yesterday:
+        profile.streaks += 1
+        profile.last_login = today
+        profile.save()
+        streak = profile.streaks
+    elif profile.last_login == today:
+        streak = profile.streaks
+    else:
+        profile.streaks = 1
+        profile.last_login = today
+        profile.save()
+        streak = profile.streaks
+
+    return render(request, 'home.html', {'screen_width': screen_width, 'positive_sum': positive_sum_str, 'negative_sum': negative_sum_str, 'streak': streak})
 
 @login_required
 def update_home_view(request):
