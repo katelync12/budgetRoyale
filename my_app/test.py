@@ -1077,57 +1077,52 @@ def sort_by_date(username, password):
     except:
         return "Failed"
     
-def unselect_category(username, password):
+def select_transportation_category(username, password):
+    login(username, password)
+    button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+    button.click()
+    button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+    button.click()
+    time.sleep(buffer_constant)
+    button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+    button.click()
+    time.sleep(buffer_constant)
+    button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+    button.click()
+    button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+    button.click()
+    time.sleep(buffer_constant)
+    check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
     try:
-        login(username, password)
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
-        button.click()
-        time.sleep(buffer_constant)
-        button = driver.find_element("xpath", "//label[@class='dropdown-label' and text()='Filter by Category']")
-        button.click()
-        time.sleep(buffer_constant)
-        button = driver.find_element("xpath", "//a[@href='#' and @data-toggle='check-all' and @class='dropdown-option' and text()='Uncheck All']")
-        button.click()
-        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
-        button.click()
-        time.sleep(buffer_constant)
-        try:
-            check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
-            return "Failed"
-        except:
-            return "Passed"
-    except:
+        check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
         return "Failed"
+    except:
+        return "Passed"
+    
     
 def select_groceries_category(username, password):
+    login(username, password)
+    button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+    button.click()
+    button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+    button.click()
+    time.sleep(buffer_constant)
+    button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+    button.click()
+    time.sleep(buffer_constant)
+    button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Groceries']")
+    button.click()
+    button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+    button.click()
+    button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+    button.click()
+    time.sleep(buffer_constant)
+    check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
     try:
-        login(username, password)
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
-        button.click()
-        time.sleep(buffer_constant)
-        button = driver.find_element("xpath", "//label[@class='dropdown-label' and text()='Filter by Category']")
-        button.click()
-        time.sleep(buffer_constant)
-        button = driver.find_element("xpath", "//a[@href='#' and @data-toggle='check-all' and @class='dropdown-option' and text()='Uncheck All']")
-        button.click()
-        time.sleep(buffer_constant)
-        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Groceries']")
-        button.click()
-        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
-        button.click()
-        time.sleep(buffer_constant)
-        check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
-        try:
-            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
-            return "Failed"
-        except:
-            return "Passed"
-    except:
+        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
         return "Failed"
+    except:
+        return "Passed"
     
 def search_group_leaderboard(username, password):
     try:
@@ -1675,8 +1670,8 @@ temp_result = start_after_current_date("test-dates", "testpassword")
 print(f"{'Start after Current Date Error':<45} {temp_result}")
 temp_result = sort_by_date("test-dates", "testpassword")
 print(f"{'Sort Transactions by Date':<45} {temp_result}")
-temp_result = unselect_category("test-piechart", "testpassword")
-print(f"{'Select no categories in view transaction':<45} {temp_result}")
+temp_result = select_transportation_category("test-piechart", "testpassword")
+print(f"{'Select transportation category':<45} {temp_result}")
 temp_result = select_groceries_category("test-piechart", "testpassword")
 print(f"{'Select only groceries category':<45} {temp_result}")
 temp_result = admin_leave_group("group_test", "testpassword")
