@@ -1340,12 +1340,14 @@ def create_group_goal(request):
     group_goal.save()
     return redirect('view_group_goals')
 
+@login_required
 def join_groups(request):
     # Ensure user is authenticated before accessing request.user
     if request.user.is_authenticated:
         try:
             print("try")
             UserJoinGroup.objects.get(user=request.user)
+            messages.error(request, "You are already in a group.")
             return redirect('group_settings')
         except:
             # Create a new relationship between user and group
@@ -1383,9 +1385,17 @@ def join_groups(request):
         # Redirect to login page if user is not authenticated
         return redirect('login')
 
+@login_required
 def join_group_action(request, group_id):
-    if request.user.is_authenticated:
 
+    try:
+        UserJoinGroup.objects.get(user=request.user)
+        messages.error(request, "You are already in a group.")
+        return redirect('group_settings')
+    except:
+        pass
+
+    if request.user.is_authenticated:
         group = Group.objects.get(id=group_id)
         if group.password == "":
             public = True
@@ -1399,16 +1409,18 @@ def join_group_action(request, group_id):
     else:
         # Redirect to login page if user is not authenticated
         return redirect('login')
-    
+
+@login_required
 def join_specific_group_action(request, group_id):
     if request.user.is_authenticated:
         group_password = request.POST.get("password")
         try:
             UserJoinGroup.objects.get(user=request.user)
+            messages.error(request, "You are already in a group.")
             return redirect('group_settings')
         except:
             # Create a new relationship between user and group
-            print()
+            pass
         username = request.user.username
         user = User.objects.get(username=username)
         group = Group.objects.get(id=group_id)
