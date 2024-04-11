@@ -10,12 +10,12 @@ from django.core.management import call_command
 
 def cleanup():
     # Call Django management command to clear sessions
-    print("clear!")
+    #print("clear!")
     call_command('clearsessions')
 
 
 def schedule_api():
-    print("Hello, world!")
+    #print("Hello, world!")
     subscribers = SubscriberList.objects.all()
     for subscriber in subscribers:
         print(subscriber.user.id)

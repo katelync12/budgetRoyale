@@ -690,8 +690,8 @@ def delete_transaction(request, transaction_id):
         return JsonResponse({'message': 'Transaction deleted successfully.'})
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
-
-@login_required 
+    
+@login_required
 def home_view(request):
     current_user = request.user
 
@@ -1297,7 +1297,7 @@ def create_group_goal(request):
 
         if is_primary and existing_primary_goal:
             # If the group already has a primary goal, redirect with an error message
-            messages.error(request, "You already have a primary goal!")
+            messages.error(request, "Primary goal already exists")
             return render(request, "create_group_goal.html", {'error_message': "You already have a primary goal!"})
 
         group_goal = GroupGoal(
@@ -1489,10 +1489,9 @@ def edit_group_goal_action(request, goal_id):
         if is_primary and GroupGoal.objects.filter(is_primary=True).exclude(pk=goal_id).exists():
             # Another primary goal already exists, show alert and redirect back
             messages.error(request, 'Another primary goal already exists. You cannot set this goal as primary.')
-            return redirect('edit_group_goal_action')
-            #return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': goal.is_primary, 'is_overall': goal.is_overall, 'is_spending': goal.is_spending, 'goal_id': goal_id})
-            #messages.error(request, 'Another primary goal already exists. You cannot set this goal as primary.')
-            #return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': goal.is_primary, 'is_overall': goal.is_overall, 'is_spending': goal.is_spending})
+            return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': goal.is_primary, 'is_overall': goal.is_overall, 'is_spending': goal.is_spending})
+           # return render(request, 'edit_group_goal_action')
+            
         is_overall = request.POST.get("is_overall") == "on"
     
         if is_spending:
