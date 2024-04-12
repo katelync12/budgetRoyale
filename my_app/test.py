@@ -164,6 +164,31 @@ def create_account(username, password):
         return "Passed"
     except:
         return "Failed"
+    
+def create_account_error(username, password):
+    try:
+        url = "http://127.0.0.1:8000/accounts/signup/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        username_input = driver.find_element("name", "username")
+        username_input.send_keys(username)
+        email_input = driver.find_element("name", "email")
+        email_input.send_keys("teambudgetroyale@gmail.com")
+        password_input = driver.find_element("name", "password1")
+        password_input.send_keys(password)
+        password_input = driver.find_element("name", "password2")
+        password_input.send_keys(password + "jfdalk")
+        button = driver.find_element("xpath", "//button[text()='Sign Up']")
+        button.click()
+        try:
+            alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert.accept()
+            return ("Passed")
+        except TimeoutException:
+            return ("Failed")
+    except:
+        return "Failed"
+
 def cancel_transaction(username, password):
     try:
         login(username, password)
@@ -1486,7 +1511,10 @@ def member_leave_group(username, password):
         check = driver.find_element("xpath", '//button[contains(text(), "Leave Group")]')
         check.click()
 
-        time.sleep(buffer_constant)
+        time.sleep(1)
+        alert = driver.switch_to.alert
+        alert.accept()
+        time.sleep(1)
         join = driver.find_element("xpath", './/input[@id="search_input"]')
         return "Passed"
     except:
@@ -1583,6 +1611,24 @@ def savings_total_large(username, password):
             return "Failed"
     except:
         return "Failed"
+    
+def streak(username, password):
+    login(username, password)
+    streak = driver.find_element(By.ID, "streak")
+    streak_text = streak.text
+    if streak_text == "1":
+        return "Passed"
+    else:
+        return "Failed"
+    
+def same_day_login_streak(username, password):
+    login(username, password)
+    streak = driver.find_element(By.ID, "streak")
+    streak_text = streak.text
+    if streak_text == "1":
+        return "Passed"
+    else:
+        return "Failed"
 
 browser_options = ChromeOptions()
 browser_options.headless = False
@@ -1602,8 +1648,14 @@ print(f"{'Login failed':<45} {temp_result}")
 temp_result = login_success("sam", "testpassword")
 print(f"{'Login success':<45} {temp_result}")
 login_logout("sam", "testpassword")
+temp_result = create_account_error(username, password)
+print(f"{'Create account error':<45} {temp_result}")
 temp_result = create_account(username, password)
 print(f"{'Create account':<45} {temp_result}")
+temp_result = streak(username, password)
+print(f"{'New account streak':<45} {temp_result}")
+temp_result = same_day_login_streak(username, password)
+print(f"{'Same Day Login Streak':<45} {temp_result}")
 temp_result = create_transaction(username, password)
 print(f"{'Create transaction':<45} {temp_result}")
 temp_result = cancel_transaction(username, password)
