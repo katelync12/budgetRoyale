@@ -1645,11 +1645,13 @@ def join_group_from_link(request, group_id, password):
         group = Group.objects.get(id=group_id)
 
         # group_password = request.POST.get("password")
-
-        encrypted_base64_bytes = password.encode()
-        encrypted_bytes = base64.urlsafe_b64decode(encrypted_base64_bytes)
-        decrypted_bytes = cipher.decrypt(encrypted_bytes)
-        group_password = decrypted_bytes.decode()
+        try:
+            encrypted_base64_bytes = password.encode()
+            encrypted_bytes = base64.urlsafe_b64decode(encrypted_base64_bytes)
+            decrypted_bytes = cipher.decrypt(encrypted_bytes)
+            group_password = decrypted_bytes.decode()
+        except:
+            return redirect('group_settings')
 
         if group_password == None:
             group_password = ""
@@ -1662,9 +1664,7 @@ def join_group_from_link(request, group_id, password):
 
         user_to_group = UserJoinGroup(user=user, group=group)
         user_to_group.save()
-
-        # this causes an error when you refresh after creating the group
-        # Changing to redirect instantly has error when you hit create
+        messages.success(request, "Successfully Joined Group")
         return redirect('group_settings')
     else:
         # Redirect to login page if user is not authenticated
