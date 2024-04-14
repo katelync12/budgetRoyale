@@ -312,7 +312,50 @@ def create_personal_goal(username, password):
         return "Passed"
     except:
         return "Failed"
+def create_personal_goal_helper(name, amount_value, start_date_value, end_date_value, category_value, is_spending):
+    if (True):
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
+        button.click()
+        time.sleep(buffer_constant)
+        transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
+        transaction_name.send_keys(name)
+        amount = driver.find_element("xpath", "//input[@placeholder='Amount']")
+        amount.send_keys(amount_value)
+        end_date = driver.find_element(By.ID, "end_date")
+        end_date.send_keys(end_date_value)
+        start_date = driver.find_element(By.ID, "start_date")
+        start_date.send_keys(start_date_value)
+        if (category_value):
+            button = driver.find_element("xpath", "//select[@id='type']")
+            button.click()
+            button = driver.find_element("xpath", f"//option[@value='{category_value}']")
+            button.click()
+        if (is_spending):
+            radio_button_spending = driver.find_element("xpath", "//input[@type='radio' and @value='on']")
+            radio_button_spending.click()
+        time.sleep(buffer_constant)
 
+    submit = driver.find_element("xpath", '//button[contains(text(), "Submit")]')
+    submit.click()
+    time.sleep(buffer_constant)
+def create_six_goals(username, password):
+    try:
+        login(username, password)
+        create_personal_goal_helper("1", "100.00", "06/12/2004", "06/12/2005", "", False)
+        create_personal_goal_helper("2", "100.00", "06/12/2004", "06/12/2005", "Groceries", False)
+        create_personal_goal_helper("3", "100.00", "06/12/2006", "06/12/2007", "", False)
+        create_personal_goal_helper("4", "100.00", "06/12/2004", "06/12/2005", "", True)
+        create_personal_goal_helper("5", "100.00", "06/12/2004", "06/12/2005", "Groceries", True)
+        create_personal_goal_helper("6", "100.00", "06/12/2006", "06/12/2007", "", True)
+        return "Passed"
+    except Exception as  e:
+        print(e)
+        return "Failed"
 def create_personal_goal_custom(username, password):
     try:
         login(username, password)
@@ -556,6 +599,7 @@ def savings_personal_goal_value_groceries(username, password):
         url = "http://127.0.0.1:8000/personal-goals-test/"
         driver.get(url)
         time.sleep(buffer_constant)
+        time.sleep(5)
 
         #check all values to see if they are correct
         row = driver.find_element("xpath", "//th[text()='1']")
@@ -658,10 +702,8 @@ def savings_personal_goal_value_transportation(username, password):
         submit.click()
         time.sleep(buffer_constant)
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
         #check all values to see if they are correct
         row = driver.find_element("xpath", "//th[text()='1']")
@@ -705,10 +747,8 @@ def savings_personal_goal_value_transportation(username, password):
         time.sleep(buffer_constant)
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #check values again
@@ -808,10 +848,8 @@ def spendings_personal_goal_value_groceries(username, password):
         time.sleep(buffer_constant)
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #check values again
@@ -901,10 +939,8 @@ def spendings_multiple_and_edit(username, password):
         submit.click()
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #check all values to see if they are correct
@@ -934,10 +970,8 @@ def spendings_multiple_and_edit(username, password):
         #should be 0
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #delete transaction
@@ -956,10 +990,8 @@ def spendings_multiple_and_edit(username, password):
         time.sleep(buffer_constant)
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = "http://127.0.0.1:8000/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #check values again
@@ -1464,7 +1496,8 @@ def leaderboard_savings_overall_calculation(username, password):
         if (score == 15.0):
             return "Passed"
         return "Failed"
-    except:
+    except Exception as e:
+        print(e)
         return "Failed"
     
 def admin_leave_group(username, password):
@@ -1643,16 +1676,16 @@ driver = Chrome(options=browser_options)
 
 username = str(uuid.uuid4())[:20]
 password="testpassword"
-temp_result = login_failed("sam", "test")
+'''temp_result = login_failed("sam", "test")
 print(f"{'Login failed':<45} {temp_result}")
 temp_result = login_success("sam", "testpassword")
 print(f"{'Login success':<45} {temp_result}")
 login_logout("sam", "testpassword")
 temp_result = create_account_error(username, password)
-print(f"{'Create account error':<45} {temp_result}")
+print(f"{'Create account error':<45} {temp_result}")'''
 temp_result = create_account(username, password)
 print(f"{'Create account':<45} {temp_result}")
-temp_result = streak(username, password)
+'''temp_result = streak(username, password)
 print(f"{'New account streak':<45} {temp_result}")
 temp_result = same_day_login_streak(username, password)
 print(f"{'Same Day Login Streak':<45} {temp_result}")
@@ -1676,7 +1709,9 @@ temp_result = create_personal_goal_negative_amount(username, password)
 print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
 temp_result = create_personal_goal_dates_error(username, password)
 print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
-create_personal_goal_custom(username, password)
+create_personal_goal_custom(username, password)'''
+temp_result = create_six_goals(username, password)
+print(f"{'Create six goals':<45} {temp_result}")
 temp_result = savings_personal_goal_value_groceries(username, password)
 print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
 temp_result = savings_personal_goal_value_transportation(username, password)

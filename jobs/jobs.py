@@ -16,7 +16,7 @@ def cleanup():
 
 
 def schedule_api():
-    print("Hello, world!")
+    #print("Hello, world!")
     try:
         subscribers = SubscriberList.objects.all()
         for subscriber in subscribers:
