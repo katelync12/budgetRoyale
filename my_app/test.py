@@ -12,6 +12,7 @@ import uuid
 
 #define global variables
 buffer_constant = .1
+failed = False
 browser_options = ChromeOptions()
 browser_options.headless = False
 browser_options.add_argument('--ignore-certificate-errors-spki-list')
@@ -37,71 +38,134 @@ def run():
     password="testpassword"
     temp_result = login_failed("sam", "test")
     print(f"{'Login failed':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = login_success("sam", "testpassword")
     print(f"{'Login success':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     login_logout("sam", "testpassword")
     temp_result = create_account_error(username, password)
     print(f"{'Create account error':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = create_account(username, password)
     print(f"{'Create account':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = streak(username, password)
     print(f"{'New account streak':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = same_day_login_streak(username, password)
     print(f"{'Same Day Login Streak':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = create_transaction(username, password)
     print(f"{'Create transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = cancel_transaction(username, password)
     print(f"{'Cancel transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = edit_transaction(username, password)
     print(f"{'Edit transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = cancel_delete_transaction(username, password)
     print(f"{'Cancel delete transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = delete_transaction(username, password)
     print(f"{'Delete transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = create_personal_goal(username, password)
     print(f"{'Create personal goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = edit_personal_goal(username, password)
     print(f"{'Edit personal goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = delete_personal_goal(username, password)
     print(f"{'Delete personal goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = create_personal_goal_negative_amount(username, password)
     print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = create_personal_goal_dates_error(username, password)
     print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     create_personal_goal_custom(username, password)
     temp_result = create_six_goals(username, password)
     print(f"{'Create six goals':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = savings_personal_goal_value_groceries(username, password)
     print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = savings_personal_goal_value_transportation(username, password)
     print(f"{'Savings personal goal: Transportation':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = spendings_personal_goal_value_groceries(username, password)
     print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = spendings_multiple_and_edit(username, password)
     print(f"{'Spendings multiple and edit':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = search_group_leaderboard(username, password)
     print(f"{'Select for the group leaderboard':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = search_group_w(username, password)
     print(f"{'Select for the group w':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = create_group_no_name(username, password)
     print(f"{'Create group with no name':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = create_group_existing_username(username, password)
     print(f"{'Create group with existing group name':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = create_group_mismatching_passwords(username, password)
     print(f"{'Create group with mismatching passwords':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = delete_account_fail(username, password)
     print(f"{'Delete account failed':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = transaction_not_in_past_week(username, password)
     print(f"{'Transaction not within past week':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = date_toggle_spendings_total(username, password)
     print(f"{'Date Toggle Spendings Total':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = savings_total_large(username, password)
     print(f"{'Savings Total Large Number':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = delete_account_success(username, password)
     print(f"{'Delete second account':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
 
 
     driver.quit()
+    assert not failed, "Not all test cases passed"
 
 def install_bs4():
     subprocess.check_call([sys.executable, "-m", "pip", "install", "bs4"])
@@ -1781,6 +1845,8 @@ if __name__ == "__main__":
         sys.exit(1)
     elif len(sys.argv) == 2:
         url_head = sys.argv[1]
+    try:
         run()
-    else:
-        run()
+    except AssertionError as e:
+        print(e)
+        exit(1)
