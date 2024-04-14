@@ -1749,7 +1749,30 @@ def same_day_login_streak(username, password):
     else:
         return "Failed"
 
-
+def edit_group_goal(username, password):
+    try:
+        login(username, password)
+        url = url_head + "/groups/group_goals/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        #row = driver.find_element("xpath", "//[text()='Edit Goal Test']")
+        #row_element = row.find_element("xpath", "./parent::tr")
+        edit = driver.find_element("xpath", ".//i[@class='fas fa-pencil-alt fa-fw my-own-icon']")
+        edit.click()
+        time.sleep(1)
+        transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
+        transaction_name.clear()
+        transaction_name.send_keys("Testing Edited")
+        submit = driver.find_element("xpath", "//button[text()='Save']")
+        submit.click()
+        time.sleep(5)
+        url = "http://127.0.0.1:8000/groups/group_goals/"
+        driver.get(url)
+        time.sleep(5)
+        check = driver.find_element("name", "Testing Edited")
+        return "Passed"
+    except:
+        return "Failed"
 
 #main declaration
 if __name__ == "__main__":
