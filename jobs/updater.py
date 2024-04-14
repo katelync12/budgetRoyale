@@ -12,3 +12,5 @@ def start():
     scheduler.add_job(schedule_api, 'interval', seconds=1000)
     scheduler.add_job(cleanup, 'cron', minute=46)
     scheduler.start()
+    print("scheduler started")
+#
