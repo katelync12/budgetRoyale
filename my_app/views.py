@@ -70,7 +70,7 @@ def send_subscription_email(user_id):
 
         # Send email to the user's email address
         send_mail(
-            f"Hello {user.username}",
+            f"Hello {user.username}, Here's Your Weekly Subscription Email!",
             f"This is your weekly subscription email. Here are some insights into your spending and savings this week:\n"
             f"You saved: ${calculate_weekly_savings(user)}\n"
             f"You spent: ${calculate_weekly_spendings(user)}\n\n"
@@ -125,7 +125,8 @@ def spendings_breakdown(request):
         total_score = 0
 
 # If total_score is None (i.e., no transactions found), set it to 0
-        if transactions is not None:
+        print(transactions)
+        if transactions:
             total_score = transactions.aggregate(total_score=Sum('amount'))['total_score'] * -1
 
         color = None
