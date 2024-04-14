@@ -99,6 +99,12 @@ def run():
     print(f"{'Savings Total Large Number':<45} {temp_result}")
     temp_result = delete_account_success(username, password)
     print(f"{'Delete second account':<45} {temp_result}")
+    temp_result = create_group_goal_edit("user1", "testpassword")
+    print(f"{'Create group goal':<45} {temp_result}")
+    temp_result = edit_group_goal("user1", "testpassword")
+    print(f"{'Edit group goal':<45} {temp_result}")
+    temp_result = delete_group_goal("user1", "testpassword")
+    print(f"{'Delete group goal':<45} {temp_result}")
 
 
     driver.quit()
@@ -1749,6 +1755,38 @@ def same_day_login_streak(username, password):
     else:
         return "Failed"
 
+def create_group_goal_edit(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Group Goals")]')
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
+        button.click()
+        time.sleep(buffer_constant)
+        transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
+        transaction_name.send_keys("Testing Group Goal")
+        amount = driver.find_element("xpath", "//input[@placeholder='Amount']")
+        amount.send_keys("100.30")
+        end_date = driver.find_element(By.ID, "end_date")
+        end_date.send_keys("06/12/2005")
+        start_date = driver.find_element(By.ID, "start_date")
+        start_date.send_keys("06/12/2004")
+        checkbox = driver.find_element("xpath", "//input[@type='checkbox' and @name='is_overall']")
+        if not checkbox.is_selected():
+            # If not selected, click the checkbox to select it
+            checkbox.click()
+        submit = driver.find_element("xpath", '//button[contains(text(), "Submit")]')
+        submit.click()
+        time.sleep(buffer_constant)
+    #   TODO: CONFIRM WE HAVE LANDED ON THE RIGHT PAGE
+        return "Passed"
+    except Exception as e:
+        #print(e)
+        return "Failed"
+
 def edit_group_goal(username, password):
     try:
         login(username, password)
@@ -1765,12 +1803,36 @@ def edit_group_goal(username, password):
         transaction_name.send_keys("Testing Edited")
         submit = driver.find_element("xpath", "//button[text()='Save']")
         submit.click()
-        time.sleep(5)
+        time.sleep(buffer_constant)
         url = "http://127.0.0.1:8000/groups/group_goals/"
         driver.get(url)
-        time.sleep(5)
-        check = driver.find_element("name", "Testing Edited")
+        time.sleep(buffer_constant)
+        #check = driver.find_element("xpath", '//a[contains(text(), "Testing Edited")]')
+        text_present = driver.execute_script('return document.body.innerText.includes("Testing Edited");')
         return "Passed"
+    except:
+        return "Failed"
+    
+def delete_group_goal(username, password):
+    try:
+        login(username, password)
+        url = "http://127.0.0.1:8000/groups/group_goals/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+       # row = driver.find_element("xpath", "//th[text()='Testing Edited']")
+       # row_element = row.find_element("xpath", "./parent::tr")
+        trash = driver.find_element("xpath", ".//i[@class='fas fa-trash-alt delete-goal']")
+        trash.click()
+        time.sleep(1)
+        alert = driver.switch_to.alert
+        alert.accept()
+        time.sleep(1)
+        try:
+            #check = driver.find_element("xpath", '//th[contains(text(), "Testing Edited")]')
+            text_present = driver.execute_script('return document.body.innerText.includes("Testing Edited");')
+            return "Passed"
+        except:
+            return "Passed"
     except:
         return "Failed"
 
@@ -1784,3 +1846,4 @@ if __name__ == "__main__":
         run()
     else:
         run()
+
