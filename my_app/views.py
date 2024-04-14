@@ -1501,11 +1501,12 @@ def edit_group_goal_action(request, goal_id):
         #category_id = request.POST.get('type')
         is_spending = request.POST.get("goal_type") == "on"
         is_primary = request.POST.get("is_primary") == "on"
-        if is_primary and GroupGoal.objects.filter(is_primary=True).exclude(pk=goal_id).exists():
-            # Another primary goal already exists, show alert and redirect back
-            messages.error(request, 'Another primary goal already exists. You cannot set this goal as primary.')
-            return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': goal.is_primary, 'is_overall': goal.is_overall, 'is_spending': goal.is_spending})
-           # return render(request, 'edit_group_goal_action')
+        # if is_primary and GroupGoal.objects.filter(is_primary=True).exclude(pk=goal_id).exists():
+        #     # Another primary goal already exists, show alert and redirect back
+        #     print("reached primary")
+        #     messages.error(request, 'Another primary goal already exists. You cannot set this goal as primary.')
+        #     return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': goal.is_primary, 'is_overall': goal.is_overall, 'is_spending': goal.is_spending})
+        #    # return render(request, 'edit_group_goal_action')
             
         is_overall = request.POST.get("is_overall") == "on"
     
