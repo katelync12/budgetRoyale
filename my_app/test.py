@@ -1676,16 +1676,16 @@ driver = Chrome(options=browser_options)
 
 username = str(uuid.uuid4())[:20]
 password="testpassword"
-'''temp_result = login_failed("sam", "test")
+temp_result = login_failed("sam", "test")
 print(f"{'Login failed':<45} {temp_result}")
 temp_result = login_success("sam", "testpassword")
 print(f"{'Login success':<45} {temp_result}")
 login_logout("sam", "testpassword")
 temp_result = create_account_error(username, password)
-print(f"{'Create account error':<45} {temp_result}")'''
+print(f"{'Create account error':<45} {temp_result}")
 temp_result = create_account(username, password)
 print(f"{'Create account':<45} {temp_result}")
-'''temp_result = streak(username, password)
+temp_result = streak(username, password)
 print(f"{'New account streak':<45} {temp_result}")
 temp_result = same_day_login_streak(username, password)
 print(f"{'Same Day Login Streak':<45} {temp_result}")
@@ -1709,7 +1709,7 @@ temp_result = create_personal_goal_negative_amount(username, password)
 print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
 temp_result = create_personal_goal_dates_error(username, password)
 print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
-create_personal_goal_custom(username, password)'''
+create_personal_goal_custom(username, password)
 temp_result = create_six_goals(username, password)
 print(f"{'Create six goals':<45} {temp_result}")
 temp_result = savings_personal_goal_value_groceries(username, password)

@@ -1,7 +1,4 @@
 from django.conf import settings
-import requests
-import json
-import random
 #python manage.py runserver --noreload
 from my_app.models import *
 from my_app.views import send_subscription_email
