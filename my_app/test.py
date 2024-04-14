@@ -1663,6 +1663,31 @@ def same_day_login_streak(username, password):
     else:
         return "Failed"
 
+def edit_group_goal(username, password):
+    try:
+        login(username, password)
+        url = "http://127.0.0.1:8000/groups/group_goals/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        #row = driver.find_element("xpath", "//[text()='Edit Goal Test']")
+        #row_element = row.find_element("xpath", "./parent::tr")
+        edit = driver.find_element("xpath", ".//i[@class='fas fa-pencil-alt fa-fw my-own-icon']")
+        edit.click()
+        time.sleep(1)
+        transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
+        transaction_name.clear()
+        transaction_name.send_keys("Testing Edited")
+        submit = driver.find_element("xpath", "//button[text()='Save']")
+        submit.click()
+        time.sleep(5)
+        url = "http://127.0.0.1:8000/groups/group_goals/"
+        driver.get(url)
+        time.sleep(5)
+        check = driver.find_element("name", "Testing Edited")
+        return "Passed"
+    except:
+        return "Failed"
+
 browser_options = ChromeOptions()
 browser_options.headless = False
 browser_options.add_argument('--ignore-certificate-errors-spki-list')
@@ -1783,6 +1808,8 @@ temp_result = savings_total_large(username, password)
 print(f"{'Savings Total Large Number':<45} {temp_result}")
 temp_result = delete_account_success(username, password)
 print(f"{'Delete second account':<45} {temp_result}")
+temp_result = edit_group_goal("user1", "testpassword")
+print(f"{'Edit group goal':<45} {temp_result}")
 
 
 driver.quit()
