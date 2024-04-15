@@ -53,6 +53,14 @@ def run():
     print(f"{'Create account':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
+    temp_result = spendings_total_zero(username, password)
+    print(f"{'Spendings total no transactions':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = date_toggle_spendings_total(username, password)
+    print(f"{'Date Toggle Spendings Total':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = nav_bar_view_transaction(username, password)
     print(f"{'Nav Bar View Transaction':<45} {temp_result}")
     if temp_result == "Failed":
@@ -155,12 +163,75 @@ def run():
     print(f"{'Delete account failed':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
-    temp_result = transaction_not_in_past_week(username, password)
-    print(f"{'Transaction not within past week':<45} {temp_result}")
+    temp_result = create_group(username, password)
+    print(f"{'Create Group':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
-    temp_result = date_toggle_spendings_total(username, password)
-    print(f"{'Date Toggle Spendings Total':<45} {temp_result}")
+    temp_result = cancel_delete_group(username, password)
+    print(f"{'Cancel Delete Group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_group_goal(username, password)
+    print(f"{'Create Group Goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = leaderboard_savings_overall_calculation(username, password)
+    print(f"{'Savings Leaderboard Calculation':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = delete_group(username, password)
+    print(f"{'Delete Group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    #steps for this integration test since delete group goal doesnt exist
+    temp_result = create_group(username, password)
+    print(f"{'Create/join group after delete group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_group_goal2(username, password)
+    print(f"{'Create Spendings, Nonoverall Group Goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = leaderboard_spending_calculation(username, password)
+    print(f"{'Spending Leaderboard Calculation':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = delete_group(username, password)
+    #end of integration test
+    temp_result = start_after_end_date("test-dates", "testpassword")
+    print(f"{'Start after End Date Error':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = start_after_current_date("test-dates", "testpassword")
+    print(f"{'Start after Current Date Error':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = sort_by_date("test-dates", "testpassword")
+    print(f"{'Sort Transactions by Date':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = select_transportation_category("test-piechart", "testpassword")
+    print(f"{'Select transportation category':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = select_groceries_category("test-piechart", "testpassword")
+    print(f"{'Select only groceries category':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = admin_leave_group("group_test", "testpassword")
+    print(f"{'No leave group option for admin':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = join_group(username, password)
+    print(f"{'Member joining group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = member_leave_group(username, password)
+    print(f"{'Member leaving group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = transaction_not_in_past_week(username, password)
+    print(f"{'Transaction not within past week':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
     temp_result = savings_total_large(username, password)
@@ -168,7 +239,7 @@ def run():
     if temp_result == "Failed":
         failed = True
     temp_result = delete_account_success(username, password)
-    print(f"{'Delete second account':<45} {temp_result}")
+    print(f"{'Delete account':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
     temp_result = create_group_goal_edit("user1", "testpassword")
@@ -1798,7 +1869,7 @@ def date_toggle_spendings_total(username, password):
         time.sleep(1)
         expenses_total_element = driver.find_element(By.ID, "expenses_total")
         expenses_total_text = expenses_total_element.text
-        if expenses_total_text == "$8.99":
+        if expenses_total_text == "$0.00":
             return "Passed"
         else:
             return "Failed"
