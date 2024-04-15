@@ -53,6 +53,15 @@ def run():
     print(f"{'Create account':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
+    temp_result = nav_bar_view_transaction(username, password)
+    print(f"{'Nav Bar View Transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = nav_bar_personal_goal(username, password)
+    print(f"{'Nav Bar Personal Goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        print("intitialized")
+        failed = True
     temp_result = streak(username, password)
     print(f"{'New account streak':<45} {temp_result}")
     if temp_result == "Failed":
@@ -1297,51 +1306,57 @@ def sort_by_date(username, password):
         return "Failed"
     
 def select_transportation_category(username, password):
-    login(username, password)
-    button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-    button.click()
-    button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//label[@class='dropdown-label']")
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
-    button.click()
-    button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
-    button.click()
-    time.sleep(buffer_constant)
-    check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
     try:
-        check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
-        return "Failed"
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+            return "Failed"
+        except:
+            return "Passed"
     except:
-        return "Passed"
+        return "Failed"
     
     
 def select_groceries_category(username, password):
-    login(username, password)
-    button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-    button.click()
-    button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//label[@class='dropdown-label']")
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Groceries']")
-    button.click()
-    button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
-    button.click()
-    button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
-    button.click()
-    time.sleep(buffer_constant)
-    check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
     try:
-        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
-        return "Failed"
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Groceries']")
+        button.click()
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            return "Failed"
+        except:
+            return "Passed"
     except:
-        return "Passed"
+        return "Failed"
     
 def search_group_leaderboard(username, password):
     try:
@@ -1403,44 +1418,50 @@ def create_group_no_name(username, password):
         return "Failed"
     
 def create_group_existing_username(username, password):
-    login(username, password)
-    url = url_head + "/groups/create/"
-    driver.get(url)
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//input[@style='width: 80%;'][@type='text'][@id='name']")
-    button.send_keys("w")
-    button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
-    button.click()
-    time.sleep(buffer_constant)
     try:
-        alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
-        alert.accept()
+        login(username, password)
+        url = url_head + "/groups/create/"
+        driver.get(url)
         time.sleep(buffer_constant)
-        return ("Passed")
-    except TimeoutException:
-        return ("Failed")
+        button = driver.find_element("xpath", "//input[@style='width: 80%;'][@type='text'][@id='name']")
+        button.send_keys("w")
+        button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert.accept()
+            time.sleep(buffer_constant)
+            return ("Passed")
+        except TimeoutException:
+            return ("Failed")
+    except:
+        return "Failed"
     
 def create_group_mismatching_passwords(username, password):
-    login(username, password)
-    url = url_head + "/groups/create"
-    driver.get(url)
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//input[@style='width: 80%;'][@type='text'][@id='name']")
-    button.send_keys("testing4325")
-    password_input = driver.find_element(By.NAME, "password1")
-    password_input.send_keys("test")
-    password_input = driver.find_element(By.NAME, "password2")
-    password_input.send_keys("testing")
-    button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
-    button.click()
-    time.sleep(buffer_constant)
     try:
-        alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
-        alert.accept()
+        login(username, password)
+        url = url_head + "/groups/create"
+        driver.get(url)
         time.sleep(buffer_constant)
-        return ("Passed")
-    except TimeoutException:
-        return ("Failed")
+        button = driver.find_element("xpath", "//input[@style='width: 80%;'][@type='text'][@id='name']")
+        button.send_keys("testing4325")
+        password_input = driver.find_element(By.NAME, "password1")
+        password_input.send_keys("test")
+        password_input = driver.find_element(By.NAME, "password2")
+        password_input.send_keys("testing")
+        button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert.accept()
+            time.sleep(buffer_constant)
+            return ("Passed")
+        except TimeoutException:
+            return ("Failed")
+    except:
+        return "Failed"
 
 def create_group(username, password):
     try:
@@ -1808,21 +1829,27 @@ def savings_total_large(username, password):
         return "Failed"
     
 def streak(username, password):
-    login(username, password)
-    streak = driver.find_element(By.ID, "streak")
-    streak_text = streak.text
-    if streak_text == "1":
-        return "Passed"
-    else:
+    try:
+        login(username, password)
+        streak = driver.find_element(By.ID, "streak")
+        streak_text = streak.text
+        if streak_text == "1":
+            return "Passed"
+        else:
+            return "Failed"
+    except:
         return "Failed"
     
 def same_day_login_streak(username, password):
-    login(username, password)
-    streak = driver.find_element(By.ID, "streak")
-    streak_text = streak.text
-    if streak_text == "1":
-        return "Passed"
-    else:
+    try:
+        login(username, password)
+        streak = driver.find_element(By.ID, "streak")
+        streak_text = streak.text
+        if streak_text == "1":
+            return "Passed"
+        else:
+            return "Failed"
+    except:
         return "Failed"
 
 def create_group_goal_edit(username, password):
@@ -1903,6 +1930,38 @@ def delete_group_goal(username, password):
             return "Passed"
         except:
             return "Passed"
+    except:
+        return "Failed"
+    
+def nav_bar_view_transaction(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//button[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//h2[contains(text(), "Transactions")]')
+            return "Passed"
+        except:
+            return "Failed"
+    except:
+        return "Failed"
+    
+def nav_bar_personal_goal(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Profile")]')
+        button.click()
+        button = driver.find_element("xpath", '//button[contains(text(), "Personal Goals")]')
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//h2[contains(text(), "Personal Goals")]')
+            return "Passed"
+        except:
+            return "Failed"
     except:
         return "Failed"
 
