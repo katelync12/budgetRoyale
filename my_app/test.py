@@ -33,7 +33,7 @@ def run():
 
 # ADD TEST CASES HERE
 # At the start of each function, call the login function at the top of the page
-
+    failed = False
     username = str(uuid.uuid4())[:20]
     password="testpassword"
     temp_result = login_failed("sam", "test")
