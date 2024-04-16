@@ -91,11 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 {% block messages %}
   {% if messages %}
-    <script>
-      // JavaScript to show alert box with messages
-      window.onload = function() {
-        alert("{% for message in messages %}{{ message }}\n{% endfor %}");
-      };
-    </script>
+  <div class="alert alert-danger" role="alert">
+    {{ message }}
+  </div>
   {% endif %}
 {% endblock %}

@@ -87,18 +87,22 @@
     {% if goal.is_primary %}
     <h3 style="text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Primary goal: {{ goal.goal_name }}</h3>
     <div style="text-align: center; margin-bottom: 0px;">
+      {% if is_admin %}
       <!-- Edit button -->
       <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editGroupGoal({{ goal.id }})"></i>
       <!-- Delete button -->
       <i class="fas fa-trash-alt delete-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
+      {% endif %}
     </div>
     {% else %}
     <h3 style="text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Goal name: {{ goal.goal_name }}</h3>
     <div style="text-align: center; margin-bottom: 0px;">
+      {% if is_admin %}
       <!-- Edit button -->
       <i class="fas fa-pencil-alt fa-fw my-own-icon" title="Update" onclick="editGroupGoal({{ goal.id }})"></i>
       <!-- Delete button -->
       <i class="fas fa-trash-alt delete-goal" data-goal-id="{{ goal.id }}" data-goal-name="{{ goal.goal_name }}"></i>
+      {% endif %}
     </div>
     {% endif %}
     <h5 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Total amount: {{ goal.amount }}</h5>
