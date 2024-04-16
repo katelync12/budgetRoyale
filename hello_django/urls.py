@@ -105,6 +105,7 @@ urlpatterns = [
     path('generate_income_pie_chart/', views.generate_income_pie_chart, name='generate_income_pie_chart'),
     path('generate_income_line_chart/', views.generate_income_line_chart, name='generate_income_line_chart'),
     path('generate_expenses_line_chart/', views.generate_expenses_line_chart, name='generate_expenses_line_chart'),
+    path('category_chart/', views.category_chart, name='category_chart'),
     path('update_home_view/', views.update_home_view, name='update_home_view'),
 
     path('create_group_goal/', views.create_group_goal, name='create_group_goal_action'),
