@@ -264,6 +264,7 @@ cursor: pointer;
 
 .button-single {
 text-align: center;
+margin-bottom: 30px;
 }
 
 .button-single button {

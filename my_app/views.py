@@ -116,8 +116,14 @@ def spendings_breakdown(request):
     else:
         screen_width = 800
     #DEFAULT DATES
-    end_date = datetime.now()
-    start_date = end_date - timedelta(days=7)
+
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
+
+    # end_date = datetime.now()
+    # start_date = end_date - timedelta(days=7)
 
     user = request.user
 
@@ -133,8 +139,16 @@ def spendings_breakdown(request):
     for user_group in leaderboard_users:
         transactions = Transactions.objects.filter(
         user=user_group.user,
-        amount__lt=0,
-        week__range=(start_date, end_date))
+        amount__lt=0)
+
+        if start_date:
+            transactions = transactions.filter(week__gte=start_date)
+        if end_date:
+            transactions = transactions.filter(week__lte=end_date)
+        if not start_date and not end_date:
+            end_date = timezone.now().date()
+            start_date = end_date - timedelta(days=7)
+            transactions = transactions.filter(week__range=[start_date, end_date])
 
 # Calculate total score as the sum of negative amounts
         total_score = 0
@@ -1716,3 +1730,15 @@ def category_chart(request):
             category_id = None
             member_spent_categories[display] = {'category_id': category_id, 'total_amount': total_amount}
     return JsonResponse(member_spent_categories)
+
+def spendings_chart(request):
+    user_agent = get_user_agent(request)
+    screen_width = None
+
+    if user_agent.is_mobile:
+        screen_width = 400
+    elif user_agent.is_tablet:
+        screen_width = 600
+    else:
+        screen_width = 800
+    return render(request, "spendings_chart.html", {'screen_width': screen_width})
