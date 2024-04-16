@@ -271,7 +271,8 @@ def group_leaderboard(request):
                     opted = False
                 continue
             else:
-                opted = True
+                if request.user == user_group.user:
+                    opted = True
         except:
             if request.user == user_group.user:
                 opted = True
@@ -313,6 +314,7 @@ def group_leaderboard(request):
     # Sort the leaderboard by score in descending order
     leaderboard.sort(key=lambda x: x['score'], reverse=True)
     
+    print(opted)
     context = {
         'leaderboard': leaderboard,
         'opted': opted,
