@@ -36,8 +36,19 @@
         </div>
     {% endfor %}
 </div> 
-
-<canvas id="barChart" width="400" height="200"></canvas>
+<div class="container-line">
+    <div class="line_chart">
+        {% if screen_width > 500 %}
+            <h2 style="text-align: center">Everyone's Most Spent Category</h2>
+            <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
+            <canvas id="barChart" width="800" height="400"></canvas>
+        {% else %}
+            <h2 style="text-align: center">Everyone's Most Spent Category</h2>
+            <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
+            <canvas id="barChart" width="80%", height="70%"></canvas>
+        {% endif %}
+    </div>
+</div> 
 
 <style>
     /* Style for leaderboard entries */
@@ -85,8 +96,8 @@
                 datasets: [{
                     label: 'Total Amount Spent',
                     data: amounts,
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)', // Adjust the color as needed
-                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: '#A0A3D5',
+                    borderColor: '#A0A3D5',
                     borderWidth: 1
                 }]
             },

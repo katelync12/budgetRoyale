@@ -105,6 +105,16 @@ def hex_to_rgb(hex_color):
 
 @login_required
 def spendings_breakdown(request):
+
+    user_agent = get_user_agent(request)
+    screen_width = None
+
+    if user_agent.is_mobile:
+        screen_width = 400
+    elif user_agent.is_tablet:
+        screen_width = 600
+    else:
+        screen_width = 800
     #DEFAULT DATES
     end_date = datetime.now()
     start_date = end_date - timedelta(days=7)
@@ -147,7 +157,8 @@ def spendings_breakdown(request):
     for entry in leaderboard:
         entry['score'] = format_as_currency(entry['score'])
     context = {
-        'leaderboard': leaderboard,  # Pass the primary group goal's name in the context
+        'leaderboard': leaderboard,
+        'screen_width': screen_width,
     }
     return render(request, 'spendings_breakdown.html', context)
 
