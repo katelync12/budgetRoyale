@@ -35,7 +35,7 @@
   <div class="container-dashboard-small">
     <div class="box-dashboard-small">
         <p class="dashboard-small-header">Streak</p>
-        <p class="dashboard-small-text"> {{streak}} </p>
+        <p class="dashboard-small-text" id="streak"> {{streak}} </p>
     </div>
     <div class="box-dashboard-small">
         <p class="dashboard-small-header">Expenses Total</p>
@@ -64,12 +64,12 @@
   <div class="container-line">
     <div class="line_chart">
         {% if screen_width > 500 %}
-            <h2 style="text-align: center">Expenses Over Time</h2>
-            <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
+            <p style="font-size: xx-large; text-align: center">Expenses Over Time</h2>
+            <i style="margin-left: 95%; font-size: 16px;" class="fas fa-download"></i>
             <canvas id="expensesLineChart" width="800" height="400"></canvas>
         {% else %}
             <h2 style="text-align: center">Expenses Over Time</h2>
-            <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
+            <i style="margin-left: 95%; font-size: 16px;" class="fas fa-download"></i>
             <canvas id="expensesLineChart" width="80%", height="70%"></canvas>
         {% endif %}
     </div>
@@ -78,12 +78,12 @@
   <div class="container-line">
     <div class="pie_chart">
       <h2 style="text-align: center">Expenses Breakdown</h2>
-      <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
+      <i style="margin-left: 95%; font-size: 16px;" class="fas fa-download"></i>
       <canvas id="expensesChart" width="400" height="400"></canvas>
     </div>
-    <div class="pie_chart">
+    <div class="pie_chart"> 
       <h2 style="text-align: center">Income Breakdown</h2>
-      <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
+      <i style="margin-left: 95%; font-size: 16px;" class="fas fa-download"></i>
       <canvas id="incomeChart" width="400" height="400"></canvas>
     </div>
   </div>

@@ -31,7 +31,7 @@ urlpatterns = [
 
     # path("", include("my_app.urls")),
     # path('edit_transaction/', views.edit_transaction, name='edit_transaction_action'),
-    path('rr/', views.spendings_breakdown, name="testspending"),
+    path('groups/spendings_breakdown/', views.spendings_breakdown, name="spendings_breakdown"),
     path('create_transaction/', views.create_transaction, name='create_transaction_action'),
     path('create_group/', views.create_group, name='create_group_action'),
     # path('groups/', views.groups, name='search_group_action'),

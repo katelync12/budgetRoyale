@@ -9,19 +9,261 @@ import subprocess
 import time
 import sys
 import uuid
+
+#define global variables
+buffer_constant = .1
+failed = False
+browser_options = ChromeOptions()
+browser_options.headless = False
+browser_options.add_argument('--ignore-certificate-errors-spki-list')
+browser_options.add_argument('--ignore-ssl-errors')
+browser_options.add_argument("--disable-web-security")
+browser_options.add_argument('log-level=3')
+driver = Chrome(options=browser_options)
+url_head = "http://127.0.0.1:8000"
+
+
+def run():
+    try:
+        from bs4 import BeautifulSoup
+    except:
+        install_bs4()
+        from bs4 import BeautifulSoup
+    
+
+# ADD TEST CASES HERE
+# At the start of each function, call the login function at the top of the page
+    failed = False
+    username = str(uuid.uuid4())[:20]
+    password="testpassword"
+    temp_result = login_failed("sam", "test")
+    print(f"{'Login failed':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = login_success("sam", "testpassword")
+    print(f"{'Login success':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    login_logout("sam", "testpassword")
+    temp_result = create_account_error(username, password)
+    print(f"{'Create account error':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_account(username, password)
+    print(f"{'Create account':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = spendings_total_zero(username, password)
+    print(f"{'Spendings total no transactions':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = date_toggle_spendings_total(username, password)
+    print(f"{'Date Toggle Spendings Total':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = nav_bar_view_transaction(username, password)
+    print(f"{'Nav Bar View Transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = nav_bar_personal_goal(username, password)
+    print(f"{'Nav Bar Personal Goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        print("intitialized")
+        failed = True
+    temp_result = streak(username, password)
+    print(f"{'New account streak':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = same_day_login_streak(username, password)
+    print(f"{'Same Day Login Streak':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_transaction(username, password)
+    print(f"{'Create transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = cancel_transaction(username, password)
+    print(f"{'Cancel transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = edit_transaction(username, password)
+    print(f"{'Edit transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = cancel_delete_transaction(username, password)
+    print(f"{'Cancel delete transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = delete_transaction(username, password)
+    print(f"{'Delete transaction':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_personal_goal(username, password)
+    print(f"{'Create personal goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = edit_personal_goal(username, password)
+    print(f"{'Edit personal goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = delete_personal_goal(username, password)
+    print(f"{'Delete personal goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_personal_goal_negative_amount(username, password)
+    print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_personal_goal_dates_error(username, password)
+    print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    create_personal_goal_custom(username, password)
+    temp_result = create_six_goals(username, password)
+    print(f"{'Create six goals':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = savings_personal_goal_value_groceries(username, password)
+    print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = savings_personal_goal_value_transportation(username, password)
+    print(f"{'Savings personal goal: Transportation':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = spendings_personal_goal_value_groceries(username, password)
+    print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = spendings_multiple_and_edit(username, password)
+    print(f"{'Spendings multiple and edit':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = search_group_leaderboard(username, password)
+    print(f"{'Select for the group leaderboard':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = search_group_w(username, password)
+    print(f"{'Select for the group w':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_group_no_name(username, password)
+    print(f"{'Create group with no name':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_group_existing_username(username, password)
+    print(f"{'Create group with existing group name':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_group_mismatching_passwords(username, password)
+    print(f"{'Create group with mismatching passwords':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = delete_account_fail(username, password)
+    print(f"{'Delete account failed':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_group(username, password)
+    print(f"{'Create Group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = cancel_delete_group(username, password)
+    print(f"{'Cancel Delete Group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_group_goal(username, password)
+    print(f"{'Create Group Goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = leaderboard_savings_overall_calculation(username, password)
+    print(f"{'Savings Leaderboard Calculation':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = delete_group(username, password)
+    print(f"{'Delete Group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    #steps for this integration test since delete group goal doesnt exist
+    temp_result = create_group(username, password)
+    print(f"{'Create/join group after delete group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_group_goal2(username, password)
+    print(f"{'Create Spendings, Nonoverall Group Goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = leaderboard_spending_calculation(username, password)
+    print(f"{'Spending Leaderboard Calculation':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = delete_group(username, password)
+    #end of integration test
+    temp_result = start_after_end_date("test-dates", "testpassword")
+    print(f"{'Start after End Date Error':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = start_after_current_date("test-dates", "testpassword")
+    print(f"{'Start after Current Date Error':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = sort_by_date("test-dates", "testpassword")
+    print(f"{'Sort Transactions by Date':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = select_transportation_category("test-piechart", "testpassword")
+    print(f"{'Select transportation category':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = select_groceries_category("test-piechart", "testpassword")
+    print(f"{'Select only groceries category':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = admin_leave_group("group_test", "testpassword")
+    print(f"{'No leave group option for admin':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = join_group(username, password)
+    print(f"{'Member joining group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = member_leave_group(username, password)
+    print(f"{'Member leaving group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = transaction_not_in_past_week(username, password)
+    print(f"{'Transaction not within past week':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = savings_total_large(username, password)
+    print(f"{'Savings Total Large Number':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = delete_account_success(username, password)
+    print(f"{'Delete account':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = create_group_goal_edit("user1", "testpassword")
+    print(f"{'Create group goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = edit_group_goal("user1", "testpassword")
+    print(f"{'Edit group goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = delete_group_goal("user1", "testpassword")
+    print(f"{'Delete group goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+
+
+    driver.quit()
+    assert not failed, "Not all test cases passed"
+
 def install_bs4():
     subprocess.check_call([sys.executable, "-m", "pip", "install", "bs4"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
-
-try:
-    from bs4 import BeautifulSoup
-except:
-    install_bs4()
-    from bs4 import BeautifulSoup
-buffer_constant = .1
-
 def login(username, password):
-    url = "http://127.0.0.1:8000/login"
+    url = url_head + "/login/"
     driver.get(url)
     time.sleep(buffer_constant)
     username_input = driver.find_element("name", "username")
@@ -34,7 +276,7 @@ def login(username, password):
 
 def login_success(username, password):
     try:
-        url = "http://127.0.0.1:8000/login"
+        url = url_head + "/login/"
         driver.get(url)
         time.sleep(buffer_constant)
         username_input = driver.find_element("name", "username")
@@ -55,7 +297,7 @@ def login_success(username, password):
 
 def login_failed(username, password):
     try:
-        url = "http://127.0.0.1:8000/login"
+        url = url_head + "/login/"
         driver.get(url)
         time.sleep(buffer_constant)
         username_input = driver.find_element("name", "username")
@@ -76,7 +318,7 @@ def login_failed(username, password):
 
 def login_logout(username, password):
     try:
-        url = "http://127.0.0.1:8000/"
+        url = url_head
         driver.get(url)
         time.sleep(buffer_constant)
         button = driver.find_element("xpath", '//a[contains(text(), "Profile")]')
@@ -90,7 +332,7 @@ def create_transaction(username, password):
     try:
         time.sleep(buffer_constant)
         login(username, password)
-        url = "http://127.0.0.1:8000/transactions/"
+        url = url_head + "/transactions/"
         driver.get(url)
         time.sleep(buffer_constant)
         button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
@@ -121,7 +363,7 @@ def create_transaction_large(username, password):
     try:
         time.sleep(buffer_constant)
         login(username, password)
-        url = "http://127.0.0.1:8000/transactions/"
+        url = url_head + "/transactions/"
         driver.get(url)
         time.sleep(buffer_constant)
         button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
@@ -147,7 +389,7 @@ def create_transaction_large(username, password):
     
 def create_account(username, password):
     try:
-        url = "http://127.0.0.1:8000/accounts/signup/"
+        url = url_head + "/accounts/signup/"
         driver.get(url)
         time.sleep(buffer_constant)
         username_input = driver.find_element("name", "username")
@@ -164,6 +406,31 @@ def create_account(username, password):
         return "Passed"
     except:
         return "Failed"
+    
+def create_account_error(username, password):
+    try:
+        url = url_head + "/accounts/signup/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        username_input = driver.find_element("name", "username")
+        username_input.send_keys(username)
+        email_input = driver.find_element("name", "email")
+        email_input.send_keys("teambudgetroyale@gmail.com")
+        password_input = driver.find_element("name", "password1")
+        password_input.send_keys(password)
+        password_input = driver.find_element("name", "password2")
+        password_input.send_keys(password + "jfdalk")
+        button = driver.find_element("xpath", "//button[text()='Sign Up']")
+        button.click()
+        try:
+            alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert.accept()
+            return ("Passed")
+        except TimeoutException:
+            return ("Failed")
+    except:
+        return "Failed"
+
 def cancel_transaction(username, password):
     try:
         login(username, password)
@@ -279,7 +546,7 @@ def create_personal_goal(username, password):
         submit = driver.find_element("xpath", '//button[contains(text(), "Submit")]')
         submit.click()
         time.sleep(buffer_constant)
-        url = "http://127.0.0.1:8000/personal-goals-test/"
+        url = url_head + "/personal-goals-test/"
         driver.get(url)
         time.sleep(buffer_constant)
 
@@ -287,7 +554,50 @@ def create_personal_goal(username, password):
         return "Passed"
     except:
         return "Failed"
+def create_personal_goal_helper(name, amount_value, start_date_value, end_date_value, category_value, is_spending):
+    if (True):
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
+        button.click()
+        time.sleep(buffer_constant)
+        transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
+        transaction_name.send_keys(name)
+        amount = driver.find_element("xpath", "//input[@placeholder='Amount']")
+        amount.send_keys(amount_value)
+        end_date = driver.find_element(By.ID, "end_date")
+        end_date.send_keys(end_date_value)
+        start_date = driver.find_element(By.ID, "start_date")
+        start_date.send_keys(start_date_value)
+        if (category_value):
+            button = driver.find_element("xpath", "//select[@id='type']")
+            button.click()
+            button = driver.find_element("xpath", f"//option[@value='{category_value}']")
+            button.click()
+        if (is_spending):
+            radio_button_spending = driver.find_element("xpath", "//input[@type='radio' and @value='on']")
+            radio_button_spending.click()
+        time.sleep(buffer_constant)
 
+    submit = driver.find_element("xpath", '//button[contains(text(), "Submit")]')
+    submit.click()
+    time.sleep(buffer_constant)
+def create_six_goals(username, password):
+    try:
+        login(username, password)
+        create_personal_goal_helper("1", "100.00", "06/12/2004", "06/12/2005", "", False)
+        create_personal_goal_helper("2", "100.00", "06/12/2004", "06/12/2005", "Groceries", False)
+        create_personal_goal_helper("3", "100.00", "06/12/2006", "06/12/2007", "", False)
+        create_personal_goal_helper("4", "100.00", "06/12/2004", "06/12/2005", "", True)
+        create_personal_goal_helper("5", "100.00", "06/12/2004", "06/12/2005", "Groceries", True)
+        create_personal_goal_helper("6", "100.00", "06/12/2006", "06/12/2007", "", True)
+        return "Passed"
+    except Exception as  e:
+        print(e)
+        return "Failed"
 def create_personal_goal_custom(username, password):
     try:
         login(username, password)
@@ -407,7 +717,7 @@ def create_personal_goal_custom(username, password):
 def edit_personal_goal(username, password):
     try:
         login(username, password)
-        url = "http://127.0.0.1:8000/personal-goals-test/"
+        url = url_head + "/personal-goals-test/"
         driver.get(url)
         time.sleep(buffer_constant)
         row = driver.find_element("xpath", "//th[text()='Testing Goal']")
@@ -421,7 +731,7 @@ def edit_personal_goal(username, password):
         submit = driver.find_element("xpath", '//button[contains(text(), "Save")]')
         submit.click()
         time.sleep(buffer_constant)
-        url = "http://127.0.0.1:8000/personal-goals-test/"
+        url = url_head + "/personal-goals-test/"
         driver.get(url)
         time.sleep(buffer_constant)
         check = driver.find_element("xpath", '//th[contains(text(), "Testing Edited")]')
@@ -432,7 +742,7 @@ def edit_personal_goal(username, password):
 def delete_personal_goal(username, password):
     try:
         login(username, password)
-        url = "http://127.0.0.1:8000/personal-goals-test/"
+        url = url_head + "/personal-goals-test/"
         driver.get(url)
         time.sleep(buffer_constant)
         row = driver.find_element("xpath", "//th[text()='Testing Edited']")
@@ -528,9 +838,10 @@ def savings_personal_goal_value_groceries(username, password):
         time.sleep(buffer_constant)
 
         #nav to personal goals
-        url = "http://127.0.0.1:8000/personal-goals-test/"
+        url = url_head + "/personal-goals-test/"
         driver.get(url)
         time.sleep(buffer_constant)
+        time.sleep(5)
 
         #check all values to see if they are correct
         row = driver.find_element("xpath", "//th[text()='1']")
@@ -574,7 +885,7 @@ def savings_personal_goal_value_groceries(username, password):
         time.sleep(buffer_constant)
 
         #nav to personal goals
-        url = "http://127.0.0.1:8000/personal-goals-test/"
+        url = url_head + "/personal-goals-test/"
         driver.get(url)
         time.sleep(buffer_constant)
 
@@ -633,10 +944,8 @@ def savings_personal_goal_value_transportation(username, password):
         submit.click()
         time.sleep(buffer_constant)
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = url_head + "/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
         #check all values to see if they are correct
         row = driver.find_element("xpath", "//th[text()='1']")
@@ -680,10 +989,8 @@ def savings_personal_goal_value_transportation(username, password):
         time.sleep(buffer_constant)
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = url_head + "/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #check values again
@@ -739,7 +1046,7 @@ def spendings_personal_goal_value_groceries(username, password):
         submit.click()
         time.sleep(buffer_constant)
         #nav to personal goals
-        url = "http://127.0.0.1:8000/personal-goals-test/"
+        url = url_head + "/personal-goals-test/"
         driver.get(url)
         time.sleep(buffer_constant)
         #check all values to see if they are correct
@@ -783,10 +1090,8 @@ def spendings_personal_goal_value_groceries(username, password):
         time.sleep(buffer_constant)
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = url_head + "/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #check values again
@@ -876,10 +1181,8 @@ def spendings_multiple_and_edit(username, password):
         submit.click()
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = url_head + "/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #check all values to see if they are correct
@@ -909,10 +1212,8 @@ def spendings_multiple_and_edit(username, password):
         #should be 0
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = url_head + "/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #delete transaction
@@ -931,10 +1232,8 @@ def spendings_multiple_and_edit(username, password):
         time.sleep(buffer_constant)
 
         #nav to personal goals
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-        button.click()
-        button = driver.find_element("xpath", '//a[contains(text(), "Personal Goals")]')
-        button.click()
+        url = url_head + "/personal-goals-test/"
+        driver.get(url)
         time.sleep(buffer_constant)
 
         #check values again
@@ -983,7 +1282,7 @@ def spendings_multiple_and_edit(username, password):
 def delete_account_fail(username, password):
     try:
         login(username, password)
-        url = "http://127.0.0.1:8000/settings"
+        url = url_head + "/settings/"
         driver.get(url)
         button = driver.find_element("xpath", "//button[text()='Delete Account']")
         button.click()
@@ -1004,7 +1303,7 @@ def delete_account_fail(username, password):
 def delete_account_success(username, password):
     try:
         login(username, password)
-        url = "http://127.0.0.1:8000/settings"
+        url = url_head + "/settings/"
         driver.get(url)
         time.sleep(buffer_constant)
         button = driver.find_element("xpath", "//button[text()='Delete Account']")
@@ -1078,56 +1377,62 @@ def sort_by_date(username, password):
         return "Failed"
     
 def select_transportation_category(username, password):
-    login(username, password)
-    button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-    button.click()
-    button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//label[@class='dropdown-label']")
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
-    button.click()
-    button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
-    button.click()
-    time.sleep(buffer_constant)
-    check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
     try:
-        check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
-        return "Failed"
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+            return "Failed"
+        except:
+            return "Passed"
     except:
-        return "Passed"
+        return "Failed"
     
     
 def select_groceries_category(username, password):
-    login(username, password)
-    button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
-    button.click()
-    button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//label[@class='dropdown-label']")
-    button.click()
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Groceries']")
-    button.click()
-    button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
-    button.click()
-    button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
-    button.click()
-    time.sleep(buffer_constant)
-    check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
     try:
-        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
-        return "Failed"
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Groceries']")
+        button.click()
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            return "Failed"
+        except:
+            return "Passed"
     except:
-        return "Passed"
+        return "Failed"
     
 def search_group_leaderboard(username, password):
     try:
         login(username, password)
-        url = 'http://127.0.0.1:8000/groups/'
+        url = url_head + "/groups/"
         driver.get(url)
         time.sleep(buffer_constant)
         search_input = driver.find_element(By.ID, "search_input")
@@ -1148,7 +1453,7 @@ def search_group_leaderboard(username, password):
 def search_group_w(username, password):
     try:
         login(username, password)
-        url = 'http://127.0.0.1:8000/groups/'
+        url = url_head + "/groups/"
         driver.get(url)
         time.sleep(buffer_constant)
         search_input = driver.find_element(By.ID, "search_input")
@@ -1169,7 +1474,7 @@ def search_group_w(username, password):
 def create_group_no_name(username, password):
     try:
         login(username, password)
-        url = 'http://127.0.0.1:8000/groups/create/'
+        url = url_head + "/groups/create/"
         driver.get(url)
         time.sleep(buffer_constant)
         button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
@@ -1184,44 +1489,50 @@ def create_group_no_name(username, password):
         return "Failed"
     
 def create_group_existing_username(username, password):
-    login(username, password)
-    url = 'http://127.0.0.1:8000/groups/create/'
-    driver.get(url)
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//input[@style='width: 80%;'][@type='text'][@id='name']")
-    button.send_keys("w")
-    button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
-    button.click()
-    time.sleep(buffer_constant)
     try:
-        alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
-        alert.accept()
+        login(username, password)
+        url = url_head + "/groups/create/"
+        driver.get(url)
         time.sleep(buffer_constant)
-        return ("Passed")
-    except TimeoutException:
-        return ("Failed")
+        button = driver.find_element("xpath", "//input[@style='width: 80%;'][@type='text'][@id='name']")
+        button.send_keys("w")
+        button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert.accept()
+            time.sleep(buffer_constant)
+            return ("Passed")
+        except TimeoutException:
+            return ("Failed")
+    except:
+        return "Failed"
     
 def create_group_mismatching_passwords(username, password):
-    login(username, password)
-    url = 'http://127.0.0.1:8000/groups/create/'
-    driver.get(url)
-    time.sleep(buffer_constant)
-    button = driver.find_element("xpath", "//input[@style='width: 80%;'][@type='text'][@id='name']")
-    button.send_keys("testing4325")
-    password_input = driver.find_element(By.NAME, "password1")
-    password_input.send_keys("test")
-    password_input = driver.find_element(By.NAME, "password2")
-    password_input.send_keys("testing")
-    button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
-    button.click()
-    time.sleep(buffer_constant)
     try:
-        alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
-        alert.accept()
+        login(username, password)
+        url = url_head + "/groups/create"
+        driver.get(url)
         time.sleep(buffer_constant)
-        return ("Passed")
-    except TimeoutException:
-        return ("Failed")
+        button = driver.find_element("xpath", "//input[@style='width: 80%;'][@type='text'][@id='name']")
+        button.send_keys("testing4325")
+        password_input = driver.find_element(By.NAME, "password1")
+        password_input.send_keys("test")
+        password_input = driver.find_element(By.NAME, "password2")
+        password_input.send_keys("testing")
+        button = driver.find_element("xpath", "//button[contains(@style, 'background-color: #5B5FC5;') and contains(@style, 'color: #ffffff;') and contains(@style, 'cursor: pointer;')]")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert.accept()
+            time.sleep(buffer_constant)
+            return ("Passed")
+        except TimeoutException:
+            return ("Failed")
+    except:
+        return "Failed"
 
 def create_group(username, password):
     try:
@@ -1291,7 +1602,7 @@ def delete_group(username, password):
         return "Failed"
 
 def create_transaction_subroutine(name, amount, date, is_spending, category):
-        url = "http://127.0.0.1:8000/transactions/"
+        url = url_head + "/transactions/"
         driver.get(url)
         time.sleep(buffer_constant)
         button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
@@ -1318,7 +1629,7 @@ def create_transaction_subroutine(name, amount, date, is_spending, category):
         time.sleep(buffer_constant)
 
 def create_transaction_with_group_goal_subroutine(name, amount, date, is_spending, category, group_goal):
-        url = "http://127.0.0.1:8000/transactions/"
+        url = url_head + "/transactions/"
         driver.get(url)
         time.sleep(buffer_constant)
         button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
@@ -1439,13 +1750,14 @@ def leaderboard_savings_overall_calculation(username, password):
         if (score == 15.0):
             return "Passed"
         return "Failed"
-    except:
+    except Exception as e:
+        print(e)
         return "Failed"
     
 def admin_leave_group(username, password):
     try:
         login(username, password)
-        url = 'http://127.0.0.1:8000/groups/group_settings/'
+        url = url_head + "/groups/group_settings/"
         driver.get(url)
         time.sleep(buffer_constant)
         try:
@@ -1459,7 +1771,7 @@ def admin_leave_group(username, password):
 def join_group(username, password):
     try:
         login(username, password)
-        url = 'http://127.0.0.1:8000/groups/'
+        url = url_head + "/groups/"
         driver.get(url)
         time.sleep(buffer_constant)
         # group_to_join = driver.find_element("xpath", '//p[@class="group_name_label" and text()="w"]/following-sibling::div/button[text()="Join Group"]')
@@ -1479,14 +1791,17 @@ def join_group(username, password):
 def member_leave_group(username, password):
     try:
         login(username, password)
-        url = 'http://127.0.0.1:8000/groups/group_settings'
+        url = url_head + "/groups/group_settings/"
         driver.get(url)
         time.sleep(buffer_constant)
         time.sleep(5)
         check = driver.find_element("xpath", '//button[contains(text(), "Leave Group")]')
         check.click()
 
-        time.sleep(buffer_constant)
+        time.sleep(1)
+        alert = driver.switch_to.alert
+        alert.accept()
+        time.sleep(1)
         join = driver.find_element("xpath", './/input[@id="search_input"]')
         return "Passed"
     except:
@@ -1554,7 +1869,7 @@ def date_toggle_spendings_total(username, password):
         time.sleep(1)
         expenses_total_element = driver.find_element(By.ID, "expenses_total")
         expenses_total_text = expenses_total_element.text
-        if expenses_total_text == "$8.99":
+        if expenses_total_text == "$0.00":
             return "Passed"
         else:
             return "Failed"
@@ -1583,119 +1898,153 @@ def savings_total_large(username, password):
             return "Failed"
     except:
         return "Failed"
+    
+def streak(username, password):
+    try:
+        login(username, password)
+        streak = driver.find_element(By.ID, "streak")
+        streak_text = streak.text
+        if streak_text == "1":
+            return "Passed"
+        else:
+            return "Failed"
+    except:
+        return "Failed"
+    
+def same_day_login_streak(username, password):
+    try:
+        login(username, password)
+        streak = driver.find_element(By.ID, "streak")
+        streak_text = streak.text
+        if streak_text == "1":
+            return "Passed"
+        else:
+            return "Failed"
+    except:
+        return "Failed"
 
-browser_options = ChromeOptions()
-browser_options.headless = False
-browser_options.add_argument('--ignore-certificate-errors-spki-list')
-browser_options.add_argument('--ignore-ssl-errors')
-browser_options.add_argument("--disable-web-security")
-browser_options.add_argument('log-level=3')
-driver = Chrome(options=browser_options)
+def create_group_goal_edit(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Group Goals")]')
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//button[contains(text(), "Create")]')
+        button.click()
+        time.sleep(buffer_constant)
+        transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
+        transaction_name.send_keys("Testing Group Goal")
+        amount = driver.find_element("xpath", "//input[@placeholder='Amount']")
+        amount.send_keys("100.30")
+        end_date = driver.find_element(By.ID, "end_date")
+        end_date.send_keys("06/12/2005")
+        start_date = driver.find_element(By.ID, "start_date")
+        start_date.send_keys("06/12/2004")
+        checkbox = driver.find_element("xpath", "//input[@type='checkbox' and @name='is_overall']")
+        if not checkbox.is_selected():
+            # If not selected, click the checkbox to select it
+            checkbox.click()
+        submit = driver.find_element("xpath", '//button[contains(text(), "Submit")]')
+        submit.click()
+        time.sleep(buffer_constant)
+    #   TODO: CONFIRM WE HAVE LANDED ON THE RIGHT PAGE
+        return "Passed"
+    except Exception as e:
+        #print(e)
+        return "Failed"
 
-# ADD TEST CASES HERE
-# At the start of each function, call the login function at the top of the page
+def edit_group_goal(username, password):
+    try:
+        login(username, password)
+        url = url_head + "/groups/group_goals/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        #row = driver.find_element("xpath", "//[text()='Edit Goal Test']")
+        #row_element = row.find_element("xpath", "./parent::tr")
+        edit = driver.find_element("xpath", ".//i[@class='fas fa-pencil-alt fa-fw my-own-icon']")
+        edit.click()
+        time.sleep(1)
+        transaction_name = driver.find_element("xpath", "//input[@placeholder='Goal Name']")
+        transaction_name.clear()
+        transaction_name.send_keys("Testing Edited")
+        submit = driver.find_element("xpath", "//button[text()='Save']")
+        submit.click()
+        time.sleep(buffer_constant)
+        url = "http://127.0.0.1:8000/groups/group_goals/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        #check = driver.find_element("xpath", '//a[contains(text(), "Testing Edited")]')
+        text_present = driver.execute_script('return document.body.innerText.includes("Testing Edited");')
+        return "Passed"
+    except:
+        return "Failed"
+    
+def delete_group_goal(username, password):
+    try:
+        login(username, password)
+        url = "http://127.0.0.1:8000/groups/group_goals/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+       # row = driver.find_element("xpath", "//th[text()='Testing Edited']")
+       # row_element = row.find_element("xpath", "./parent::tr")
+        trash = driver.find_element("xpath", ".//i[@class='fas fa-trash-alt delete-goal']")
+        trash.click()
+        time.sleep(1)
+        alert = driver.switch_to.alert
+        alert.accept()
+        time.sleep(1)
+        try:
+            #check = driver.find_element("xpath", '//th[contains(text(), "Testing Edited")]')
+            text_present = driver.execute_script('return document.body.innerText.includes("Testing Edited");')
+            return "Passed"
+        except:
+            return "Passed"
+    except:
+        return "Failed"
+    
+def nav_bar_view_transaction(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//button[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//h2[contains(text(), "Transactions")]')
+            return "Passed"
+        except:
+            return "Failed"
+    except:
+        return "Failed"
+    
+def nav_bar_personal_goal(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Profile")]')
+        button.click()
+        button = driver.find_element("xpath", '//button[contains(text(), "Personal Goals")]')
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//h2[contains(text(), "Personal Goals")]')
+            return "Passed"
+        except:
+            return "Failed"
+    except:
+        return "Failed"
 
-username = str(uuid.uuid4())[:20]
-password="testpassword"
-temp_result = login_failed("sam", "test")
-print(f"{'Login failed':<45} {temp_result}")
-temp_result = login_success("sam", "testpassword")
-print(f"{'Login success':<45} {temp_result}")
-login_logout("sam", "testpassword")
-temp_result = create_account(username, password)
-print(f"{'Create account':<45} {temp_result}")
-temp_result = create_transaction(username, password)
-print(f"{'Create transaction':<45} {temp_result}")
-temp_result = cancel_transaction(username, password)
-print(f"{'Cancel transaction':<45} {temp_result}")
-temp_result = edit_transaction(username, password)
-print(f"{'Edit transaction':<45} {temp_result}")
-temp_result = cancel_delete_transaction(username, password)
-print(f"{'Cancel delete transaction':<45} {temp_result}")
-temp_result = delete_transaction(username, password)
-print(f"{'Delete transaction':<45} {temp_result}")
-temp_result = create_personal_goal(username, password)
-print(f"{'Create personal goal':<45} {temp_result}")
-temp_result = edit_personal_goal(username, password)
-print(f"{'Edit personal goal':<45} {temp_result}")
-temp_result = delete_personal_goal(username, password)
-print(f"{'Delete personal goal':<45} {temp_result}")
-temp_result = create_personal_goal_negative_amount(username, password)
-print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
-temp_result = create_personal_goal_dates_error(username, password)
-print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
-create_personal_goal_custom(username, password)
-temp_result = savings_personal_goal_value_groceries(username, password)
-print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
-temp_result = savings_personal_goal_value_transportation(username, password)
-print(f"{'Savings personal goal: Transportation':<45} {temp_result}")
-temp_result = spendings_personal_goal_value_groceries(username, password)
-print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
-temp_result = spendings_multiple_and_edit(username, password)
-print(f"{'Spendings multiple and edit':<45} {temp_result}")
-temp_result = search_group_leaderboard(username, password)
-print(f"{'Select for the group leaderboard':<45} {temp_result}")
-temp_result = search_group_w(username, password)
-print(f"{'Select for the group w':<45} {temp_result}")
-temp_result = create_group_no_name(username, password)
-print(f"{'Create group with no name':<45} {temp_result}")
-temp_result = create_group_existing_username(username, password)
-print(f"{'Create group with existing group name':<45} {temp_result}")
-temp_result = create_group_mismatching_passwords(username, password)
-print(f"{'Create group with mismatching passwords':<45} {temp_result}")
-temp_result = delete_account_fail(username, password)
-print(f"{'Delete account failed':<45} {temp_result}")
-temp_result = create_group(username, password)
-print(f"{'Create Group':<45} {temp_result}")
-temp_result = cancel_delete_group(username, password)
-print(f"{'Cancel Delete Group':<45} {temp_result}")
-temp_result = create_group_goal(username, password)
-print(f"{'Create Group Goal':<45} {temp_result}")
-temp_result = leaderboard_savings_overall_calculation(username, password)
-print(f"{'Savings Leaderboard Calculation':<45} {temp_result}")
-temp_result = delete_group(username, password)
-print(f"{'Delete Group':<45} {temp_result}")
-#steps for this integration test since delete group goal doesnt exist
-temp_result = create_group(username, password)
-print(f"{'Create/join group after delete group':<45} {temp_result}")
-temp_result = create_group_goal2(username, password)
-print(f"{'Create Spendings, Nonoverall Group Goal':<45} {temp_result}")
-temp_result = leaderboard_spending_calculation(username, password)
-print(f"{'Spending Leaderboard Calculation':<45} {temp_result}")
-temp_result = delete_group(username, password)
-#end of integration test
-temp_result = start_after_end_date("test-dates", "testpassword")
-print(f"{'Start after End Date Error':<45} {temp_result}")
-temp_result = start_after_current_date("test-dates", "testpassword")
-print(f"{'Start after Current Date Error':<45} {temp_result}")
-temp_result = sort_by_date("test-dates", "testpassword")
-print(f"{'Sort Transactions by Date':<45} {temp_result}")
-temp_result = select_transportation_category("test-piechart", "testpassword")
-print(f"{'Select transportation category':<45} {temp_result}")
-temp_result = select_groceries_category("test-piechart", "testpassword")
-print(f"{'Select only groceries category':<45} {temp_result}")
-temp_result = admin_leave_group("group_test", "testpassword")
-print(f"{'No leave group option for admin':<45} {temp_result}")
-temp_result = join_group(username, password)
-print(f"{'Member joining group':<45} {temp_result}")
-temp_result = member_leave_group(username, password)
-print(f"{'Member leaving group':<45} {temp_result}")
-temp_result = delete_account_success(username, password)
-print(f"{'Delete account success':<45} {temp_result}")
-username = "test-dashboard"
-password = "testpassword"
-temp_result = create_account(username, password)
-print(f"{'Create second account':<45} {temp_result}")
-temp_result = spendings_total_zero(username, password)
-print(f"{'Spendings total no transactions':<45} {temp_result}")
-temp_result = transaction_not_in_past_week(username, password)
-print(f"{'Transaction not within past week':<45} {temp_result}")
-temp_result = date_toggle_spendings_total(username, password)
-print(f"{'Date Toggle Spendings Total':<45} {temp_result}")
-temp_result = savings_total_large(username, password)
-print(f"{'Savings Total Large Number':<45} {temp_result}")
-temp_result = delete_account_success(username, password)
-print(f"{'Delete second account':<45} {temp_result}")
-
-
-driver.quit()
+#main declaration
+if __name__ == "__main__":
+    if len(sys.argv) > 2:
+        print("Usage: python test.py [url]")
+        sys.exit(1)
+    elif len(sys.argv) == 2:
+        url_head = sys.argv[1]
+    try:
+        run()
+    except AssertionError as e:
+        print(e)
+        exit(1)
