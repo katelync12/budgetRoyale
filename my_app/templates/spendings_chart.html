@@ -1,0 +1,122 @@
+{% extends "base.html" %} 
+
+{% block content %}
+{% load static %}
+<div style="text-align: center; margin-bottom: 20px;">
+  <h1> Category Breakdown </h1>
+  <h3>What are you and your friends' most spent category?</h3>
+</div>
+<div class="date-container" style="margin-top: 20px">
+    <div class="date-label">
+        <p>From</p>
+    </div>
+    <div class="date-input-container">
+        <input type="date" id="start_date" name="start_date" class="date-input" required>
+    </div>
+    <div class="date-label">
+        <p>to</p>
+    </div>
+    <div class="date-input-container">
+        <input type="date" id="end_date" name="end_date" class="date-input" required>
+    </div>
+    <div>
+        <button onclick="submitDates()">Submit</button>
+    </div>
+</div>
+<br>
+
+<div class="container-line">
+    <div class="line_chart">
+        {% if screen_width > 500 %}
+            <h2 style="text-align: center">Everyone's Most Spent Category</h2>
+            <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
+            <canvas id="barChart" width="800" height="400"></canvas>
+        {% else %}
+            <h2 style="text-align: center">Everyone's Most Spent Category</h2>
+            <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
+            <canvas id="barChart" width="80%", height="70%"></canvas>
+        {% endif %}
+    </div>
+</div> 
+
+<div class="button-single" id="transactions-for-week-button">
+    <button onclick="redirectToSpendingsBreakdown()">Breakdown by Spendings</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    function redirectToSpendingsBreakdown() {
+        window.location.href = "/groups/spendings_breakdown";
+    }
+
+    // Fetch data from the endpoint
+    var barChart;
+    fetch('/category_chart/')
+    .then(response => response.json())
+    .then(data => {
+        const labels = Object.keys(data);
+        const amounts = Object.values(data).map(item => item.total_amount);
+
+        // Draw the bar chart
+        const ctx = document.getElementById('barChart').getContext('2d');
+        barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Amount Spent',
+                    data: amounts,
+                    backgroundColor: '#A0A3D5',
+                    borderColor: '#A0A3D5',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+    function submitDates() {
+        var startDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+
+        var currentDate = new Date();
+        var currentDateString = currentDate.toISOString().split('T')[0];
+        var startDateObj = new Date(startDate);
+        var endDateObj = new Date(endDate);
+
+        if (startDateObj > endDateObj) {
+            alert("Start date cannot be later than end date.");
+            return;
+        }
+
+        if (startDateObj > currentDate) {
+            alert("Start date is past the current date.");
+            return;
+        }
+
+        fetch(`/category_chart/?start_date=${startDate}&end_date=${endDate}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            updateData(barChart, Object.keys(data), Object.values(data).map(item => item.total_amount));
+        });
+    
+    }
+    
+    function updateData(chart, label, data) {
+        chart.data.labels = label
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data = data;
+        });
+        chart.update();
+    }
+</script>
+
+{% endblock %}

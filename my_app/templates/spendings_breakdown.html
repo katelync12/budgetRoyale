@@ -39,19 +39,10 @@
         
     {% endfor %}
 </div> 
-<div class="container-line">
-    <div class="line_chart">
-        {% if screen_width > 500 %}
-            <h2 style="text-align: center">Everyone's Most Spent Category</h2>
-            <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
-            <canvas id="barChart" width="800" height="400"></canvas>
-        {% else %}
-            <h2 style="text-align: center">Everyone's Most Spent Category</h2>
-            <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
-            <canvas id="barChart" width="80%", height="70%"></canvas>
-        {% endif %}
-    </div>
-</div> 
+<div class="button-single" id="transactions-for-week-button">
+    <button onclick="redirectToSpendingsChart()">Breakdown by Category</button>
+</div>
+<br>
 
 <style>
     /* Style for leaderboard entries */
@@ -83,6 +74,10 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+    function redirectToSpendingsChart() {
+        window.location.href = "/groups/spendings_chart";
+    }
+
     // Fetch data from the endpoint
     var barChart;
     fetch('/category_chart/')
@@ -134,12 +129,9 @@
             return;
         }
 
-        fetch(`/category_chart/?start_date=${startDate}&end_date=${endDate}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            updateData(barChart, Object.keys(data), Object.values(data).map(item => item.total_amount));
-        });
+        const url = `/groups/spendings_breakdown/?start_date=${startDate}&end_date=${endDate}`;
+
+        window.location.href = url
     
     }
     
