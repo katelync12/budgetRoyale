@@ -1487,7 +1487,6 @@ def join_specific_group_action(request, group_id):
         print("-" + group_password + "-")
         print("-" + group.password + "-")
         if (group_password != group.password):
-            print("testing")
             messages.error(request, "Invalid Group Password.")
             return redirect('join_group_action', group_id=group.id)
 
@@ -1534,20 +1533,12 @@ def remove_member(request, userToRemove):
 def edit_group_goal_action(request, goal_id):
     goal = get_object_or_404(GroupGoal, pk=goal_id)
     if request.method == 'POST':
-        # Retrieve the form data from the POST request
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         amount = request.POST.get('amount')
         name = request.POST.get('name')
-        #category_id = request.POST.get('type')
         is_spending = request.POST.get("goal_type") == "on"
         is_primary = request.POST.get("is_primary") == "on"
-        # if is_primary and GroupGoal.objects.filter(is_primary=True).exclude(pk=goal_id).exists():
-        #     # Another primary goal already exists, show alert and redirect back
-        #     print("reached primary")
-        #     messages.error(request, 'Another primary goal already exists. You cannot set this goal as primary.')
-        #     return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': goal.is_primary, 'is_overall': goal.is_overall, 'is_spending': goal.is_spending})
-        #    # return render(request, 'edit_group_goal_action')
 
         if not goal.is_primary:
             # Check if the user is trying to make it primary and if another primary goal already exists
@@ -1561,7 +1552,6 @@ def edit_group_goal_action(request, goal_id):
     
         if is_spending:
             amount = str(float(amount) * -1)
-       # category = Category.objects.get(category_id=category_id)
         goal.start_date = start_date
         goal.end_date = end_date
         goal.amount = amount
