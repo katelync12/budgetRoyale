@@ -4,7 +4,7 @@
 {% load static %}
 <div style="text-align: center; margin-bottom: 20px;">
   <h1> Spendings Breakdown </h1>
-  <h3>How much have you and your friends spent?</h3>
+  <h3>How much are you and your friends spending?</h3>
 </div>
 <div class="date-container" style="margin-top: 20px">
     <div class="date-label">
@@ -26,14 +26,17 @@
 <br>
 <div id="leaderboard" style="max-width: 500px; margin: 0 auto;">
     {% for player in leaderboard %}
-    <div class="leaderboard-entry" style="{% if player.color %} background-color: {{ player.color }}; {% endif %}">
+    <div class="leaderboard-entry" style="background-color: #e2e3ed; box-shadow: 0px 0px 10px {{ player.color }};">
+        
             <div class="left-content">
-                <span class="player-name" style="color: white;">{{ player.name }}</span>
+                <span class="player-number" style="color: #5B5FC5; margin-right: 2px;">{{ forloop.counter }})</span>
+                <span class="player-name" style="color: #5B5FC5;">{{ player.name }}</span>
             </div>
             <div class="right-content">
-                <span class="player-score" style="color: white; margin-right: 10px;">{{ player.score }}</span>
+                <span class="player-score" style="color: #5B5FC5; margin-right: 10px;">{{ player.score }}</span>
             </div>
         </div>
+        
     {% endfor %}
 </div> 
 <div class="container-line">
@@ -57,13 +60,14 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px; /* Add bottom margin between entries */
-        border-radius: 5px;
-        border: 2px solid white;
+        border-radius: 20px;
+        border-color: #5B5FC5;
         background-color: rgba(91, 95, 197, .4);
         height: 50px;
         padding: 10px;
         margin-left:20px;
         margin-right:20px;
+        box-shadow: 0px 0px 10px #5B5FC5;
     }
     /* Style for the left content */
     .left-content {
