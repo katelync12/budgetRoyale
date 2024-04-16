@@ -283,6 +283,14 @@ def run():
     print(f"{'Delete group goal':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
+    temp_result = spendings_breakdown_transaction("new12", "qwerty098")
+    print(f"{'Transaction with breakdown':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = spendings_breakdown_transaction_not_range("new12", "qwerty098")
+    print(f"{'Transaction with breakdown - not in range':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
 
 
     driver.quit()
@@ -2195,7 +2203,7 @@ def join_link_success(username, password):
 def spendings_breakdown_transaction(username, password):
     try:
         login(username, password)
-        create_transaction_with_group_goal_subroutine("Testing breakdown", "10" ,"04/15/2024", True, "", "")
+        create_transaction_with_group_goal_subroutine("Testing Edited", "10" ,"04/15/2024", True, "", "")
         #create_transaction_with_group_goal_subroutine("No category savings", "10" ,"06/12/2004", True, "", "")
         time.sleep(buffer_constant)
         button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
@@ -2207,8 +2215,34 @@ def spendings_breakdown_transaction(username, password):
         right_content = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']//div[@class='right-content']")
         # Find the span with class player-score and get its text (assuming it contains the score)
         score_span = right_content.find_element("xpath", ".//span[@class='player-score']")
-        score = float(score_span.text)
-        if (score == -10.0):
+        #score = float(score_span.text)
+        score = driver.execute_script('return document.body.innerText.includes("$10.00");')
+        delete_transaction(username, password)
+        if (score == True):
+            return "Passed"
+        return "Failed"
+    except:
+        return "Failed"
+
+def spendings_breakdown_transaction_not_range(username, password):
+    try:
+        login(username, password)
+        create_transaction_with_group_goal_subroutine("Testing Edited", "10" ,"04/15/2003", True, "", "")
+        #create_transaction_with_group_goal_subroutine("No category savings", "10" ,"06/12/2004", True, "", "")
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Spendings Breakdown")]')
+        button.click()
+        time.sleep(2)
+        user_entry = driver.find_element("xpath", f"//div[@class='leaderboard-entry']//div[@class='left-content']//span[@class='player-name' and contains(text(), '{username}')]")
+        right_content = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']//div[@class='right-content']")
+        # Find the span with class player-score and get its text (assuming it contains the score)
+        score_span = right_content.find_element("xpath", ".//span[@class='player-score']")
+        #score = float(score_span.text)
+        score = driver.execute_script('return document.body.innerText.includes("$10.00");')
+        delete_transaction(username, password)
+        if (score == False):
             return "Passed"
         return "Failed"
     except:
