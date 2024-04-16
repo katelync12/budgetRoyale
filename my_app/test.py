@@ -2192,6 +2192,28 @@ def join_link_success(username, password):
 
 
 
+def spendings_breakdown_transaction(username, password):
+    try:
+        login(username, password)
+        create_transaction_with_group_goal_subroutine("Testing breakdown", "10" ,"04/15/2024", True, "", "")
+        #create_transaction_with_group_goal_subroutine("No category savings", "10" ,"06/12/2004", True, "", "")
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Spendings Breakdown")]')
+        button.click()
+        time.sleep(2)
+        user_entry = driver.find_element("xpath", f"//div[@class='leaderboard-entry']//div[@class='left-content']//span[@class='player-name' and contains(text(), '{username}')]")
+        right_content = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']//div[@class='right-content']")
+        # Find the span with class player-score and get its text (assuming it contains the score)
+        score_span = right_content.find_element("xpath", ".//span[@class='player-score']")
+        score = float(score_span.text)
+        if (score == -10.0):
+            return "Passed"
+        return "Failed"
+    except:
+        return "Failed"
+
 #main declaration
 if __name__ == "__main__":
     if len(sys.argv) > 2:
