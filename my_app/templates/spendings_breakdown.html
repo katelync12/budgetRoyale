@@ -150,6 +150,34 @@
         });
         chart.update();
     }
+
+    document.querySelectorAll('.fas.fa-download').forEach(icon => {
+        icon.addEventListener('click', function() {
+            exportChart(this.parentElement.querySelector('canvas'));
+            });
+        });
+
+
+    function exportChart(canvas) {
+        
+        var tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        var tempCtx = tempCanvas.getContext('2d');
+
+        // Set background color
+        tempCtx.fillStyle = '#ffffff'; 
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+        tempCtx.drawImage(canvas, 0, 0);
+
+        var image = tempCanvas.toDataURL("image/jpeg", 1.0);
+
+        var anchor = document.createElement('a');
+        anchor.href = image;
+        anchor.download = "chart.jpg";
+        anchor.click();
+     }
 </script>
 
 {% endblock %}
