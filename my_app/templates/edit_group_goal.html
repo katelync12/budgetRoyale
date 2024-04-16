@@ -1,5 +1,5 @@
 {% extends "edit_transaction.html" %}
-
+{% load static %}
 {% block mainTitle %}Edit Group Goal{% endblock %}
 
 
@@ -79,6 +79,18 @@ document.addEventListener('DOMContentLoaded', function () {
         </label>
     </div>
 </div>
+
+
+{% block messages %}
+  {% if messages %}
+  <script>
+    // JavaScript to show alert box with messages
+    window.onload = function() {
+      alert("{% for message in messages %}{{ message }}\n{% endfor %}");
+    };
+  </script>
+  {% endif %}
+{% endblock %}
 {% endblock %}
 
 
@@ -88,11 +100,3 @@ document.addEventListener('DOMContentLoaded', function () {
 {% block toggleName2 %}"goal_type"{% endblock %}
 
 {% block back %}onclick="window.location.href='{% url 'view_group_goals' %}'"{% endblock %}
-
-{% block messages %}
-  {% if messages %}
-  <div class="alert alert-danger" role="alert">
-    {{ message }}
-  </div>
-  {% endif %}
-{% endblock %}

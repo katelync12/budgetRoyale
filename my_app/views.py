@@ -105,10 +105,19 @@ def hex_to_rgb(hex_color):
 
 @login_required
 def spendings_breakdown(request):
+
+    user_agent = get_user_agent(request)
+    screen_width = None
+
+    if user_agent.is_mobile:
+        screen_width = 400
+    elif user_agent.is_tablet:
+        screen_width = 600
+    else:
+        screen_width = 800
     #DEFAULT DATES
     end_date = datetime.now()
     start_date = end_date - timedelta(days=7)
-    print("spendings_breakdown")
 
     user = request.user
 
@@ -120,11 +129,8 @@ def spendings_breakdown(request):
         return redirect('groups')
     # Get all users in the same groups as the current user
     leaderboard_users = UserJoinGroup.objects.filter(group__in=user_groups).select_related('user')
-    print(leaderboard_users)
     # Iterate through each user
     for user_group in leaderboard_users:
-        print(str(user_group.user) + "is user")
-        print("go wow wow")
         transactions = Transactions.objects.filter(
         user=user_group.user,
         amount__lt=0,
@@ -134,7 +140,6 @@ def spendings_breakdown(request):
         total_score = 0
 
 # If total_score is None (i.e., no transactions found), set it to 0
-        print(transactions)
         if transactions:
             total_score = transactions.aggregate(total_score=Sum('amount'))['total_score'] * -1
 
@@ -152,7 +157,8 @@ def spendings_breakdown(request):
     for entry in leaderboard:
         entry['score'] = format_as_currency(entry['score'])
     context = {
-        'leaderboard': leaderboard,  # Pass the primary group goal's name in the context
+        'leaderboard': leaderboard,
+        'screen_width': screen_width,
     }
     return render(request, 'spendings_breakdown.html', context)
 
@@ -1482,7 +1488,6 @@ def join_specific_group_action(request, group_id):
         print("-" + group_password + "-")
         print("-" + group.password + "-")
         if (group_password != group.password):
-            print("testing")
             messages.error(request, "Invalid Group Password.")
             return redirect('join_group_action', group_id=group.id)
 
@@ -1529,20 +1534,12 @@ def remove_member(request, userToRemove):
 def edit_group_goal_action(request, goal_id):
     goal = get_object_or_404(GroupGoal, pk=goal_id)
     if request.method == 'POST':
-        # Retrieve the form data from the POST request
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         amount = request.POST.get('amount')
         name = request.POST.get('name')
-        #category_id = request.POST.get('type')
         is_spending = request.POST.get("goal_type") == "on"
         is_primary = request.POST.get("is_primary") == "on"
-        # if is_primary and GroupGoal.objects.filter(is_primary=True).exclude(pk=goal_id).exists():
-        #     # Another primary goal already exists, show alert and redirect back
-        #     print("reached primary")
-        #     messages.error(request, 'Another primary goal already exists. You cannot set this goal as primary.')
-        #     return render(request, 'edit_group_goal.html', {'goal': goal, 'is_primary': goal.is_primary, 'is_overall': goal.is_overall, 'is_spending': goal.is_spending})
-        #    # return render(request, 'edit_group_goal_action')
 
         if not goal.is_primary:
             # Check if the user is trying to make it primary and if another primary goal already exists
@@ -1556,7 +1553,6 @@ def edit_group_goal_action(request, goal_id):
     
         if is_spending:
             amount = str(float(amount) * -1)
-       # category = Category.objects.get(category_id=category_id)
         goal.start_date = start_date
         goal.end_date = end_date
         goal.amount = amount
@@ -1685,3 +1681,38 @@ def join_group_from_link(request, group_id, password):
     else:
         # Redirect to login page if user is not authenticated
         return redirect('login')
+    
+def category_chart(request):
+    user = request.user
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
+
+    user_group = user.group_set.first()
+    group_members = user_group.userjoingroup_set.all()
+
+    member_spent_categories = {}
+    for member in group_members:
+        transactions = Transactions.objects.filter(user=member.user, amount__lt=0)
+        if start_date:
+            transactions = transactions.filter(week__gte=start_date)
+        if end_date:
+            transactions = transactions.filter(week__lte=end_date)
+        if not start_date and not end_date:
+            end_date = timezone.now().date()
+            start_date = end_date - timedelta(days=7)
+            transactions = transactions.filter(week__range=[start_date, end_date])
+        if transactions:
+            most_spent_category = transactions.values('category__category_id').annotate(total_amount=Sum('amount')).order_by('-total_amount').last()
+            category_id = most_spent_category['category__category_id']
+            total_amount = most_spent_category['total_amount']
+            total_amount *= -1
+            display = str(member.user.username) + ": " + str(category_id)
+            member_spent_categories[display] = {'category_id': category_id, 'total_amount': total_amount}
+        else:
+            display = str(member.user.username) + ": None"
+            total_amount = 0
+            category_id = None
+            member_spent_categories[display] = {'category_id': category_id, 'total_amount': total_amount}
+    return JsonResponse(member_spent_categories)

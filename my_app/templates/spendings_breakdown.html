@@ -3,23 +3,55 @@
 {% block content %}
 {% load static %}
 <div style="text-align: center; margin-bottom: 20px;">
-  <h1 style="margin-bottom: 30px;"> Spendings Breakdown </h1>
-  <h3 style="margin-bottom: 30px;"> How much have you and your friends spent this week? </h3>
+  <h1> Spendings Breakdown </h1>
+  <h3>How much are you and your friends spending?</h3>
 </div>
+<div class="date-container" style="margin-top: 20px">
+    <div class="date-label">
+        <p>From</p>
+    </div>
+    <div class="date-input-container">
+        <input type="date" id="start_date" name="start_date" class="date-input" required>
+    </div>
+    <div class="date-label">
+        <p>to</p>
+    </div>
+    <div class="date-input-container">
+        <input type="date" id="end_date" name="end_date" class="date-input" required>
+    </div>
+    <div>
+        <button onclick="submitDates()">Submit</button>
+    </div>
+</div>
+<br>
 <div id="leaderboard" style="max-width: 500px; margin: 0 auto;">
     {% for player in leaderboard %}
-    <div class="leaderboard-entry" style="{% if player.color %} background-color: {{ player.color }}; {% endif %}">
+    <div class="leaderboard-entry" style="background-color: #e2e3ed; box-shadow: 0px 0px 10px {{ player.color }};">
+        
             <div class="left-content">
-                <span class="player-name" style="color: white;">{{ player.name }}</span>
+                <span class="player-number" style="color: #5B5FC5; margin-right: 2px;">{{ forloop.counter }})</span>
+                <span class="player-name" style="color: #5B5FC5;">{{ player.name }}</span>
             </div>
             <div class="right-content">
-                <span class="player-score" style="color: white; margin-right: 10px;">{{ player.score }}</span>
+                <span class="player-score" style="color: #5B5FC5; margin-right: 10px;">{{ player.score }}</span>
             </div>
         </div>
+        
     {% endfor %}
-
-
-</div>
+</div> 
+<div class="container-line">
+    <div class="line_chart">
+        {% if screen_width > 500 %}
+            <h2 style="text-align: center">Everyone's Most Spent Category</h2>
+            <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
+            <canvas id="barChart" width="800" height="400"></canvas>
+        {% else %}
+            <h2 style="text-align: center">Everyone's Most Spent Category</h2>
+            <i style="margin-left: 95%; font-size: 20px;" class="fas fa-download"></i>
+            <canvas id="barChart" width="80%", height="70%"></canvas>
+        {% endif %}
+    </div>
+</div> 
 
 <style>
     /* Style for leaderboard entries */
@@ -28,13 +60,14 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px; /* Add bottom margin between entries */
-        border-radius: 5px;
-        border: 2px solid white;
+        border-radius: 20px;
+        border-color: #5B5FC5;
         background-color: rgba(91, 95, 197, .4);
         height: 50px;
         padding: 10px;
         margin-left:20px;
         margin-right:20px;
+        box-shadow: 0px 0px 10px #5B5FC5;
     }
     /* Style for the left content */
     .left-content {
@@ -45,23 +78,106 @@
         display: flex;
         align-items: center;
     }
-    /* Style for the icon container */
-    .icon-container {
-        margin-left: 10px; /* Add left margin */
-    }
-    /* Style for the icon */
-    .icon {
-        width: auto; /* Set width of the icon */
-        height: 30px; /* Maintain aspect ratio */
-    }
-    /* Style for the opted out text */
-    .opted_out_text {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-      }
-      
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Fetch data from the endpoint
+    var barChart;
+    fetch('/category_chart/')
+    .then(response => response.json())
+    .then(data => {
+        const labels = Object.keys(data);
+        const amounts = Object.values(data).map(item => item.total_amount);
+
+        // Draw the bar chart
+        const ctx = document.getElementById('barChart').getContext('2d');
+        barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Amount Spent',
+                    data: amounts,
+                    backgroundColor: '#A0A3D5',
+                    borderColor: '#A0A3D5',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+    function submitDates() {
+        var startDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+
+        var currentDate = new Date();
+        var currentDateString = currentDate.toISOString().split('T')[0];
+        var startDateObj = new Date(startDate);
+        var endDateObj = new Date(endDate);
+
+        if (startDateObj > endDateObj) {
+            alert("Start date cannot be later than end date.");
+            return;
+        }
+
+        if (startDateObj > currentDate) {
+            alert("Start date is past the current date.");
+            return;
+        }
+
+        fetch(`/category_chart/?start_date=${startDate}&end_date=${endDate}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            updateData(barChart, Object.keys(data), Object.values(data).map(item => item.total_amount));
+        });
+    
+    }
+    
+    function updateData(chart, label, data) {
+        chart.data.labels = label
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data = data;
+        });
+        chart.update();
+    }
+
+    document.querySelectorAll('.fas.fa-download').forEach(icon => {
+        icon.addEventListener('click', function() {
+            exportChart(this.parentElement.querySelector('canvas'));
+            });
+        });
+
+
+    function exportChart(canvas) {
+        
+        var tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        var tempCtx = tempCanvas.getContext('2d');
+
+        // Set background color
+        tempCtx.fillStyle = '#ffffff'; 
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+        tempCtx.drawImage(canvas, 0, 0);
+
+        var image = tempCanvas.toDataURL("image/jpeg", 1.0);
+
+        var anchor = document.createElement('a');
+        anchor.href = image;
+        anchor.download = "chart.jpg";
+        anchor.click();
+     }
+</script>
 
 {% endblock %}
