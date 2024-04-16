@@ -677,15 +677,15 @@ def view_transactions(request, view_all = True):
             if start_date_str and end_date_str:
                 start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
                 end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
-                transactions = Transactions.objects.filter(week__gte=start_date, week__lte=end_date)
+                transactions = Transactions.objects.filter(week__gte=start_date, week__lte=end_date).order_by('-week')
             elif start_date_str:
                 start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
-                transactions = Transactions.objects.filter(week__gte=start_date)
+                transactions = Transactions.objects.filter(week__gte=start_date).order_by('-week')
             elif end_date_str:
                 end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
-                transactions = Transactions.objects.filter(week__lte=end_date)
+                transactions = Transactions.objects.filter(week__lte=end_date).order_by('-week')
             else:
-                transactions = Transactions.objects.all()
+                transactions = Transactions.objects.order_by('-week')
 
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
