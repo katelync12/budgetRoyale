@@ -179,6 +179,35 @@ def run():
     print(f"{'Savings Leaderboard Calculation':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
+    temp_result = remove_member_cancel("group_test", "testpassword")
+    print(f"{'Cancel remove member':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = remove_member_success("group_test", "testpassword")
+    print(f"{'Success remove member':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+
+    temp_result = join_link_in_group("group_test", "testpassword")
+    print(f"{'User cannot join when in a group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+        
+    temp_result = join_link_success("testCaseRemoveMember", "testpassword")
+    print(f"{'User join group from link':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+
+
+
+    temp_result = opt_out_comp("group_test", "testpassword")
+    print(f"{'Opt out of competition':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = opt_in_comp("group_test", "testpassword")
+    print(f"{'Opt back into competition':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = delete_group(username, password)
     print(f"{'Delete Group':<45} {temp_result}")
     if temp_result == "Failed":
@@ -1794,7 +1823,6 @@ def member_leave_group(username, password):
         url = url_head + "/groups/group_settings/"
         driver.get(url)
         time.sleep(buffer_constant)
-        time.sleep(5)
         check = driver.find_element("xpath", '//button[contains(text(), "Leave Group")]')
         check.click()
 
@@ -2036,6 +2064,134 @@ def nav_bar_personal_goal(username, password):
     except:
         return "Failed"
 
+def remove_member_cancel(username, password):
+    try:
+        if join_group("testCaseRemoveMember", "testpassword") == "Failed":
+            return "Failed"
+        login(username, password)
+        url = url_head + "/groups/group_settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//form[@id="remove-member-formtestCaseRemoveMember"]//button[contains(@class, "remove-member-btn")]')
+        button.click()
+        alert = driver.switch_to.alert
+        alert.dismiss()
+        time.sleep(1)
+        check = driver.find_element("xpath", '//form[@id="remove-member-formtestCaseRemoveMember"]')
+        return "Passed"
+    except:
+        return "Failed"
+
+def remove_member_success(username, password):
+    try:
+        login(username, password)
+        url = url_head + "/groups/group_settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//form[@id="remove-member-formtestCaseRemoveMember"]//button[contains(@class, "remove-member-btn")]')
+        button.click()
+        alert = driver.switch_to.alert
+        alert.accept()
+        time.sleep(1)
+        try:
+            check = driver.find_element("xpath", '//form[@id="remove-member-formtestCaseRemoveMember"]')
+            return "Failed"
+        except:
+            return "Passed"
+    except:
+        return "Failed"
+
+
+def opt_out_comp(username, password):
+    try:
+        login(username, password)
+        url = url_head + "/groups/group_settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//span[@class="slider round"]')
+        button.click()
+        url = url_head + "/groups/leaderboard/"
+        driver.get(url)
+        try:
+            check = driver.find_element("xpath", '//span[@class="player-name" and text()="group_test"]')
+            return "Failed"
+        except:
+            return "Passed"
+    except:
+        return "Failed"
+
+def opt_in_comp(username, password):
+    try:
+        login(username, password)
+        url = url_head + "/groups/group_settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//span[@class="slider round"]')
+        button.click()
+        url = url_head + "/groups/leaderboard/"
+        driver.get(url)
+        check = driver.find_element("xpath", '//span[@class="player-name" and text()="group_test"]')
+        return "Passed"
+    except:
+        return "Failed"
+
+def join_link_in_group(username, password):
+    try:
+        login(username, password)
+        url = url_head + "/groups/group_settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//button[@class="group-settings-button" and @id="popupBtn"]')
+        button.click()
+
+        popup_text_element = driver.find_element("xpath", '//div[@id="popupText"]')
+        popup_text = popup_text_element.text
+        driver.get(popup_text)
+        time.sleep(buffer_constant)
+        alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+        alert.accept()
+        return "Passed"
+    except:
+        return "Failed"
+
+def join_link_success(username, password):
+    try:
+        login("group_test", "testpassword")
+        url = url_head + "/groups/group_settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//button[@class="group-settings-button" and @id="popupBtn"]')
+        button.click()
+        popup_text_element = driver.find_element("xpath", '//div[@id="popupText"]')
+        popup_text = popup_text_element.text
+
+        url = url_head
+        driver.get(url)
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//a[contains(text(), "Profile")]')
+        button.click()
+        button = driver.find_element("xpath", '//button[contains(text(), "Log Out")]')
+        button.click()
+
+        login(username, password)
+        driver.get(popup_text)
+        time.sleep(buffer_constant)
+        alert = WebDriverWait(driver, 2).until(EC.alert_is_present())
+        alert.accept()
+        check = driver.find_element("xpath", '//button[contains(text(), "Leave Group")]')
+        check.click()
+
+        time.sleep(1)
+        alert = driver.switch_to.alert
+        alert.accept()
+
+        return "Passed"
+    except:
+        return "Failed"
+
+
+
+
 #main declaration
 if __name__ == "__main__":
     if len(sys.argv) > 2:
@@ -2048,3 +2204,4 @@ if __name__ == "__main__":
     except AssertionError as e:
         print(e)
         exit(1)
+
