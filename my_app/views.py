@@ -24,6 +24,8 @@ import json
 from django_user_agents.utils import get_user_agent
 import colorsys
 #HELPER, DO NOT ADD LOGIN REQUIRED
+def format_as_currency(amount):
+    return "${:,.2f}".format(amount)
 def calculate_weekly_savings(user):
     # Get the start and end date for the past week
     end_date = datetime.now()
@@ -140,7 +142,8 @@ def spendings_breakdown(request):
     
     # Sort the leaderboard by score in descending order
     leaderboard.sort(key=lambda x: x['score'], reverse=True)
-    
+    for entry in leaderboard:
+        entry['score'] = format_as_currency(entry['score'])
     context = {
         'leaderboard': leaderboard,  # Pass the primary group goal's name in the context
     }
@@ -306,7 +309,8 @@ def group_leaderboard(request):
     
     # Sort the leaderboard by score in descending order
     leaderboard.sort(key=lambda x: x['score'], reverse=True)
-    
+    for entry in leaderboard:
+        entry['score'] = format_as_currency(entry['score'])
     context = {
         'leaderboard': leaderboard,
         'opted': opted,
