@@ -181,11 +181,13 @@ def profile_settings(request):
     print("profile_settings")
     user = request.user
     user_profile = UserProfile.objects.filter(user=user).first()
-    color = user_profile.color if user_profile and user_profile.color else ''
+    color = ''
+    if user_profile and user_profile.color is not None:
+        color = user_profile.color
     
     # Calculate hue value
     hue_value = 0
-    val = "0%"
+    val = "0.0%"
     if color:
         # Parse the color to get RGB components
         r, g, b = hex_to_rgb(color)
@@ -196,12 +198,15 @@ def profile_settings(request):
         # Convert hue to degrees
         hue_value = int(h * 360)
         val = str((hue_value / 360) * 100) + '%'  # Calculate the hue value as a percentage
+    else:
+        color = "#c27070"
     context = {
         'color': color,
         'val': val,
         'hue': hue_value,
         'subscribed': SubscriberList.objects.filter(user=user).exists()
     }
+
     print(color)
     print(hue_value)
     print(val)
