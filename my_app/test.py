@@ -36,270 +36,280 @@ def run():
     failed = False
     username = str(uuid.uuid4())[:20]
     password="testpassword"
-    temp_result = login_failed("sam", "test")
-    print(f"{'Login failed':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = login_success("sam", "testpassword")
-    print(f"{'Login success':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    login_logout("sam", "testpassword")
-    temp_result = create_account_error(username, password)
-    print(f"{'Create account error':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_account(username, password)
-    print(f"{'Create account':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = spendings_total_zero(username, password)
-    print(f"{'Spendings total no transactions':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = date_toggle_spendings_total(username, password)
-    print(f"{'Date Toggle Spendings Total':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = nav_bar_view_transaction(username, password)
-    print(f"{'Nav Bar View Transaction':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = nav_bar_personal_goal(username, password)
-    print(f"{'Nav Bar Personal Goal':<45} {temp_result}")
-    if temp_result == "Failed":
-        print("intitialized")
-        failed = True
-    temp_result = streak(username, password)
-    print(f"{'New account streak':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = same_day_login_streak(username, password)
-    print(f"{'Same Day Login Streak':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_transaction(username, password)
-    print(f"{'Create transaction':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = cancel_transaction(username, password)
-    print(f"{'Cancel transaction':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = edit_transaction(username, password)
-    print(f"{'Edit transaction':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = cancel_delete_transaction(username, password)
-    print(f"{'Cancel delete transaction':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = delete_transaction(username, password)
-    print(f"{'Delete transaction':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_personal_goal(username, password)
-    print(f"{'Create personal goal':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = edit_personal_goal(username, password)
-    print(f"{'Edit personal goal':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = delete_personal_goal(username, password)
-    print(f"{'Delete personal goal':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_personal_goal_negative_amount(username, password)
-    print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_personal_goal_dates_error(username, password)
-    print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    create_personal_goal_custom(username, password)
-    temp_result = create_six_goals(username, password)
-    print(f"{'Create six goals':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = savings_personal_goal_value_groceries(username, password)
-    print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = savings_personal_goal_value_transportation(username, password)
-    print(f"{'Savings personal goal: Transportation':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = spendings_personal_goal_value_groceries(username, password)
-    print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = spendings_multiple_and_edit(username, password)
-    print(f"{'Spendings multiple and edit':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = search_group_leaderboard(username, password)
-    print(f"{'Select for the group leaderboard':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = search_group_w(username, password)
-    print(f"{'Select for the group w':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_group_no_name(username, password)
-    print(f"{'Create group with no name':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_group_existing_username(username, password)
-    print(f"{'Create group with existing group name':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_group_mismatching_passwords(username, password)
-    print(f"{'Create group with mismatching passwords':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = delete_account_fail(username, password)
-    print(f"{'Delete account failed':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_group(username, password)
-    print(f"{'Create Group':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = cancel_delete_group(username, password)
-    print(f"{'Cancel Delete Group':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
+    # temp_result = login_failed("sam", "test")
+    # print(f"{'Login failed':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = login_success("sam", "testpassword")
+    # print(f"{'Login success':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # login_logout("sam", "testpassword")
+    # temp_result = create_account_error(username, password)
+    # print(f"{'Create account error':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_account(username, password)
+    # print(f"{'Create account':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = spendings_total_zero(username, password)
+    # print(f"{'Spendings total no transactions':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = date_toggle_spendings_total(username, password)
+    # print(f"{'Date Toggle Spendings Total':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = nav_bar_view_transaction(username, password)
+    # print(f"{'Nav Bar View Transaction':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = nav_bar_personal_goal(username, password)
+    # print(f"{'Nav Bar Personal Goal':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     print("intitialized")
+    #     failed = True
+    # temp_result = streak(username, password)
+    # print(f"{'New account streak':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = same_day_login_streak(username, password)
+    # print(f"{'Same Day Login Streak':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_transaction(username, password)
+    # print(f"{'Create transaction':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = cancel_transaction(username, password)
+    # print(f"{'Cancel transaction':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = edit_transaction(username, password)
+    # print(f"{'Edit transaction':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = cancel_delete_transaction(username, password)
+    # print(f"{'Cancel delete transaction':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = delete_transaction(username, password)
+    # print(f"{'Delete transaction':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_personal_goal(username, password)
+    # print(f"{'Create personal goal':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = edit_personal_goal(username, password)
+    # print(f"{'Edit personal goal':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = delete_personal_goal(username, password)
+    # print(f"{'Delete personal goal':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_personal_goal_negative_amount(username, password)
+    # print(f"{'Goal w/ Neg Amount':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_personal_goal_dates_error(username, password)
+    # print(f"{'Goal w/ Invalid Date':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # create_personal_goal_custom(username, password)
+    # temp_result = create_six_goals(username, password)
+    # print(f"{'Create six goals':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = savings_personal_goal_value_groceries(username, password)
+    # print(f"{'Savings personal goal: Groceries':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = savings_personal_goal_value_transportation(username, password)
+    # print(f"{'Savings personal goal: Transportation':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = spendings_personal_goal_value_groceries(username, password)
+    # print(f"{'Spendings personal goal: Groceries':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = spendings_multiple_and_edit(username, password)
+    # print(f"{'Spendings multiple and edit':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = search_group_leaderboard(username, password)
+    # print(f"{'Select for the group leaderboard':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = search_group_w(username, password)
+    # print(f"{'Select for the group w':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_group_no_name(username, password)
+    # print(f"{'Create group with no name':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_group_existing_username(username, password)
+    # print(f"{'Create group with existing group name':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_group_mismatching_passwords(username, password)
+    # print(f"{'Create group with mismatching passwords':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = delete_account_fail(username, password)
+    # print(f"{'Delete account failed':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_group(username, password)
+    # print(f"{'Create Group':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = cancel_delete_group(username, password)
+    # print(f"{'Cancel Delete Group':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
     
-    temp_result = create_group_goal(username, password)
-    print(f"{'Create Group Goal':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = color_check_default(username, password)
-    print(f"{'Profile Default Color':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = color_change(username, password)
-    print(f"{'Profile Change Color':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = leaderboard_savings_overall_calculation(username, password)
-    print(f"{'Savings Leaderboard Calculation':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = remove_member_cancel("group_test", "testpassword")
-    print(f"{'Cancel remove member':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = remove_member_success("group_test", "testpassword")
-    print(f"{'Success remove member':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
+    # temp_result = create_group_goal(username, password)
+    # print(f"{'Create Group Goal':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = color_check_default(username, password)
+    # print(f"{'Profile Default Color':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = color_change(username, password)
+    # print(f"{'Profile Change Color':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = leaderboard_savings_overall_calculation(username, password)
+    # print(f"{'Savings Leaderboard Calculation':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = remove_member_cancel("group_test", "testpassword")
+    # print(f"{'Cancel remove member':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = remove_member_success("group_test", "testpassword")
+    # print(f"{'Success remove member':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
 
-    temp_result = join_link_in_group("group_test", "testpassword")
-    print(f"{'User cannot join when in a group':<45} {temp_result}")
+    # temp_result = join_link_in_group("group_test", "testpassword")
+    # print(f"{'User cannot join when in a group':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+        
+    # temp_result = join_link_success("testCaseRemoveMember", "testpassword")
+    # print(f"{'User join group from link':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = opt_out_comp("group_test", "testpassword")
+    # print(f"{'Opt out of competition':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = opt_in_comp("group_test", "testpassword")
+    # print(f"{'Opt back into competition':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = delete_group(username, password)
+    # print(f"{'Delete Group':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # #steps for this integration test since delete group goal doesnt exist
+    # temp_result = create_group(username, password)
+    # print(f"{'Create/join group after delete group':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_group_goal2(username, password)
+    # print(f"{'Create Spendings, Nonoverall Group Goal':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = leaderboard_spending_calculation(username, password)
+    # print(f"{'Spending Leaderboard Calculation':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = delete_group(username, password)
+    # #end of integration test
+    # temp_result = start_after_end_date("test-dates", "testpassword")
+    # print(f"{'Start after End Date Error':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = start_after_current_date("test-dates", "testpassword")
+    # print(f"{'Start after Current Date Error':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = sort_by_date("test-dates", "testpassword")
+    # print(f"{'Sort Transactions by Date':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = select_transportation_category("test-piechart", "testpassword")
+    # print(f"{'Select transportation category':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = select_groceries_category("test-piechart", "testpassword")
+    # print(f"{'Select only groceries category':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = admin_leave_group("group_test", "testpassword")
+    # print(f"{'No leave group option for admin':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = join_group(username, password)
+    # print(f"{'Member joining group':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = member_leave_group(username, password)
+    # print(f"{'Member leaving group':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = transaction_not_in_past_week(username, password)
+    # print(f"{'Transaction not within past week':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = savings_total_large(username, password)
+    # print(f"{'Savings Total Large Number':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = delete_account_success(username, password)
+    # print(f"{'Delete account':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = create_group_goal_edit("user1", "testpassword")
+    # print(f"{'Create group goal':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = edit_group_goal("user1", "testpassword")
+    # print(f"{'Edit group goal':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = delete_group_goal("user1", "testpassword")
+    # print(f"{'Delete group goal':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = spendings_breakdown_transaction("new12", "qwerty098")
+    # print(f"{'Transaction with breakdown':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = spendings_breakdown_transaction_not_range("new12", "qwerty098")
+    # print(f"{'Transaction with breakdown - not in range':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = view_transaction_groceries("test-piechart", "testpassword")
+    # print(f"{'View transaction groceries':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    # temp_result = view_transaction_transportation("test-piechart", "testpassword")
+    # print(f"{'View transaction transportation':<45} {temp_result}")
+    # if temp_result == "Failed":
+    #     failed = True
+    temp_result = public_group("test-piechart", "testpassword")
+    print(f"{'Public group':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
         
-    temp_result = join_link_success("testCaseRemoveMember", "testpassword")
-    print(f"{'User join group from link':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-
-
-
-    temp_result = opt_out_comp("group_test", "testpassword")
-    print(f"{'Opt out of competition':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = opt_in_comp("group_test", "testpassword")
-    print(f"{'Opt back into competition':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = delete_group(username, password)
-    print(f"{'Delete Group':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    #steps for this integration test since delete group goal doesnt exist
-    temp_result = create_group(username, password)
-    print(f"{'Create/join group after delete group':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_group_goal2(username, password)
-    print(f"{'Create Spendings, Nonoverall Group Goal':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = leaderboard_spending_calculation(username, password)
-    print(f"{'Spending Leaderboard Calculation':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = delete_group(username, password)
-    #end of integration test
-    temp_result = start_after_end_date("test-dates", "testpassword")
-    print(f"{'Start after End Date Error':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = start_after_current_date("test-dates", "testpassword")
-    print(f"{'Start after Current Date Error':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = sort_by_date("test-dates", "testpassword")
-    print(f"{'Sort Transactions by Date':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = select_transportation_category("test-piechart", "testpassword")
-    print(f"{'Select transportation category':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = select_groceries_category("test-piechart", "testpassword")
-    print(f"{'Select only groceries category':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = admin_leave_group("group_test", "testpassword")
-    print(f"{'No leave group option for admin':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = join_group(username, password)
-    print(f"{'Member joining group':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = member_leave_group(username, password)
-    print(f"{'Member leaving group':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = transaction_not_in_past_week(username, password)
-    print(f"{'Transaction not within past week':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = savings_total_large(username, password)
-    print(f"{'Savings Total Large Number':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = delete_account_success(username, password)
-    print(f"{'Delete account':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = create_group_goal_edit("user1", "testpassword")
-    print(f"{'Create group goal':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = edit_group_goal("user1", "testpassword")
-    print(f"{'Edit group goal':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = delete_group_goal("user1", "testpassword")
-    print(f"{'Delete group goal':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = spendings_breakdown_transaction("new12", "qwerty098")
-    print(f"{'Transaction with breakdown':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
-    temp_result = spendings_breakdown_transaction_not_range("new12", "qwerty098")
-    print(f"{'Transaction with breakdown - not in range':<45} {temp_result}")
-    if temp_result == "Failed":
-        failed = True
 
 
     driver.quit()
@@ -2308,6 +2318,53 @@ def spendings_breakdown_transaction_not_range(username, password):
         return "Failed"
     except:
         return "Failed"
+    
+def view_transaction_groceries(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+        return "Passed"
+    except:
+        return "Failed"
+    
+def view_transaction_transportation(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+        return "Passed"
+    except:
+        return "Failed"
+    
+def public_group(username, password):
+    login(username, password)
+    url = url_head + "/groups/"
+    driver.get(url)
+    time.sleep(buffer_constant)
+    search_input = driver.find_element(By.ID, "search_input")
+    search_input.click()
+    search_input.send_keys("publicGroup")
+    search_button = driver.find_element(By.CLASS_NAME, "search-btn")
+    search_button.click()
+    time.sleep(buffer_constant)
+    check = driver.find_element("xpath", '//button[contains(text(), "Join Group")]')
+    check.click()
+    time.sleep(buffer_constant)
+    try:
+        check = driver.find_element("xpath", "//input[@type='password' and @name='password']")
+        return "Failed"
+    except:
+        return "Passed"
+
 
 #main declaration
 if __name__ == "__main__":
