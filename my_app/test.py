@@ -171,8 +171,17 @@ def run():
     print(f"{'Cancel Delete Group':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
+    
     temp_result = create_group_goal(username, password)
     print(f"{'Create Group Goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = color_check_default(username, password)
+    print(f"{'Profile Default Color':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = color_change(username, password)
+    print(f"{'Profile Change Color':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
     temp_result = leaderboard_savings_overall_calculation(username, password)
@@ -1783,8 +1792,8 @@ def leaderboard_savings_overall_calculation(username, password):
         right_content = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']//div[@class='right-content']")
         # Find the span with class player-score and get its text (assuming it contains the score)
         score_span = right_content.find_element("xpath", ".//span[@class='player-score']")
-        score = float(score_span.text)
-        if (score == 15.0):
+        score = score_span.text
+        if (score == "$15.00"):
             return "Passed"
         return "Failed"
     except Exception as e:
@@ -1842,7 +1851,59 @@ def member_leave_group(username, password):
         return "Passed"
     except:
         return "Failed"
-
+def color_check_default(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Leaderboard")]')
+        button.click()
+        time.sleep(2)
+        
+        # Find the leaderboard entry for the specified username
+        user_entry = driver.find_element("xpath", f"//div[@class='leaderboard-entry']//div[@class='left-content']//span[@class='player-name' and contains(text(), '{username}')]")
+        
+        # Get the style attribute of the leaderboard entry div
+        leaderboarddiv = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']")
+        entry_style = leaderboarddiv.value_of_css_property('background-color')
+        # Check if the style attribute contains the desired background color
+        if "rgba(91, 95, 197, 0.4)" == entry_style:
+            return "Passed"
+        else:
+            return "Failed"
+    except Exception as e:
+        return "Failed"
+def color_change(username, password):
+    try:
+        login(username, password)
+        url = url_head + "/settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+    
+        button = driver.find_element("xpath", '//button[contains(text(), "Update Profile Color")]')
+        button.click()
+        time.sleep(3)
+        alert = driver.switch_to.alert
+        alert.accept()
+        time.sleep(1)
+        button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Leaderboard")]')
+        button.click()
+        time.sleep(2)
+        user_entry = driver.find_element("xpath", f"//div[@class='leaderboard-entry']//div[@class='left-content']//span[@class='player-name' and contains(text(), '{username}')]")
+        
+        # Get the style attribute of the leaderboard entry div
+        leaderboarddiv = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']")
+        entry_style = leaderboarddiv.value_of_css_property('background-color')
+        # Check if the style attribute contains the desired background color
+        if "rgba(194, 112, 112, 1)" == entry_style:
+            return "Passed"
+        else:
+            return "Failed"
+    except Exception as e:
+        print("Error occurred:", e)
+        return "Failed"
 def leaderboard_spending_calculation(username, password):
     try:
         login(username, password)
@@ -1858,8 +1919,8 @@ def leaderboard_spending_calculation(username, password):
         right_content = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']//div[@class='right-content']")
         # Find the span with class player-score and get its text (assuming it contains the score)
         score_span = right_content.find_element("xpath", ".//span[@class='player-score']")
-        score = float(score_span.text)
-        if (score == -10.0):
+        score = score_span.text
+        if (score == "$-10.00"):
             return "Passed"
         return "Failed"
     except:
