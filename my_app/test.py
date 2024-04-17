@@ -206,9 +206,6 @@ def run():
     print(f"{'User join group from link':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
-
-
-
     temp_result = opt_out_comp("group_test", "testpassword")
     print(f"{'Opt out of competition':<45} {temp_result}")
     if temp_result == "Failed":
@@ -300,6 +297,19 @@ def run():
     print(f"{'Transaction with breakdown - not in range':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
+    temp_result = view_transaction_groceries("test-piechart", "testpassword")
+    print(f"{'View transaction groceries':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = view_transaction_transportation("test-piechart", "testpassword")
+    print(f"{'View transaction transportation':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = public_group("test-piechart", "testpassword")
+    print(f"{'Public group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+        
 
 
     driver.quit()
@@ -2308,6 +2318,53 @@ def spendings_breakdown_transaction_not_range(username, password):
         return "Failed"
     except:
         return "Failed"
+    
+def view_transaction_groceries(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+        return "Passed"
+    except:
+        return "Failed"
+    
+def view_transaction_transportation(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+        return "Passed"
+    except:
+        return "Failed"
+    
+def public_group(username, password):
+    login(username, password)
+    url = url_head + "/groups/"
+    driver.get(url)
+    time.sleep(buffer_constant)
+    search_input = driver.find_element(By.ID, "search_input")
+    search_input.click()
+    search_input.send_keys("publicGroup")
+    search_button = driver.find_element(By.CLASS_NAME, "search-btn")
+    search_button.click()
+    time.sleep(buffer_constant)
+    check = driver.find_element("xpath", '//button[contains(text(), "Join Group")]')
+    check.click()
+    time.sleep(buffer_constant)
+    try:
+        check = driver.find_element("xpath", "//input[@type='password' and @name='password']")
+        return "Failed"
+    except:
+        return "Passed"
+
 
 #main declaration
 if __name__ == "__main__":
