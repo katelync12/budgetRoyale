@@ -305,6 +305,14 @@ def run():
     print(f"{'View transaction transportation':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
+    temp_result = view_transaction_no_transaction_persistent("test-piechart", "testpassword")
+    print(f"{'View transaction no transactions persistent':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = view_transaction_date_and_category("test_sub", "testpassword")
+    print(f"{'View transaction date and category filter':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
     temp_result = public_group("test-piechart", "testpassword")
     print(f"{'Public group':<45} {temp_result}")
     if temp_result == "Failed":
@@ -2332,6 +2340,7 @@ def view_transaction_groceries(username, password):
     except:
         return "Failed"
     
+    
 def view_transaction_transportation(username, password):
     try:
         login(username, password)
@@ -2345,6 +2354,143 @@ def view_transaction_transportation(username, password):
     except:
         return "Failed"
     
+def view_transaction_no_transaction_persistent(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        start_date = driver.find_element(By.ID, "start_date")
+        start_date.send_keys("06/12/2004")
+        end_date = driver.find_element(By.ID, "end_date")
+        end_date.send_keys("06/12/2005")
+        time.sleep(1)
+        button = driver.find_element("xpath", "//button[@onclick='filterTransactions()']")
+        button.click()
+        time.sleep(1)
+        button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+            return "Failed"
+        except:
+            pass
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Dashboard")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(3)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+            return "Failed"
+        except:
+            return "Passed"
+    except Exception as e:
+        return "Failed"
+def view_transaction_no_transaction_persistent(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        start_date = driver.find_element(By.ID, "start_date")
+        start_date.send_keys("06/12/2004")
+        end_date = driver.find_element(By.ID, "end_date")
+        end_date.send_keys("06/12/2005")
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//button[@onclick='filterTransactions()']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            return "Failed"
+        except:
+            pass
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+            return "Failed"
+        except:
+            pass
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Dashboard")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            return "Failed"
+        except:
+            return "Passed"
+    except Exception as e:
+        return "Failed"
+    
+def view_transaction_date_and_category(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        start_date = driver.find_element(By.ID, "start_date")
+        start_date.send_keys("06/12/2004")
+        end_date = driver.find_element(By.ID, "end_date")
+        end_date.send_keys("06/12/2005")
+        time.sleep(1)
+        button = driver.find_element("xpath", "//button[@onclick='filterTransactions()']")
+        button.click()
+        time.sleep(1)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Lyft")]')
+            return "Failed"
+        except:
+            pass
+        button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Groceries")]')
+            return "Failed"
+        except:
+            pass
+        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+        return "Passed"
+    except Exception as e:
+        return "Failed"
+
 def public_group(username, password):
     login(username, password)
     url = url_head + "/groups/"
@@ -2364,6 +2510,30 @@ def public_group(username, password):
         return "Failed"
     except:
         return "Passed"
+def subscription_change(username, password):
+    try:
+        login(username, password)
+        url = url_head + "/settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", "//input[@type='checkbox' and @id='toggleButton']")
+        check.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        url = url_head + "/settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", "//input[@type='checkbox' and @id='toggleButton']")
+        if not check.is_selected():
+          return "Failed"
+        check.click()
+        return "Passed"
+    except Exception as e:
+        print(e)
+        return "Failed"
 
 
 #main declaration
