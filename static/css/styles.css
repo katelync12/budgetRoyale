@@ -206,7 +206,7 @@ background-color: white;
 display: flex;
 justify-content: center;
 align-items: center;
-margin: 0;
+margin: 5px;
 }
 
 .styled-table {
@@ -622,6 +622,11 @@ border: 1px solid #ccc; /* Add a border */
 /* end create group */
 
 /* Styling for group settings */
+
+.group-settings-table {
+  padding: 5px !important;
+}
+
 .group-header-settings {
 text-align: center;
 font-weight: 600;
