@@ -27,7 +27,7 @@ urlpatterns = [
     # path('', views.home, name="homepage"),
     
       # configured the url
-    # path('index/', views.index, name="homepage1"),
+    # path('index/ ', views.index, name="homepage1"),
 
     # path("", include("my_app.urls")),
     # path('edit_transaction/', views.edit_transaction, name='edit_transaction_action'),
