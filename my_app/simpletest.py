@@ -47,7 +47,7 @@ def run():
     print(f"{'Login failed':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
-    temp_result = login_success("sam", "testpassword")
+    temp_result = login_success("sameeeeeee", "testpassword")
     print(f"{'Login success':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
