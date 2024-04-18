@@ -84,13 +84,13 @@
     {% csrf_token %}
 
     {% block fields %}
-  
+  <!--
     <div>
       <input type="text" name="username" placeholder="Username" class="custom-input">
     </div>
     <div>
       <input type="password" name="password" placeholder="Password" class="custom-input">      
-    </div>
+    </div>-->
 
   {% endblock %}
     <!--<div style="margin-bottom: 30px;" class="fieldWrapper">
@@ -106,7 +106,7 @@
 
     {% block link %}
     <div class="forgot-password" style="font-size: 14px; margin-bottom: 10px;">
-      <a href="{% url 'password_reset' %}">Forgot my password?!</a>
+      <a href="{% url 'password_reset' %}">Forgot my password</a>
     </div>
     {% endblock %}
      <button type="submit" style="background-color: #5B5FC5; /* Blue button color */
