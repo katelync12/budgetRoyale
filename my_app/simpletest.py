@@ -14,7 +14,8 @@ import uuid
 buffer_constant = .1
 failed = False
 browser_options = ChromeOptions()
-browser_options.headless = False
+browser_options.add_argument("--headless")
+#browser_options.headless = False
 browser_options.add_argument('--ignore-certificate-errors-spki-list')
 browser_options.add_argument('--ignore-ssl-errors')
 browser_options.add_argument("--disable-web-security")
