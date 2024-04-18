@@ -52,6 +52,8 @@ def run():
     if temp_result == "Failed":
         failed = True
     login_logout("sam", "testpassword")
+    driver.quit()
+    assert not failed, "Not all test cases passed"
 
 def login_success(username, password):
     try:
