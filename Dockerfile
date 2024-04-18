@@ -1,5 +1,5 @@
 FROM python:3
-WORKDIR .
+WORKDIR /code
 RUN pip install django psycopg2 psycopg2-binary python-decouple django-pgtrigger APScheduler cryptography django-user-agents
 COPY . .
 ENV PYTHONUNBUFFERED=1
