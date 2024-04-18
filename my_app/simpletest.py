@@ -14,7 +14,15 @@ import uuid
 buffer_constant = .1
 failed = False
 browser_options = ChromeOptions()
-browser_options.headless = False
+browser_options.add_argument("--headless")
+#browser_options.headless = False
+browser_options.add_argument("window-size=1400,1500")
+browser_options.add_argument("--disable-gpu")
+browser_options.add_argument("--no-sandbox")
+browser_options.add_argument("start-maximized")
+browser_options.add_argument("enable-automation")
+browser_options.add_argument("--disable-infobars")
+browser_options.add_argument("--disable-dev-shm-usage")
 browser_options.add_argument('--ignore-certificate-errors-spki-list')
 browser_options.add_argument('--ignore-ssl-errors')
 browser_options.add_argument("--disable-web-security")
@@ -44,6 +52,8 @@ def run():
     if temp_result == "Failed":
         failed = True
     login_logout("sam", "testpassword")
+    driver.quit()
+    assert not failed, "Not all test cases passed"
 
 def login_success(username, password):
     try:

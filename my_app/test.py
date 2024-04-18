@@ -171,8 +171,17 @@ def run():
     print(f"{'Cancel Delete Group':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
+    
     temp_result = create_group_goal(username, password)
     print(f"{'Create Group Goal':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = color_check_default(username, password)
+    print(f"{'Profile Default Color':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = color_change(username, password)
+    print(f"{'Profile Change Color':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
     temp_result = leaderboard_savings_overall_calculation(username, password)
@@ -197,9 +206,6 @@ def run():
     print(f"{'User join group from link':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
-
-
-
     temp_result = opt_out_comp("group_test", "testpassword")
     print(f"{'Opt out of competition':<45} {temp_result}")
     if temp_result == "Failed":
@@ -283,6 +289,35 @@ def run():
     print(f"{'Delete group goal':<45} {temp_result}")
     if temp_result == "Failed":
         failed = True
+    temp_result = spendings_breakdown_transaction("new12", "qwerty098")
+    print(f"{'Transaction with breakdown':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = spendings_breakdown_transaction_not_range("new12", "qwerty098")
+    print(f"{'Transaction with breakdown - not in range':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = view_transaction_groceries("test-piechart", "testpassword")
+    print(f"{'View transaction groceries':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = view_transaction_transportation("test-piechart", "testpassword")
+    print(f"{'View transaction transportation':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = view_transaction_no_transaction_persistent("test-piechart", "testpassword")
+    print(f"{'View transaction no transactions persistent':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = view_transaction_date_and_category("test_sub", "testpassword")
+    print(f"{'View transaction date and category filter':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+    temp_result = public_group("test-piechart", "testpassword")
+    print(f"{'Public group':<45} {temp_result}")
+    if temp_result == "Failed":
+        failed = True
+        
 
 
     driver.quit()
@@ -1775,8 +1810,8 @@ def leaderboard_savings_overall_calculation(username, password):
         right_content = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']//div[@class='right-content']")
         # Find the span with class player-score and get its text (assuming it contains the score)
         score_span = right_content.find_element("xpath", ".//span[@class='player-score']")
-        score = float(score_span.text)
-        if (score == 15.0):
+        score = score_span.text
+        if (score == "$15.00"):
             return "Passed"
         return "Failed"
     except Exception as e:
@@ -1834,7 +1869,59 @@ def member_leave_group(username, password):
         return "Passed"
     except:
         return "Failed"
-
+def color_check_default(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Leaderboard")]')
+        button.click()
+        time.sleep(2)
+        
+        # Find the leaderboard entry for the specified username
+        user_entry = driver.find_element("xpath", f"//div[@class='leaderboard-entry']//div[@class='left-content']//span[@class='player-name' and contains(text(), '{username}')]")
+        
+        # Get the style attribute of the leaderboard entry div
+        leaderboarddiv = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']")
+        entry_style = leaderboarddiv.value_of_css_property('background-color')
+        # Check if the style attribute contains the desired background color
+        if "rgba(91, 95, 197, 0.4)" == entry_style:
+            return "Passed"
+        else:
+            return "Failed"
+    except Exception as e:
+        return "Failed"
+def color_change(username, password):
+    try:
+        login(username, password)
+        url = url_head + "/settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+    
+        button = driver.find_element("xpath", '//button[contains(text(), "Update Profile Color")]')
+        button.click()
+        time.sleep(3)
+        alert = driver.switch_to.alert
+        alert.accept()
+        time.sleep(1)
+        button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Leaderboard")]')
+        button.click()
+        time.sleep(2)
+        user_entry = driver.find_element("xpath", f"//div[@class='leaderboard-entry']//div[@class='left-content']//span[@class='player-name' and contains(text(), '{username}')]")
+        
+        # Get the style attribute of the leaderboard entry div
+        leaderboarddiv = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']")
+        entry_style = leaderboarddiv.value_of_css_property('background-color')
+        # Check if the style attribute contains the desired background color
+        if "rgba(194, 112, 112, 1)" == entry_style:
+            return "Passed"
+        else:
+            return "Failed"
+    except Exception as e:
+        print("Error occurred:", e)
+        return "Failed"
 def leaderboard_spending_calculation(username, password):
     try:
         login(username, password)
@@ -1850,8 +1937,8 @@ def leaderboard_spending_calculation(username, password):
         right_content = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']//div[@class='right-content']")
         # Find the span with class player-score and get its text (assuming it contains the score)
         score_span = right_content.find_element("xpath", ".//span[@class='player-score']")
-        score = float(score_span.text)
-        if (score == -10.0):
+        score = score_span.text
+        if (score == "$-10.00"):
             return "Passed"
         return "Failed"
     except:
@@ -2190,6 +2277,263 @@ def join_link_success(username, password):
         return "Failed"
 
 
+
+
+def spendings_breakdown_transaction(username, password):
+    try:
+        login(username, password)
+        create_transaction_with_group_goal_subroutine("Testing Edited", "10" ,"04/15/2024", True, "", "")
+        #create_transaction_with_group_goal_subroutine("No category savings", "10" ,"06/12/2004", True, "", "")
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Spendings Breakdown")]')
+        button.click()
+        time.sleep(2)
+        user_entry = driver.find_element("xpath", f"//div[@class='leaderboard-entry']//div[@class='left-content']//span[@class='player-name' and contains(text(), '{username}')]")
+        right_content = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']//div[@class='right-content']")
+        # Find the span with class player-score and get its text (assuming it contains the score)
+        score_span = right_content.find_element("xpath", ".//span[@class='player-score']")
+        #score = float(score_span.text)
+        score = driver.execute_script('return document.body.innerText.includes("$10.00");')
+        delete_transaction(username, password)
+        if (score == True):
+            return "Passed"
+        return "Failed"
+    except:
+        return "Failed"
+
+def spendings_breakdown_transaction_not_range(username, password):
+    try:
+        login(username, password)
+        create_transaction_with_group_goal_subroutine("Testing Edited", "10" ,"04/15/2003", True, "", "")
+        #create_transaction_with_group_goal_subroutine("No category savings", "10" ,"06/12/2004", True, "", "")
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//a[contains(text(), "Group")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Spendings Breakdown")]')
+        button.click()
+        time.sleep(2)
+        user_entry = driver.find_element("xpath", f"//div[@class='leaderboard-entry']//div[@class='left-content']//span[@class='player-name' and contains(text(), '{username}')]")
+        right_content = user_entry.find_element("xpath", ".//ancestor::div[@class='leaderboard-entry']//div[@class='right-content']")
+        # Find the span with class player-score and get its text (assuming it contains the score)
+        score_span = right_content.find_element("xpath", ".//span[@class='player-score']")
+        #score = float(score_span.text)
+        score = driver.execute_script('return document.body.innerText.includes("$10.00");')
+        delete_transaction(username, password)
+        if (score == False):
+            return "Passed"
+        return "Failed"
+    except:
+        return "Failed"
+    
+def view_transaction_groceries(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+        return "Passed"
+    except:
+        return "Failed"
+    
+    
+def view_transaction_transportation(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+        return "Passed"
+    except:
+        return "Failed"
+    
+def view_transaction_no_transaction_persistent(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        start_date = driver.find_element(By.ID, "start_date")
+        start_date.send_keys("06/12/2004")
+        end_date = driver.find_element(By.ID, "end_date")
+        end_date.send_keys("06/12/2005")
+        time.sleep(1)
+        button = driver.find_element("xpath", "//button[@onclick='filterTransactions()']")
+        button.click()
+        time.sleep(1)
+        button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+            return "Failed"
+        except:
+            pass
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Dashboard")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(3)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+            return "Failed"
+        except:
+            return "Passed"
+    except Exception as e:
+        return "Failed"
+def view_transaction_no_transaction_persistent(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        start_date = driver.find_element(By.ID, "start_date")
+        start_date.send_keys("06/12/2004")
+        end_date = driver.find_element(By.ID, "end_date")
+        end_date.send_keys("06/12/2005")
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//button[@onclick='filterTransactions()']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            return "Failed"
+        except:
+            pass
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Walmart")]')
+            return "Failed"
+        except:
+            pass
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Dashboard")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+            return "Failed"
+        except:
+            return "Passed"
+    except Exception as e:
+        return "Failed"
+    
+def view_transaction_date_and_category(username, password):
+    try:
+        login(username, password)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        time.sleep(buffer_constant)
+        start_date = driver.find_element(By.ID, "start_date")
+        start_date.send_keys("06/12/2004")
+        end_date = driver.find_element(By.ID, "end_date")
+        end_date.send_keys("06/12/2005")
+        time.sleep(1)
+        button = driver.find_element("xpath", "//button[@onclick='filterTransactions()']")
+        button.click()
+        time.sleep(1)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Lyft")]')
+            return "Failed"
+        except:
+            pass
+        button = driver.find_element("xpath", "//label[@class='dropdown-label']")
+        button.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", "//input[@type='checkbox' and @name='selected_categories' and @value='Transportation']")
+        button.click()
+        button = driver.find_element("xpath", "//button[@type='button' and @onclick='submitForm()']")
+        button.click()
+        time.sleep(buffer_constant)
+        try:
+            check = driver.find_element("xpath", '//th[contains(text(), "Groceries")]')
+            return "Failed"
+        except:
+            pass
+        check = driver.find_element("xpath", '//th[contains(text(), "Uber")]')
+        return "Passed"
+    except Exception as e:
+        return "Failed"
+
+def public_group(username, password):
+    login(username, password)
+    url = url_head + "/groups/"
+    driver.get(url)
+    time.sleep(buffer_constant)
+    search_input = driver.find_element(By.ID, "search_input")
+    search_input.click()
+    search_input.send_keys("publicGroup")
+    search_button = driver.find_element(By.CLASS_NAME, "search-btn")
+    search_button.click()
+    time.sleep(buffer_constant)
+    check = driver.find_element("xpath", '//button[contains(text(), "Join Group")]')
+    check.click()
+    time.sleep(buffer_constant)
+    try:
+        check = driver.find_element("xpath", "//input[@type='password' and @name='password']")
+        return "Failed"
+    except:
+        return "Passed"
+def subscription_change(username, password):
+    try:
+        login(username, password)
+        url = url_head + "/settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", "//input[@type='checkbox' and @id='toggleButton']")
+        check.click()
+        time.sleep(buffer_constant)
+        button = driver.find_element("xpath", '//a[contains(text(), "Personal")]')
+        button.click()
+        button = driver.find_element("xpath", '//a[contains(text(), "View Transactions")]')
+        button.click()
+        url = url_head + "/settings/"
+        driver.get(url)
+        time.sleep(buffer_constant)
+        check = driver.find_element("xpath", "//input[@type='checkbox' and @id='toggleButton']")
+        if not check.is_selected():
+          return "Failed"
+        check.click()
+        return "Passed"
+    except Exception as e:
+        print(e)
+        return "Failed"
 
 
 #main declaration

@@ -265,7 +265,6 @@
 
 
         function submitDates() {
-            console.log("submit button hit")
             var startDate = document.getElementById('start_date').value;
             var endDate = document.getElementById('end_date').value;
 
@@ -341,6 +340,11 @@
         });
 
         function exportChart(canvas) {
+
+            var confirmDownload = confirm("Do you want to download the chart?");
+    
+    // If user confirms, proceed with download
+    if (confirmDownload) {
         
             var tempCanvas = document.createElement('canvas');
             tempCanvas.width = canvas.width;
@@ -359,6 +363,7 @@
             anchor.href = image;
             anchor.download = "chart.jpg";
             anchor.click();
+    }
          }
   </script>
   <br></br>

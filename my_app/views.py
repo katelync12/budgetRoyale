@@ -116,8 +116,14 @@ def spendings_breakdown(request):
     else:
         screen_width = 800
     #DEFAULT DATES
-    end_date = datetime.now()
-    start_date = end_date - timedelta(days=7)
+
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
+
+    # end_date = datetime.now()
+    # start_date = end_date - timedelta(days=7)
 
     user = request.user
 
@@ -133,8 +139,16 @@ def spendings_breakdown(request):
     for user_group in leaderboard_users:
         transactions = Transactions.objects.filter(
         user=user_group.user,
-        amount__lt=0,
-        week__range=(start_date, end_date))
+        amount__lt=0)
+
+        if start_date:
+            transactions = transactions.filter(week__gte=start_date)
+        if end_date:
+            transactions = transactions.filter(week__lte=end_date)
+        if not start_date and not end_date:
+            end_date = timezone.now().date()
+            start_date = end_date - timedelta(days=7)
+            transactions = transactions.filter(week__range=[start_date, end_date])
 
 # Calculate total score as the sum of negative amounts
         total_score = 0
@@ -167,11 +181,13 @@ def profile_settings(request):
     print("profile_settings")
     user = request.user
     user_profile = UserProfile.objects.filter(user=user).first()
-    color = user_profile.color if user_profile and user_profile.color else ''
+    color = ''
+    if user_profile and user_profile.color is not None:
+        color = user_profile.color
     
     # Calculate hue value
     hue_value = 0
-    val = "0%"
+    val = "0.0%"
     if color:
         # Parse the color to get RGB components
         r, g, b = hex_to_rgb(color)
@@ -182,12 +198,15 @@ def profile_settings(request):
         # Convert hue to degrees
         hue_value = int(h * 360)
         val = str((hue_value / 360) * 100) + '%'  # Calculate the hue value as a percentage
+    else:
+        color = "#c27070"
     context = {
         'color': color,
         'val': val,
         'hue': hue_value,
         'subscribed': SubscriberList.objects.filter(user=user).exists()
     }
+
     print(color)
     print(hue_value)
     print(val)
@@ -663,15 +682,15 @@ def view_transactions(request, view_all = True):
             if start_date_str and end_date_str:
                 start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
                 end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
-                transactions = Transactions.objects.filter(week__gte=start_date, week__lte=end_date)
+                transactions = Transactions.objects.filter(week__gte=start_date, week__lte=end_date).order_by('-week')
             elif start_date_str:
                 start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
-                transactions = Transactions.objects.filter(week__gte=start_date)
+                transactions = Transactions.objects.filter(week__gte=start_date).order_by('-week')
             elif end_date_str:
                 end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
-                transactions = Transactions.objects.filter(week__lte=end_date)
+                transactions = Transactions.objects.filter(week__lte=end_date).order_by('-week')
             else:
-                transactions = Transactions.objects.all()
+                transactions = Transactions.objects.order_by('-week')
 
         for transaction in transactions:
             # Only gets the transactions of the currently logged in user
@@ -1716,3 +1735,15 @@ def category_chart(request):
             category_id = None
             member_spent_categories[display] = {'category_id': category_id, 'total_amount': total_amount}
     return JsonResponse(member_spent_categories)
+
+def spendings_chart(request):
+    user_agent = get_user_agent(request)
+    screen_width = None
+
+    if user_agent.is_mobile:
+        screen_width = 400
+    elif user_agent.is_tablet:
+        screen_width = 600
+    else:
+        screen_width = 800
+    return render(request, "spendings_chart.html", {'screen_width': screen_width})

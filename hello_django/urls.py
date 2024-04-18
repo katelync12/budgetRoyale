@@ -27,11 +27,12 @@ urlpatterns = [
     # path('', views.home, name="homepage"),
     
       # configured the url
-    # path('index/', views.index, name="homepage1"),
+    # path('index/ ', views.index, name="homepage1"),
 
     # path("", include("my_app.urls")),
     # path('edit_transaction/', views.edit_transaction, name='edit_transaction_action'),
     path('groups/spendings_breakdown/', views.spendings_breakdown, name="spendings_breakdown"),
+    path('groups/spendings_chart/', views.spendings_chart, name="spendings_chart"),
     path('create_transaction/', views.create_transaction, name='create_transaction_action'),
     path('create_group/', views.create_group, name='create_group_action'),
     # path('groups/', views.groups, name='search_group_action'),
