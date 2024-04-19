@@ -1707,9 +1707,8 @@ def category_chart(request):
     end_date_str = request.GET.get('end_date')
     start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
     end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
-
-    user_group = user.group_set.first()
-    group_members = user_group.userjoingroup_set.all()
+    user_group = UserJoinGroup.objects.get(user=user).group
+    group_members = UserJoinGroup.objects.filter(group=user_group)
 
     member_spent_categories = {}
     for member in group_members:
