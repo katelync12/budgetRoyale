@@ -207,7 +207,6 @@ display: flex;
 justify-content: center;
 align-items: center;
 margin: 5px;
-padding: 5px;
 }
 
 .styled-table {
@@ -655,9 +654,18 @@ font-weight: 800px;
 .make-inline {
 display: flex;
 align-items: center;
+justify-content: center;
 align-self: center;
 height: 100%;
 }
+
+@media screen and (max-width: 500px) {
+  .make-inline {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .set-admin-btn {
 margin: 10px;
 color:#7477d7;

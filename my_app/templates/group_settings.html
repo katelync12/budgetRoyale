@@ -9,18 +9,19 @@
   <div class="table-container">
     <table class="styled-table">
         <tr>
-            <th>Member</th>
-            <th>Role</th>
-            <th>Options</th>
+            <th style="justify-content: center; text-align: center;">Member</th>
+            <th style="justify-content: center; text-align: center;">Role</th>
+            <th style="justify-content: center; text-align: center;">Options</th>
+            
         </tr>
         {% for member in members %}
             <tr>
-                <th>{{ member.username }}</th>
+                <th style="justify-content: center; text-align: center;">{{ member.username }}</th>
                   {% if admin == user %}
 
                   
                     {% if member != user %}
-                    <th>
+                    <th style="justify-content: center; text-align: center;">
                       Member
                     </th>
 
@@ -36,7 +37,7 @@
                       </th>
                     
                     {% else %}
-                    <th>
+                    <th style="justify-content: center; text-align: center;">
                       Admin
                     </th>
                       <th>
@@ -48,14 +49,14 @@
 
                   {% else %}
                     {% if member == admin %}
-                    <th>
+                    <th style="justify-content: center; text-align: center;">
                       Admin
                     </th>
                       <th>
 
                       </th>
                     {% else %}
-                      <th>
+                      <th style="justify-content: center; text-align: center;">
                         Member
                       </th>
                         <th>
