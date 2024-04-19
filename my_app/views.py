@@ -387,6 +387,9 @@ def group_settings(request):
     encrypted_bytes = cipher.encrypt(password_bytes)
     encrypted_base64_bytes = base64.urlsafe_b64encode(encrypted_bytes)
     encrypted_password = encrypted_base64_bytes.decode()
+    current_url = request.build_absolute_uri()
+    domain_name = current_url.split('/')[2]
+
 
 
     context = {
@@ -396,6 +399,7 @@ def group_settings(request):
         'members': members,
         'profile': profile,
         'encrypted_password': encrypted_password,
+        'domain_name': domain_name,
     }
     # print(context)
 
