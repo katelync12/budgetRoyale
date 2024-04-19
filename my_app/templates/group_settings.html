@@ -82,7 +82,8 @@
       <div class="modal-content">
           <div>Shareable link to join group: {{ group.name }}</div>
           <br></br>
-          <div id="popupText">http://127.0.0.1:8000/groups/join/{{ group.id }}/{{ encrypted_password }}/</div>
+          {% comment %} <div id="popupText">http://127.0.0.1:8000/groups/join/{{ group.id }}/{{ encrypted_password }}/</div> {% endcomment %}
+          <div id="popupText">http://{{ domain_name }}/groups/join/{{ group.id }}/{{ encrypted_password }}/</div>
           <button id="copyBtn">Copy to Clipboard</button>
       </div>
   </div>
@@ -124,7 +125,7 @@
     popupBtn.addEventListener('click', function() {
         modal.style.display = 'block';
     });
-
+/*
     copyBtn.addEventListener('click', function() {
         var textToCopy = popupText.textContent;
         navigator.clipboard.writeText(textToCopy)
@@ -134,6 +135,29 @@
             .catch(function(err) {
                 console.error('Unable to copy text: ', err);
             });
+    });
+    */
+
+    document.getElementById("copyBtn").addEventListener("click", function() {
+      // Select the text to copy
+      var textToCopy = document.getElementById("popupText");
+    
+      // Create a temporary textarea element to hold the text
+      var tempTextarea = document.createElement("textarea");
+      tempTextarea.value = textToCopy.textContent;
+      document.body.appendChild(tempTextarea);
+    
+      // Select the text inside the textarea
+      tempTextarea.select();
+    
+      // Execute the copy command
+      document.execCommand("copy");
+    
+      // Remove the temporary textarea
+      document.body.removeChild(tempTextarea);
+    
+      // Provide feedback to the user
+      alert("Text copied to clipboard!");
     });
 
     // Close the modal when the user clicks outside of it
