@@ -11,14 +11,26 @@
   {% include "components/color_picker.html" %}
   {% include "components/subscribe_optin.html" %}
 </div>
-<button type="submit" onclick="confirmDelete()" style="background-color: #5B5FC5; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif; cursor: pointer; display: block; margin: 20px auto;">Delete Account</button> 
 
+
+<div class="bottom-buttons">
 <form action="{% url 'logout' %}" method="post">
   {% csrf_token %}
-  <button type="submit" style="background-color: #ffffff; color: #5B5FC5; border: none; padding: 10px 20px; border-radius: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif; cursor: pointer; display: block; margin: 20px auto;">Log Out</button>
+  <button type="submit" style=" width: 100%; background-color: #5B5FC5; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif; cursor: pointer; display: block; margin: 20px auto;">Log Out</button>
+  <button type="submit" onclick="confirmDelete()" style="width: 100%; background-color: #ffffff; color: #5B5FC5; border: none; padding: 10px 20px; border-radius: 5px; font-family: Verdana, Geneva, Tahoma, sans-serif; cursor: pointer; display: block; margin: 20px auto;">Delete Account</button> 
 </form>
+</div>
 
 <style>
+  .bottom-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .links {
     display: flex;
     flex-direction: column;

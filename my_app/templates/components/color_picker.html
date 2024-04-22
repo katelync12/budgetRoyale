@@ -1,6 +1,7 @@
 {% block color_picker %}
 {% load static %}
 <div class="container" style=" padding: 20px; box-shadow: 0px 0px 10px #5B5FC5; border-radius: 10px; background: gainsboro">
+
   <div class="row">
     <div class="selected-color" id="selected-color" style="{% if color %}background-color: {{ color }};{% endif %}"></div>
     <div class="range-slider">
