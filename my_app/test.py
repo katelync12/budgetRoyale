@@ -2340,7 +2340,7 @@ def view_transaction_groceries(username, password):
     except:
         return "Failed"
     
-    
+    #
 def view_transaction_transportation(username, password):
     try:
         login(username, password)
